@@ -1,4 +1,5 @@
 include:
+ - remote: 'https://source.puri.sm/Librem5/librem5-ci/raw/master/librem5-pipeline-definitions.yml'
  - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/34039cd573a2df832d465bc9e4c5f543571f5241/templates/ci-fairy.yml'
 
 stages:
@@ -130,6 +131,14 @@ build:native-alpinelinux-edge:
   except:
     variables:
       - $PKG_ONLY == "1"
+
+package:deb-pureos-byzantium:arm64:
+  variables:
+    L5_DOCKER_IMAGE: pureos/byzantium
+    DEB_BUILD_PROFILES: nodoc
+  extends: .l5-build-debian-package
+  tags:
+    - librem5:arm64
 
 pages:
   stage: deploy
