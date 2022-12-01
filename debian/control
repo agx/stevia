@@ -30,8 +30,6 @@ Recommends:
 Depends:
  ${misc:Depends},
  ${shlibs:Depends},
-Breaks:
- libgtk-3-0 (<< 3.24.35)
 Description: An experimental on screen keyboard for Phosh
  phosh-osk-stub implements phosh's keyboard interface for ease of
  experimentation. The focus is on ease of change and debugging rather than
