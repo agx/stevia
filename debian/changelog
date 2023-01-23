@@ -1,3 +1,34 @@
+phosh-osk-stub (0.24.0) experimental; urgency=medium
+
+  [ Guido Günther ]
+  * build: Drop trailing character
+  * packaging: Move desktop file to private dir.
+    This avoids listing it twice e.g. in mobile-setting's feedback
+    pane.
+  * osk-widget: Use layer sensitive label on symbol-layer key.
+    Use "123" when not on the symbols layer, otherwise "ABC". This
+    will make it consistent to what we use in the emoji widget.
+  * input-surface: Add helper to submit current preedit.
+    This is needed in several places e.g. when switching modes.
+  * Add emoji data.
+    Taken from GTK as of commit
+    1a4e368c7e5995b342db0be74f56c1eced74a0e6
+  * Add emoji-picker.
+    This is based on GTK's emoji picker. Besides
+    smaller fixes and dropping unneeded bits:
+    - switch to horizontal scrolling
+    - wrap section in a scrolled window
+    - add back and delete buttons
+  * input-surface: Wire up emoji picker
+  * input-surface: Submit preedit before inserting emoji.
+    In completion mode we don't want to complete on emojies
+    but rather submit the current text and append the emoji.
+
+  [ Sam Hewitt ]
+  * emoji-picker: Improve styling
+
+ -- Guido Günther <agx@sigxcpu.org>  Mon, 23 Jan 2023 19:08:20 +0100
+
 phosh-osk-stub (0.23.0~rc2) experimental; urgency=medium
 
   * input-method: Use g_warning when we can't become the input method.
