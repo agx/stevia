@@ -103,7 +103,7 @@ typedef struct {
 /**
  * PosOskWidget:
  * @name: The name of the layout, e.g. `de`, `us`, `de+ch`
- * @name: The display name of the layout, e.g. `German`, `English (US)`
+ * @display_name: The display name of the layout, e.g. `German`, `English (US)`
  *
  * Renders the keyboard and reacts to keypresses by signal emissions.
  */
