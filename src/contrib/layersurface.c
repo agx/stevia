@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2018 Purism SPC
+ * Copyright (C) 2018-2023 Purism SPC
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -14,9 +14,9 @@
 #include <gdk/gdkwayland.h>
 
 /**
- * SECTION:layersurface
- * @short_description: A #GtkWindow rendered as a LayerSurface by the compositor
- * @Title: PhoshLayerSurface
+ * PhoshLayerSurface:
+ *
+ * A #GtkWindow rendered as a LayerSurface by the compositor
  *
  * #PhoshLayerSurface allows to use a Wayland surface backed by the
  * layer-shell protocol as #GtkWindow. This allows to render e.g. panels and
@@ -80,6 +80,7 @@ layer_surface_configure (void                         *data,
 {
   PhoshLayerSurface *self = data;
   PhoshLayerSurfacePrivate *priv;
+  gboolean changed = FALSE;
 
   g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
   priv = phosh_layer_surface_get_instance_private (self);
@@ -88,16 +89,19 @@ layer_surface_configure (void                         *data,
 
   if (priv->configured_height != height) {
     priv->configured_height = height;
+    changed = TRUE;
     g_object_notify_by_pspec (G_OBJECT (self), props[PHOSH_LAYER_SURFACE_PROP_CONFIGURED_HEIGHT]);
   }
 
   if (priv->configured_width != width) {
     priv->configured_width = width;
+    changed = TRUE;
     g_object_notify_by_pspec (G_OBJECT (self), props[PHOSH_LAYER_SURFACE_PROP_CONFIGURED_WIDTH]);
   }
 
-  g_debug ("Configured %p (%dx%d)", self, width, height);
-  g_signal_emit (self, signals[CONFIGURED], 0);
+  g_debug ("Configured %s (%p) (%dx%d)", priv->namespace, self, width, height);
+  if (changed)
+    g_signal_emit (self, signals[CONFIGURED], 0);
 }
 
 
@@ -143,7 +147,7 @@ phosh_layer_surface_set_property (GObject      *object,
     priv->anchor = g_value_get_uint (value);
     break;
   case PHOSH_LAYER_SURFACE_PROP_LAYER:
-    priv->layer = g_value_get_uint (value);
+    phosh_layer_surface_set_layer (self, g_value_get_uint (value));
     break;
   case PHOSH_LAYER_SURFACE_PROP_KBD_INTERACTIVITY:
     phosh_layer_surface_set_kbd_interactivity (self, g_value_get_boolean (value));
@@ -261,14 +265,16 @@ phosh_layer_surface_get_property (GObject    *object,
 
 
 static void
-on_phosh_layer_surface_realized (PhoshLayerSurface *self, gpointer unused)
+phosh_layer_surface_realize (GtkWidget *widget)
 {
+  PhoshLayerSurface *self = PHOSH_LAYER_SURFACE (widget);
   PhoshLayerSurfacePrivate *priv;
   GdkWindow *gdk_window;
 
   g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
-
   priv = phosh_layer_surface_get_instance_private (self);
+
+  GTK_WIDGET_CLASS (phosh_layer_surface_parent_class)->realize (widget);
 
   gdk_window = gtk_widget_get_window (GTK_WIDGET (self));
   gdk_wayland_window_set_use_custom_surface (gdk_window);
@@ -279,12 +285,15 @@ on_phosh_layer_surface_realized (PhoshLayerSurface *self, gpointer unused)
 
 
 static void
-on_phosh_layer_surface_mapped (PhoshLayerSurface *self, gpointer unused)
+phosh_layer_surface_map (GtkWidget *widget)
 {
+  PhoshLayerSurface *self = PHOSH_LAYER_SURFACE (widget);
   PhoshLayerSurfacePrivate *priv;
 
   g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
   priv = phosh_layer_surface_get_instance_private (self);
+
+  GTK_WIDGET_CLASS (phosh_layer_surface_parent_class)->map (widget);
 
   if (!priv->wl_surface) {
     GdkWindow *gdk_window;
@@ -321,37 +330,18 @@ on_phosh_layer_surface_mapped (PhoshLayerSurface *self, gpointer unused)
 
 
 static void
-on_phosh_layer_surface_unmapped (PhoshLayerSurface *self, gpointer unused)
+phosh_layer_surface_unmap (GtkWidget *widget)
 {
+  PhoshLayerSurface *self = PHOSH_LAYER_SURFACE (widget);
   PhoshLayerSurfacePrivate *priv;
 
   g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
   priv = phosh_layer_surface_get_instance_private (self);
 
-  if (priv->layer_surface) {
-    zwlr_layer_surface_v1_destroy (priv->layer_surface);
-    priv->layer_surface = NULL;
-  }
+  g_clear_pointer (&priv->layer_surface, zwlr_layer_surface_v1_destroy);
   priv->wl_surface = NULL;
-}
 
-
-static void
-phosh_layer_surface_constructed (GObject *object)
-{
-  PhoshLayerSurface *self = PHOSH_LAYER_SURFACE (object);
-
-  g_signal_connect (self, "realize",
-                    G_CALLBACK (on_phosh_layer_surface_realized),
-                    NULL);
-  g_signal_connect (self, "map",
-                    G_CALLBACK (on_phosh_layer_surface_mapped),
-                    NULL);
-  g_signal_connect (self, "unmap",
-                    G_CALLBACK (on_phosh_layer_surface_unmapped),
-                    NULL);
-
-  G_OBJECT_CLASS (phosh_layer_surface_parent_class)->constructed (object);
+  GTK_WIDGET_CLASS (phosh_layer_surface_parent_class)->unmap (widget);
 }
 
 
@@ -361,10 +351,7 @@ phosh_layer_surface_dispose (GObject *object)
   PhoshLayerSurface *self = PHOSH_LAYER_SURFACE (object);
   PhoshLayerSurfacePrivate *priv = phosh_layer_surface_get_instance_private (self);
 
-  if (priv->layer_surface) {
-    zwlr_layer_surface_v1_destroy (priv->layer_surface);
-    priv->layer_surface = NULL;
-  }
+  g_clear_pointer (&priv->layer_surface, zwlr_layer_surface_v1_destroy);
   g_clear_pointer (&priv->namespace, g_free);
 
   G_OBJECT_CLASS (phosh_layer_surface_parent_class)->dispose (object);
@@ -375,12 +362,15 @@ static void
 phosh_layer_surface_class_init (PhoshLayerSurfaceClass *klass)
 {
   GObjectClass *object_class = (GObjectClass *)klass;
+  GtkWidgetClass *widget_class = (GtkWidgetClass *)klass;
 
-  object_class->constructed = phosh_layer_surface_constructed;
   object_class->dispose = phosh_layer_surface_dispose;
-
   object_class->set_property = phosh_layer_surface_set_property;
   object_class->get_property = phosh_layer_surface_get_property;
+
+  widget_class->realize = phosh_layer_surface_realize;
+  widget_class->map = phosh_layer_surface_map;
+  widget_class->unmap = phosh_layer_surface_unmap;
 
   props[PHOSH_LAYER_SURFACE_PROP_LAYER_SHELL] =
     g_param_spec_pointer (
@@ -414,7 +404,7 @@ phosh_layer_surface_class_init (PhoshLayerSurfaceClass *klass)
       0,
       G_MAXUINT,
       0,
-      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
+      G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS | G_PARAM_EXPLICIT_NOTIFY);
 
   props[PHOSH_LAYER_SURFACE_PROP_KBD_INTERACTIVITY] =
     g_param_spec_boolean (
@@ -740,6 +730,33 @@ phosh_layer_surface_set_kbd_interactivity (PhoshLayerSurface *self, gboolean int
 
 
 /**
+ * phosh_layer_surface_set_layer:
+ * @self: The #PhoshLayerSurface
+ * @layer: The layer.
+ *
+ * Sets the layer a layer-surface belongs to `layer`.
+ */
+void
+phosh_layer_surface_set_layer (PhoshLayerSurface *self, guint32 layer)
+{
+  PhoshLayerSurfacePrivate *priv;
+
+  g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
+  priv = phosh_layer_surface_get_instance_private (self);
+
+  if (priv->layer == layer)
+    return;
+
+  priv->layer = layer;
+
+  if (priv->layer_surface)
+    zwlr_layer_surface_v1_set_layer (priv->layer_surface, layer);
+
+  g_object_notify_by_pspec (G_OBJECT (self), props[PHOSH_LAYER_SURFACE_PROP_LAYER]);
+}
+
+
+/**
  * phosh_layer_surface_wl_surface_commit:
  * @self: The #PhoshLayerSurface
  *
@@ -755,4 +772,50 @@ phosh_layer_surface_wl_surface_commit (PhoshLayerSurface *self)
 
   if (priv->wl_surface)
     wl_surface_commit (priv->wl_surface);
+}
+
+
+void
+phosh_layer_surface_get_margins (PhoshLayerSurface *self, int *top, int *right, int *bottom, int *left)
+{
+  PhoshLayerSurfacePrivate *priv;
+
+  g_return_if_fail (PHOSH_IS_LAYER_SURFACE (self));
+  priv = phosh_layer_surface_get_instance_private (self);
+
+  if (top)
+    *top = priv->margin_top;
+
+  if (right)
+    *right = priv->margin_right;
+
+  if (bottom)
+    *bottom = priv->margin_bottom;
+
+  if (left)
+    *left = priv->margin_left;
+}
+
+
+int
+phosh_layer_surface_get_configured_width (PhoshLayerSurface *self)
+{
+  PhoshLayerSurfacePrivate *priv;
+
+  g_return_val_if_fail (PHOSH_IS_LAYER_SURFACE (self), 0);
+  priv = phosh_layer_surface_get_instance_private (self);
+
+  return priv->configured_width;
+}
+
+
+int
+phosh_layer_surface_get_configured_height (PhoshLayerSurface *self)
+{
+  PhoshLayerSurfacePrivate *priv;
+
+  g_return_val_if_fail (PHOSH_IS_LAYER_SURFACE (self), 0);
+  priv = phosh_layer_surface_get_instance_private (self);
+
+  return priv->configured_height;
 }
