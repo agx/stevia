@@ -19,6 +19,6 @@ G_DECLARE_FINAL_TYPE (PosVkDriver, pos_vk_driver, POS, VK_DRIVER, GObject)
 PosVkDriver *pos_vk_driver_new (PosVirtualKeyboard *virtual_keyboard);
 void pos_vk_driver_key_down (PosVkDriver *virtual_keyboard, const char *key);
 void pos_vk_driver_key_up (PosVkDriver *virtual_keyboard, const char *key);
-void pos_vk_driver_key_press_gdk (PosVkDriver *self, guint key, GdkModifierType modifiers);
+void pos_vk_driver_key_press_gdk (PosVkDriver *self, guint gdk_keycode, GdkModifierType modifiers);
 
 G_END_DECLS
