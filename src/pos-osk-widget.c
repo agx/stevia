@@ -959,6 +959,53 @@ render_label (cairo_t *cr, GtkStyleContext *context, const char *label, const Gd
 
 
 static void
+render_hint (cairo_t *cr, GtkStyleContext *context, const char *hint, const GdkRectangle *box)
+{
+  g_autoptr (PangoLayout) layout = pango_cairo_create_layout (cr);
+  g_autoptr (PangoFontDescription) font = NULL;
+  PangoRectangle extents = { 0, };
+  GdkRGBA color = {0};
+  GtkStateFlags state = GTK_STATE_FLAG_INSENSITIVE;
+  int x, y, size;
+  GtkBorder margin, border;
+  /* TODO: this should come from css */
+  int hint_margin = 1;
+  float hint_scale = 0.75;
+
+  cairo_save (cr);
+
+  gtk_style_context_get (context, state, "font", &font, NULL);
+  size = pango_font_description_get_size (font);
+  pango_font_description_set_size (font, hint_scale * size);
+  pango_layout_set_font_description (layout, font);
+
+  pango_layout_set_text (layout, hint, -1);
+  pango_layout_set_alignment (layout, PANGO_ALIGN_CENTER);
+
+  gtk_style_context_get_margin (context, state, &margin);
+  gtk_style_context_get_border (context, state, &border);
+
+  pango_layout_get_extents (layout, NULL, &extents);
+
+  x = box->width - border.left - margin.left - margin.right - border.right
+    - (extents.width / PANGO_SCALE) - hint_margin;
+  y = margin.top + border.top + hint_margin;
+
+  gtk_style_context_get_color (context, state, &color);
+
+  cairo_move_to (cr, x, y);
+  cairo_set_source_rgba (cr,
+                         color.red,
+                         color.green,
+                         color.blue,
+                         color.alpha);
+  pango_cairo_show_layout (cr, layout);
+
+  cairo_restore (cr);
+}
+
+
+static void
 render_icon (cairo_t            *cr,
              GtkStyleContext    *context,
              GtkIconTheme       *icon_theme,
@@ -1028,7 +1075,11 @@ draw_key (PosOskWidget *self, PosOskKey *key, cairo_t *cr, double col, double ro
 
       render_icon (cr, self->key_context, icon_theme, icon, box, scale);
     } else {
+      GStrv symbols = pos_osk_key_get_symbols (key);
+
       render_label (cr, self->key_context, label ?: symbol, box);
+      if (symbols)
+        render_hint (cr, self->key_context, symbols[0], box);
     }
   }
 
