@@ -501,6 +501,9 @@ clipboard_copy_activated (GSimpleAction *action,
 
   text = pos_input_method_get_surrounding_text (self->input_method, NULL, NULL);
   gtk_clipboard_set_text (clipboard, text, -1);
+
+  /* Close popover in case we pasted from there */
+  gtk_popover_popdown (self->menu_popup);
 }
 
 
