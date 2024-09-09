@@ -20,6 +20,20 @@
       </object>
     </child>
     <child>
+      <object class="GtkButton">
+        <property name="visible">True</property>
+        <property name="halign">start</property>
+        <property name="hexpand">False</property>
+        <property name="action-name">win.clipboard-copy</property>
+        <child>
+          <object class="GtkImage">
+            <property name="visible">True</property>
+            <property name="icon-name">edit-copy-symbolic</property>
+          </object>
+        </child>
+      </object>
+    </child>
+    <child>
       <object class="GtkBox" id="buttons">
         <property name="visible">True</property>
         <property name="orientation">horizontal</property>
