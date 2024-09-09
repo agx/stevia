@@ -489,6 +489,22 @@ on_osk_popover_hidden (PosInputSurface *self)
 
 
 static void
+clipboard_copy_activated (GSimpleAction *action,
+                          GVariant      *parameter,
+                          gpointer       data)
+{
+  PosInputSurface *self = POS_INPUT_SURFACE (data);
+  GtkClipboard *clipboard;
+  const char *text;
+
+  clipboard = gtk_clipboard_get_default (gdk_display_get_default ());
+
+  text = pos_input_method_get_surrounding_text (self->input_method, NULL, NULL);
+  gtk_clipboard_set_text (clipboard, text, -1);
+}
+
+
+static void
 clipboard_paste_activated (GSimpleAction *action,
                            GVariant      *parameter,
                            gpointer       data)
@@ -936,6 +952,46 @@ pos_input_surface_set_clipboard_manager (PosInputSurface     *self,
 }
 
 
+static gboolean
+transform_text_to_bool (GBinding     *binding,
+                        const GValue *from_value,
+                        GValue       *to_value,
+                        gpointer      user_data)
+{
+  const char *text = g_value_get_string (from_value);
+  gboolean has_text;
+
+  has_text = !gm_str_is_null_or_empty (text);
+  g_value_set_boolean (to_value, has_text);
+
+  return TRUE;
+}
+
+
+static void
+pos_input_surface_set_input_method (PosInputSurface *self,
+                                    PosInputMethod  *input_method)
+{
+  GAction *copy_action;
+
+  if (self->input_method == input_method)
+    return;
+
+  g_set_object (&self->input_method, input_method);
+
+  copy_action = g_action_map_lookup_action (G_ACTION_MAP (self), "clipboard-copy");
+  g_assert (copy_action);
+
+  g_object_bind_property_full (input_method, "surrounding-text",
+                               copy_action, "enabled",
+                               G_BINDING_SYNC_CREATE,
+                               transform_text_to_bool,
+                               NULL,
+                               NULL,
+                               NULL);
+}
+
+
 static double
 reverse_ease_out_cubic (double t)
 {
@@ -992,7 +1048,7 @@ pos_input_surface_set_property (GObject      *object,
 
   switch (property_id) {
   case PROP_INPUT_METHOD:
-    self->input_method = g_value_dup_object (value);
+    pos_input_surface_set_input_method (self, g_value_get_object (value));
     break;
   case PROP_COMPLETER_MANAGER:
     pos_input_surface_set_completer_manager (self, g_value_get_object (value));
@@ -1807,6 +1863,7 @@ on_completion_mode_changed (PosInputSurface *self, const char *key, GSettings *s
 
 static GActionEntry entries[] =
 {
+  { .name = "clipboard-copy", .activate = clipboard_copy_activated },
   { .name = "clipboard-paste", .activate = clipboard_paste_activated },
   { .name = "settings", .activate = settings_activated },
   { .name = "select-layout", .parameter_type = "s", .state = "\"terminal\"",
