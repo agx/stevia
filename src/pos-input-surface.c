@@ -710,8 +710,10 @@ select_layout_change_state (GSimpleAction *action,
   if (osk_widget == NULL) {
     if (g_str_equal (layout, "terminal")) {
       osk_widget = self->osk_terminal;
+      pos_input_surface_submit_current_preedit (self);
     } else if (g_str_equal (layout, "emoji")) {
       osk_widget = self->emoji_picker;
+      pos_input_surface_submit_current_preedit (self);
     } else {
       g_warning ("Failed to find layout '%s'", layout);
       return;
