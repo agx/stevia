@@ -11,7 +11,7 @@
     </p>
     <ul>
       <li>Character popovers</li>
-      <li>Word completion</li>
+      <li>Word completion / prediction using different completion engines</li>
       <li>Gesture based cursor movement</li>
       <li>Lots of emojis 😀</li>
       <li>Debug mode to debug text-input/input-method issues</li>
@@ -58,6 +58,16 @@
   </screenshots>
 
   <releases>
+    <release version="0.42.0" date="2024-09-28">
+      <description>
+        <ul>
+          <li>Support configuring keyboard layouts in Phosh mobile settings</li>
+          <li>Add paste buttons to paste clipboard contents</li>
+          <li>varnam completer: Learn accepted words to improve predictionsx</li>
+          <li>presage completer: Fix issues that could scramble text</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.41.1" date="2024-08-20">
       <description>
         <ul>

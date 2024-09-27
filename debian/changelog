@@ -1,3 +1,30 @@
+phosh-osk-stub (0.42.0) experimental; urgency=medium
+
+  * layout-info: Ensure stable sorting.
+    This makes sure we stay reproducible
+  * input-surface: Better check for completion mode.
+    When the IM signals surrounding text changes we want to perform the same
+    checks as on preedit changes (`on_completer_preedit_changed`) or
+    completion updates (`on_completer_update`). Otherwise we end up picking
+    up preedit again due to:
+    Long press for cursor mode
+     -> on_osk_mode_changed()
+       -> submit preedit via pos_input_surface_submit_current_preedit()
+       … due to that commit we receive new surrounding text from the compositor
+        -> pos_completer_presage_set_surrounding_text
+          -> we update preedit again
+    This fixes the long standing issue where entering cursor mode would
+    double the preedit when using the presage completer (hunspell and others
+    are not affected as they don't care about changed surrounding text).
+  * presage: Don't try to grab last word.
+    We only want that for "edit" mode (when deleting backwards into a word)
+    but trigger it in many other situations triggering lost or duplicated
+    text.
+    This should allow us to use presage completion in a stable way rather
+    than keeping it experimental forever.
+
+ -- Guido Günther <agx@sigxcpu.org>  Thu, 26 Sep 2024 10:53:05 +0200
+
 phosh-osk-stub (0.42~rc1) experimental; urgency=medium
 
   * input-surface: Close popover when spawning settings.
