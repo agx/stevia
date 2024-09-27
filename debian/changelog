@@ -1,3 +1,13 @@
+phosh-osk-stub (0.42.0+next20240927.1337.e4b383964.1) UNRELEASED; urgency=medium
+
+  * phosh-next e4b383964 update with merge requests
+    https://gitlab.gnome.org/guidog/phosh-osk-stub/-/merge_requests/158
+    https://gitlab.gnome.org/guidog/phosh-osk-stub/-/merge_requests/157
+    https://gitlab.gnome.org/guidog/phosh-osk-stub/-/merge_requests/156
+    https://gitlab.gnome.org/guidog/phosh-osk-stub/-/merge_requests/152
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 27 Sep 2024 13:37:04 +0200
+
 phosh-osk-stub (0.42.0) experimental; urgency=medium
 
   * layout-info: Ensure stable sorting.
