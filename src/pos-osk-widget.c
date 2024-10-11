@@ -896,6 +896,8 @@ pos_osk_widget_key_release_action (PosOskWidget *self, PosOskKey *key)
   default:
     g_assert_not_reached ();
   }
+
+  self->current = NULL;
 }
 
 
@@ -923,7 +925,6 @@ pos_osk_widget_button_release_event (GtkWidget *widget, GdkEventButton *event)
 
   pos_osk_widget_key_release_action (self, key);
 
-  self->current = NULL;
   return GDK_EVENT_STOP;
 }
 
