@@ -809,18 +809,11 @@ pos_osk_widget_key_press_action (PosOskWidget *self, PosOskKey *key)
 
 
 static gboolean
-pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
+pos_osk_widget_key_press (PosOskWidget *self, double x, double y)
 {
-  PosOskWidget *self = POS_OSK_WIDGET (widget);
   PosOskKey *key = NULL;
 
-  g_debug ("Button press: %f, %f, button: %d, state: %d",
-           event->x, event->y, event->button, event->state);
-
-  if (event->type != GDK_BUTTON_PRESS)
-    return FALSE;
-
-  key = pos_osk_widget_locate_key (self, event->x, event->y);
+  key = pos_osk_widget_locate_key (self, x, y);
   g_return_val_if_fail (key != NULL, GDK_EVENT_PROPAGATE);
 
   if (self->current) {
@@ -833,6 +826,23 @@ pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
     self->repeat_id = g_timeout_add (KEY_REPEAT_DELAY, on_repeat_timeout, self);
     g_source_set_name_by_id (self->repeat_id, "[pos-key-repeat-timeout]");
   }
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+
+static gboolean
+pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
+{
+  PosOskWidget *self = POS_OSK_WIDGET (widget);
+
+  g_debug ("Button press: %f, %f, button: %d, state: %d",
+           event->x, event->y, event->button, event->state);
+
+  if (event->type != GDK_BUTTON_PRESS)
+    return GDK_EVENT_PROPAGATE;
+
+  pos_osk_widget_key_press (self, event->x, event->y);
 
   return GDK_EVENT_STOP;
 }
