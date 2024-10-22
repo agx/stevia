@@ -464,7 +464,7 @@ static void
 adj_value_changed (GtkAdjustment *adj, gpointer data)
 {
   PosEmojiPicker *self = data;
-  double value = gtk_adjustment_get_value (adj);
+  double width, value;
   EmojiSection const *sections[] = {
     &self->recent,
     &self->people,
@@ -481,6 +481,8 @@ adj_value_changed (GtkAdjustment *adj, gpointer data)
   gsize i;
 
   /* Figure out which section the current scroll position is within */
+  width = gtk_widget_get_allocated_width (GTK_WIDGET (self));
+  value = gtk_adjustment_get_value (adj);
   for (i = 0; i < G_N_ELEMENTS (sections); ++i) {
     EmojiSection const *section = sections[i];
     GtkAllocation alloc;
@@ -490,8 +492,13 @@ adj_value_changed (GtkAdjustment *adj, gpointer data)
 
     gtk_widget_get_allocation (section->box, &alloc);
 
-    if (alloc.x == -1 || value < alloc.x - BOX_SPACE)
-      break;
+    if (gtk_widget_get_direction (GTK_WIDGET (self)) == GTK_TEXT_DIR_RTL) {
+      if (alloc.x == -1 || value > alloc.x + alloc.width - width)
+        break;
+    } else {
+      if (alloc.x == -1 || value < alloc.x - BOX_SPACE)
+        break;
+    }
 
     select_section = section;
   }
@@ -499,7 +506,6 @@ adj_value_changed (GtkAdjustment *adj, gpointer data)
   /* Un/Check the section buttons accordingly */
   for (i = 0; i < G_N_ELEMENTS (sections); ++i) {
     EmojiSection const *section = sections[i];
-
 
     /* TODO: scroll button into view */
     if (section == select_section) {
