@@ -140,6 +140,7 @@ struct _PosOskWidget {
   PosOskKey           *current;
   PosOskKey           *space;
   GtkGestureLongPress *long_press;
+  GdkEventSequence    *sequence;
   GtkWidget           *char_popup;
   guint                repeat_id;
 
@@ -809,18 +810,11 @@ pos_osk_widget_key_press_action (PosOskWidget *self, PosOskKey *key)
 
 
 static gboolean
-pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
+pos_osk_widget_key_press (PosOskWidget *self, double x, double y)
 {
-  PosOskWidget *self = POS_OSK_WIDGET (widget);
   PosOskKey *key = NULL;
 
-  g_debug ("Button press: %f, %f, button: %d, state: %d",
-           event->x, event->y, event->button, event->state);
-
-  if (event->type != GDK_BUTTON_PRESS)
-    return FALSE;
-
-  key = pos_osk_widget_locate_key (self, event->x, event->y);
+  key = pos_osk_widget_locate_key (self, x, y);
   g_return_val_if_fail (key != NULL, GDK_EVENT_PROPAGATE);
 
   if (self->current) {
@@ -833,6 +827,23 @@ pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
     self->repeat_id = g_timeout_add (KEY_REPEAT_DELAY, on_repeat_timeout, self);
     g_source_set_name_by_id (self->repeat_id, "[pos-key-repeat-timeout]");
   }
+
+  return GDK_EVENT_PROPAGATE;
+}
+
+
+static gboolean
+pos_osk_widget_button_press_event (GtkWidget *widget, GdkEventButton *event)
+{
+  PosOskWidget *self = POS_OSK_WIDGET (widget);
+
+  g_debug ("Button press: %f, %f, button: %d, state: %d",
+           event->x, event->y, event->button, event->state);
+
+  if (event->type != GDK_BUTTON_PRESS)
+    return GDK_EVENT_PROPAGATE;
+
+  pos_osk_widget_key_press (self, event->x, event->y);
 
   return GDK_EVENT_STOP;
 }
@@ -886,6 +897,8 @@ pos_osk_widget_key_release_action (PosOskWidget *self, PosOskKey *key)
   default:
     g_assert_not_reached ();
   }
+
+  self->current = NULL;
 }
 
 
@@ -913,7 +926,6 @@ pos_osk_widget_button_release_event (GtkWidget *widget, GdkEventButton *event)
 
   pos_osk_widget_key_release_action (self, key);
 
-  self->current = NULL;
   return GDK_EVENT_STOP;
 }
 
@@ -929,6 +941,66 @@ pos_osk_widget_cancel_press (PosOskWidget *self)
   pos_osk_widget_set_key_pressed (self, self->current, FALSE);
   g_signal_emit (self, signals[OSK_KEY_CANCELLED], 0, pos_osk_key_get_symbol (self->current));
   self->current = NULL;
+}
+
+
+static gboolean
+pos_osk_widget_touch_event (GtkWidget *widget, GdkEventTouch *event)
+{
+  PosOskWidget *self = POS_OSK_WIDGET (widget);
+
+  g_debug ("Touch event: seq: %p (%f, %f), type: %d",
+           event->sequence,
+           event->x,
+           event->y,
+           event->type);
+
+  if (event->type == GDK_TOUCH_BEGIN) {
+    if (self->current) {
+      key_repeat_cancel (self);
+      pos_osk_widget_set_mode (self, POS_OSK_WIDGET_MODE_KEYBOARD);
+      pos_osk_widget_key_release_action (self, self->current);
+    }
+
+    self->sequence = event->sequence;
+    pos_osk_widget_key_press (self, event->x, event->y);
+    return GDK_EVENT_STOP;
+  }
+
+  if (event->sequence != self->sequence)
+    return GDK_EVENT_PROPAGATE;
+
+  if (event->type == GDK_TOUCH_END || event->type == GDK_TOUCH_CANCEL) {
+    if (self->current) {
+      key_repeat_cancel (self);
+      pos_osk_widget_set_mode (self, POS_OSK_WIDGET_MODE_KEYBOARD);
+      pos_osk_widget_key_release_action (self, self->current);
+    }
+  } else if (event->type == GDK_TOUCH_UPDATE) {
+    PosOskKey *key;
+
+    if (!self->current)
+      return GDK_EVENT_PROPAGATE;
+
+    key = pos_osk_widget_locate_key (self, event->x, event->y);
+    if (self->current && key != self->current) {
+      gboolean accept = !!(self->features & PHOSH_OSK_FEATURE_KEY_DRAG);
+
+      g_debug ("Crossed key boundary, %s", accept ? "accepting" : "canceling");
+      if (accept) {
+        /* Handle current key */
+        pos_osk_widget_key_release_action (self, self->current);
+        /* Make the new key current */
+        pos_osk_widget_key_press_action (self, key);
+        return GDK_EVENT_STOP;
+      } else {
+        pos_osk_widget_cancel_press (self);
+      }
+    }
+    return GDK_EVENT_PROPAGATE;
+  }
+
+  return GDK_EVENT_STOP;
 }
 
 
@@ -1345,6 +1417,7 @@ pos_osk_widget_class_init (PosOskWidgetClass *klass)
   widget_class->button_press_event = pos_osk_widget_button_press_event;
   widget_class->button_release_event = pos_osk_widget_button_release_event;
   widget_class->motion_notify_event = pos_osk_widget_motion_notify_event;
+  widget_class->touch_event = pos_osk_widget_touch_event;
   widget_class->get_preferred_height = pos_osk_widget_get_preferred_height;
   widget_class->get_preferred_width = pos_osk_widget_get_preferred_width;
 
