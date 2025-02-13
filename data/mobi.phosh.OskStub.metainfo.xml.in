@@ -61,6 +61,15 @@
   </screenshots>
 
   <releases>
+    <release version="0.45.0" date="2025-02-13">
+      <description translate="no">
+        <ul>
+          <li>Long press on shift toggles caps lock</li>
+          <li>Update emoji data</li>
+          <li>Make IL layout as close as possible to SI-1452-2</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.44.0" date="2024-12-30">
       <description translate="no">
         <ul>
