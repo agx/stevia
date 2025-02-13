@@ -133,7 +133,7 @@ The available completers depend on how ``phosh-osk-stub`` was
 built. Available are currently at most
 
   - ``hunspell``: word correction based on the hunspell library
-  - ``presage``: (experimental) word prediction based on the presage libarary
+  - ``presage``: (experimental) word prediction based on the presage library
   - ``pipe``: completer using a pipe
   - ``fzf``: completer based on fzf command line tool. Useful for experiments)
   - ``varnam``: completer using govarnam for Indic languages

@@ -1,8 +1,9 @@
-phosh-osk-stub 0.45~rc1
------------------------
+phosh-osk-stub 0.45.0
+---------------------
 Released February 2025
 * Long press on shift toggles caps lock
 * Update emoji data
+* Make IL layout as close as possible to SI-1452-2
 * Issues fixed:
     * https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/53
     * https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/31
