@@ -1,10 +1,8 @@
 subdir('dbus')
 subdir('layouts')
 
-libpos_enum_headers = files(['pos-enums.h', 'phosh-osk-enums.h'])
-libpos_enum_sources = gnome.mkenums_simple(
-  'pos-enum-types',
-  sources : libpos_enum_headers)
+libpos_enum_headers = files('phosh-osk-enums.h', 'pos-enums.h')
+libpos_enum_sources = gnome.mkenums_simple('pos-enum-types', sources: libpos_enum_headers)
 
 libpos_deps = [
   gio_dep,
@@ -32,52 +30,52 @@ pos_resources = gnome.compile_resources(
 )
 
 libpos_sources = files(
-  'pos.h',
-  'pos-activation-filter.h',
   'pos-activation-filter.c',
-  'pos-char-popup.h',
+  'pos-activation-filter.h',
   'pos-char-popup.c',
-  'pos-clipboard-manager.h',
+  'pos-char-popup.h',
   'pos-clipboard-manager.c',
-  'pos-completer.h',
-  'pos-completer.c',
-  'pos-completer-manager.h',
+  'pos-clipboard-manager.h',
   'pos-completer-manager.c',
-  'pos-completion-bar.h',
+  'pos-completer-manager.h',
+  'pos-completer.c',
+  'pos-completer.h',
   'pos-completion-bar.c',
-  'pos-emoji-picker.h',
+  'pos-completion-bar.h',
   'pos-emoji-picker.c',
+  'pos-emoji-picker.h',
   'pos-enums.h',
-  'pos-input-method.h',
-  'pos-input-method.c',
-  'pos-input-surface.h',
-  'pos-input-surface.c',
-  'pos-hw-tracker.h',
   'pos-hw-tracker.c',
-  'pos-keypad.h',
-  'pos-keypad.c',
-  'pos-keypad-button.h',
+  'pos-hw-tracker.h',
+  'pos-input-method.c',
+  'pos-input-method.h',
+  'pos-input-surface.c',
+  'pos-input-surface.h',
   'pos-keypad-button.c',
-  'pos-logind-session.h',
+  'pos-keypad-button.h',
+  'pos-keypad.c',
+  'pos-keypad.h',
   'pos-logind-session.c',
+  'pos-logind-session.h',
   'pos-main.c',
   'pos-main.h',
-  'pos-osk-dbus.h',
   'pos-osk-dbus.c',
-  'pos-osk-key.h',
+  'pos-osk-dbus.h',
   'pos-osk-key.c',
-  'pos-osk-widget.h',
+  'pos-osk-key.h',
   'pos-osk-widget.c',
-  'pos-shortcuts-bar.h',
-  'pos-shortcuts-bar.c',
-  'pos-settings-panel.h',
+  'pos-osk-widget.h',
   'pos-settings-panel.c',
-  'pos-style-manager.h',
+  'pos-settings-panel.h',
+  'pos-shortcuts-bar.c',
+  'pos-shortcuts-bar.h',
   'pos-style-manager.c',
-  'pos-vk-driver.h',
-  'pos-vk-driver.c',
-  'pos-virtual-keyboard.h',
+  'pos-style-manager.h',
   'pos-virtual-keyboard.c',
+  'pos-virtual-keyboard.h',
+  'pos-vk-driver.c',
+  'pos-vk-driver.h',
+  'pos.h',
 )
 
 libpos_generated_sources = [
@@ -90,13 +88,13 @@ libpos_generated_sources = [
 
 # copied verbatim from phoh
 phosh_contrib_sources = files(
-  'contrib/layersurface.h',
   'contrib/layersurface.c',
-  'contrib/util.h',
+  'contrib/layersurface.h',
   'contrib/util.c',
+  'contrib/util.h',
 )
 
-pos_inc = include_directories([ '.', 'contrib/' ])
+pos_inc = include_directories(['.', 'contrib/'])
 pos_includes = [pos_inc, root_inc, dbus_inc, proto_inc]
 
 subdir('completers')
@@ -108,39 +106,38 @@ pos_lib = static_library(
   phosh_contrib_sources,
   dependencies: libpos_deps,
   include_directories: pos_includes,
-  install: false)
+  install: false,
+)
 
 libpos_dep = declare_dependency(
   sources: libpos_generated_sources,
   include_directories: pos_includes,
   link_with: pos_lib,
-  dependencies: [libpos_deps,
-		 libpos_completers_dep,
-		])
+  dependencies: [libpos_deps, libpos_completers_dep],
+)
 
-executable('phosh-osk-stub',
-	   'phosh-osk-stub.c',
-           include_directories: pos_includes,
-           install: true,
-           dependencies: libpos_dep)
+executable(
+  'phosh-osk-stub',
+  'phosh-osk-stub.c',
+  include_directories: pos_includes,
+  install: true,
+  dependencies: libpos_dep,
+)
 
 if get_option('gtk_doc')
-  pos_gir_extra_args = [
-    '--quiet',
-  ]
+  pos_gir_extra_args = ['--quiet']
 
-  pos_gir = gnome.generate_gir([pos_lib,
-                                libpos_completer_libs,
-                               ],
-                 sources: [libpos_sources, libpos_completers_sources],
-               nsversion: '0',
-               namespace: 'Pos',
-         export_packages: 'pos-0',
-           symbol_prefix: 'pos',
-       identifier_prefix: 'Pos',
-                includes: ['Gio-2.0', 'Gtk-3.0', 'Handy-1'],
-                 install: false,
-              extra_args: pos_gir_extra_args,
-            dependencies: [libpos_dep, libpos_completers_dep],
-   )
+  pos_gir = gnome.generate_gir(
+    [pos_lib, libpos_completer_libs],
+    sources: [libpos_sources, libpos_completers_sources],
+    nsversion: '0',
+    namespace: 'Pos',
+    export_packages: 'pos-0',
+    symbol_prefix: 'pos',
+    identifier_prefix: 'Pos',
+    includes: ['Gio-2.0', 'Gtk-3.0', 'Handy-1'],
+    install: false,
+    extra_args: pos_gir_extra_args,
+    dependencies: [libpos_dep, libpos_completers_dep],
+  )
 endif
