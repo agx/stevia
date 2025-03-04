@@ -209,6 +209,11 @@ format-check:
   extends: .phosh-format-check
   allow_failure: true
 
+check-meson:
+  stage: style-checks
+  extends:
+    - .phosh-check-meson
+
 pages:
   stage: deploy
   before_script: []
@@ -220,3 +225,4 @@ pages:
       - public
   only:
     - main
+
