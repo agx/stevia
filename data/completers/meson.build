@@ -1,4 +1,4 @@
-foreach completer: completers
+foreach completer : completers
   i18n.merge_file(
     input: completer + '.desktop.in',
     output: completer + '.completer',

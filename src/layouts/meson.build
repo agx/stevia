@@ -63,21 +63,26 @@ layouts = [
 
 if json_glib_utils.found()
   foreach layout : layouts
-    test('Validate layout @0@'.format(layout),
-	 json_glib_utils, args: meson.current_source_dir() / layout)
+    test(
+      'Validate layout @0@'.format(layout),
+      json_glib_utils,
+      args: meson.current_source_dir() / layout,
+    )
   endforeach
 endif
 
 info_builder = find_program(meson.project_source_root() / 'tools' / 'write-layout-info.py')
-build_info = custom_target('build-info',
+build_info = custom_target(
+  'build-info',
   output: 'layouts.json',
-  command: [info_builder,
-	    '--layouts=@0@'.format(meson.current_source_dir()),
-	    '--out=@OUTPUT@',
-            varnam_dep.found() ? '--varnam' : '--no-varnam',
-	   ],
+  command: [
+    info_builder,
+    '--layouts=@0@'.format(meson.current_source_dir()),
+    '--out=@OUTPUT@',
+    varnam_dep.found() ? '--varnam' : '--no-varnam',
+  ],
   depend_files: [layouts, info_builder.full_path()],
-  env: { 'LC_ALL': 'C' },
+  env: {'LC_ALL': 'C'},
   install: true,
   install_dir: pkgdatadir,
 )

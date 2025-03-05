@@ -1,8 +1,10 @@
-project('phosh-osk-stub', 'c',
-          version: '0.45.0',
-          license: 'GPLv3+',
-    meson_version: '>= 0.60.0',
-  default_options: [ 'warning_level=1', 'buildtype=debugoptimized', 'c_std=gnu11' ],
+project(
+  'phosh-osk-stub',
+  'c',
+  version: '0.45.0',
+  license: 'GPLv3+',
+  meson_version: '>= 0.60.0',
+  default_options: ['warning_level=1', 'buildtype=debugoptimized', 'c_std=gnu11'],
 )
 
 
@@ -23,16 +25,19 @@ systemduserdir = join_paths(systemddir, 'user')
 schemasdir = datadir / 'glib-2.0' / 'schemas'
 
 glib_ver = '2.80'
-glib_ver_str = 'GLIB_VERSION_@0@'.format(glib_ver.replace('.','_'))
+glib_ver_str = 'GLIB_VERSION_@0@'.format(glib_ver.replace('.', '_'))
 glib_ver_cmp = '>=@0@'.format(glib_ver)
 
-add_project_arguments([
-  '-DLIBFEEDBACK_USE_UNSTABLE_API',
-  '-DGLIB_VERSION_MIN_REQUIRED=@0@'.format(glib_ver_str),
-  '-DGLIB_VERSION_MAX_REQUIRED=@0@'.format(glib_ver_str),
-  '-DG_LOG_USE_STRUCTURED',
-  '-DGMOBILE_USE_UNSTABLE_API',
-], language: 'c')
+add_project_arguments(
+  [
+    '-DLIBFEEDBACK_USE_UNSTABLE_API',
+    '-DGLIB_VERSION_MIN_REQUIRED=@0@'.format(glib_ver_str),
+    '-DGLIB_VERSION_MAX_REQUIRED=@0@'.format(glib_ver_str),
+    '-DG_LOG_USE_STRUCTURED',
+    '-DGMOBILE_USE_UNSTABLE_API',
+  ],
+  language: 'c',
+)
 
 root_inc = include_directories('.')
 
@@ -81,18 +86,15 @@ if get_option('buildtype') != 'plain'
   test_c_args += '-fstack-protector-strong'
 endif
 
-foreach arg: test_c_args
+foreach arg : test_c_args
   if cc.has_multi_arguments(arg)
     global_c_args += arg
   endif
 endforeach
-add_project_arguments(
-  global_c_args,
-  language: 'c'
-)
+add_project_arguments(global_c_args, language: 'c')
 
 gnome = import('gnome')
-i18n  = import('i18n')
+i18n = import('i18n')
 
 glib_dep = dependency('glib-2.0', version: glib_ver_cmp)
 gio_dep = dependency('gio-2.0', version: glib_ver_cmp)
@@ -104,16 +106,18 @@ gtk_dep = dependency('gtk+-3.0', version: '>=3.22')
 gtk_wayland_dep = dependency('gtk+-wayland-3.0', version: '>=3.22')
 gdk_dep = dependency('gdk-3.0', version: '>=3.22')
 gdk_wayland_dep = dependency('gdk-wayland-3.0', version: '>=3.22')
-json_glib_dep =  dependency('json-glib-1.0')
-libfeedback_dep = dependency('libfeedback-0.0',
+json_glib_dep = dependency('json-glib-1.0')
+libfeedback_dep = dependency(
+  'libfeedback-0.0',
   fallback: ['libfeedback', 'libfeedback_dep'],
-  default_options: ['introspection=disabled', 'daemon=false', 'gtk_doc=false']
-  )
-libhandy_dep = dependency('libhandy-1',
+  default_options: ['introspection=disabled', 'daemon=false', 'gtk_doc=false'],
+)
+libhandy_dep = dependency(
+  'libhandy-1',
   version: '>=1.1.90',
   fallback: ['libhandy', 'libhandy_dep'],
-  default_options: ['introspection=disabled']
-			 )
+  default_options: ['introspection=disabled'],
+)
 libsystemd_dep = dependency('libsystemd', 'libelogind', version: '>= 241')
 wayland_client_dep = dependency('wayland-client', version: '>=1.14')
 wayland_protos_dep = dependency('wayland-protocols', version: '>=1.12')
@@ -156,18 +160,12 @@ config_h.set('POS_HAVE_PRESAGE2', presage2_dep.found())
 config_h.set('POS_HAVE_VARNAM', varnam_dep.found())
 config_h.set_quoted('POS_DEFAULT_COMPLETER', default_completer)
 
-configure_file(
-  output: 'pos-config.h',
-  configuration: config_h,
-)
+configure_file(output: 'pos-config.h', configuration: config_h)
 
 run_data = configuration_data()
 run_data.set('ABS_BUILDDIR', meson.current_build_dir())
 run_data.set('ABS_SRCDIR', meson.current_source_dir())
-configure_file(
-  input: 'run.in',
-  output: 'run',
-  configuration: run_data)
+configure_file(input: 'run.in', output: 'run', configuration: run_data)
 
 subdir('data')
 subdir('po')
@@ -176,16 +174,18 @@ subdir('src')
 subdir('tests')
 subdir('doc')
 
-summary({
-   'Tests': get_option('tests'),
-   'Documentation': get_option('gtk_doc'),
-   'Manpages': get_option('man'),
+summary(
+  {
+    'Tests': get_option('tests'),
+    'Documentation': get_option('gtk_doc'),
+    'Manpages': get_option('man'),
   },
   bool_yn: true,
   section: 'Build',
 )
 
-summary({
+summary(
+  {
     'Default': default_completer,
     'Presage': presage_dep.found(),
     'Fzf': fzf.found(),
@@ -196,18 +196,11 @@ summary({
   section: 'Completers',
 )
 
-summary({
-   'Use as default OSK': get_option('default_osk'),
-  },
-  bool_yn: true,
-  section: 'Run',
-)
+summary({'Use as default OSK': get_option('default_osk')}, bool_yn: true, section: 'Run')
 
 # gnome.post_install() is available since meson 0.59.0
 # Distributions use their own tooling (e.g. postinst, triggers, etc)
 # so it is okay if the post_install() is not run on distro builds
 if meson.version().version_compare('>=0.59.0')
-  gnome.post_install(
-    glib_compile_schemas: true,
-  )
+  gnome.post_install(glib_compile_schemas: true)
 endif
