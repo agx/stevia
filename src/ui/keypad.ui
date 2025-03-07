@@ -5,14 +5,10 @@
   <template class="PosKeypad" parent="GtkBin">
     <child>
       <object class="GtkGrid" id="grid">
-        <property name="visible">True</property>
-        <property name="hexpand">True</property>
-        <property name="vexpand">False</property>
-        <property name="column-spacing">0</property>
-        <property name="row-spacing">0</property>
-        <property name="halign">fill</property>
-        <property name="row-homogeneous">True</property>
-        <property name="column-homogeneous">True</property>
+        <property name="visible">1</property>
+        <property name="hexpand">1</property>
+        <property name="row-homogeneous">1</property>
+        <property name="column-homogeneous">1</property>
         <child>
           <object class="PosKeypadButton" id="btn_1">
             <property name="symbols">1</property>
@@ -134,7 +130,7 @@
           <object class="GtkButton" id="btn_asterisk">
             <property name="visible">1</property>
             <property name="sensitive" bind-source="PosKeypad" bind-property="symbols-visible" bind-flags="sync-create"/>
-            <property name="focus-on-click">False</property>
+            <property name="focus-on-click">0</property>
             <signal name="clicked" handler="on_asterisk_clicked" swapped="yes"/>
             <child>
               <object class="GtkLabel" id="label_asterisk">
@@ -168,7 +164,7 @@
           <object class="GtkButton" id="btn_hash">
             <property name="visible">1</property>
             <property name="sensitive" bind-source="PosKeypad" bind-property="symbols-visible" bind-flags="sync-create"/>
-            <property name="focus-on-click">False</property>
+            <property name="focus-on-click">0</property>
             <signal name="clicked" handler="on_hash_clicked" swapped="yes"/>
             <child>
               <object class="GtkLabel" id="label_hash">
@@ -185,7 +181,6 @@
             <property name="top-attach">3</property>
           </packing>
         </child>
-
         <child>
           <object class="GtkButton">
             <property name="visible">1</property>
