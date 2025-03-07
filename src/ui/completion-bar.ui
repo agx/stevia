@@ -7,13 +7,12 @@
     <property name="height-request">32</property>
     <child>
       <object class="GtkButton">
-        <property name="visible">True</property>
+        <property name="visible">1</property>
         <property name="halign">start</property>
-        <property name="hexpand">False</property>
         <property name="action-name">win.clipboard-paste</property>
         <child>
           <object class="GtkImage">
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="icon-name">edit-paste-symbolic</property>
           </object>
         </child>
@@ -21,11 +20,9 @@
     </child>
     <child>
       <object class="GtkBox" id="buttons">
-        <property name="visible">True</property>
-        <property name="orientation">horizontal</property>
-        <property name="hexpand">True</property>
-        <property name="halign">fill</property>
-        <property name="homogeneous">True</property>
+        <property name="visible">1</property>
+        <property name="hexpand">1</property>
+        <property name="homogeneous">1</property>
       </object>
     </child>
   </template>
