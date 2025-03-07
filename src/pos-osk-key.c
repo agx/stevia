@@ -381,6 +381,23 @@ pos_osk_key_get_label (PosOskKey *self)
 }
 
 /**
+ * pos_osk_key_get_icon:
+ * @self: The key
+ *
+ * Get the icon to be rendered on the key. This can be `NULL` if the
+ * key uses a label.
+ *
+ * Returns:(nullable) The icon
+ */
+const char *
+pos_osk_key_get_icon (PosOskKey *self)
+{
+  g_return_val_if_fail (POS_IS_OSK_KEY (self), NULL);
+
+  return self->icon;
+}
+
+/**
  * pos_osk_key_get_symbol:
  * @self: The key
  *

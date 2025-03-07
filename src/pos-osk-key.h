@@ -33,6 +33,7 @@ PosOskKeyUse        pos_osk_key_get_use (PosOskKey *self);
 gboolean            pos_osk_key_get_pressed (PosOskKey *self);
 void                pos_osk_key_set_pressed (PosOskKey *self, gboolean pressed);
 const char         *pos_osk_key_get_label (PosOskKey *self);
+const char         *pos_osk_key_get_icon (PosOskKey *self);
 const char         *pos_osk_key_get_symbol (PosOskKey *self);
 PosOskWidgetLayer   pos_osk_key_get_layer (PosOskKey *self);
 GStrv               pos_osk_key_get_symbols (PosOskKey *self);
