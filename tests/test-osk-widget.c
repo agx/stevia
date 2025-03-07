@@ -78,14 +78,19 @@ test_switch_layer (void)
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
 
-  /* shift then symbols switches to symbols layer… */
+  /* shift then symbols switches to symbols2 layer… */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
   switch_layer (osk_widget, shift);
+  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_CAPS);
   switch_layer (osk_widget, symbols);
-  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
+  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS2);
   /* … symbols then back to normal */
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
+  /* shift on symbols2 goes back to symbols */
+  pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_SYMBOLS2);
+  switch_layer (osk_widget, shift);
+  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
 
   /* shift switches caps lock back to normal */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
@@ -100,7 +105,7 @@ test_switch_layer (void)
   set_caps_lock (osk_widget, TRUE);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_CAPS);
   switch_layer (osk_widget, symbols);
-  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
+  g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS2);
   g_assert_false (osk_widget->caps_lock);
 }
 

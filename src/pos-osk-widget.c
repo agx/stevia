@@ -675,19 +675,38 @@ pos_osk_widget_get_property (GObject    *object,
   }
 }
 
-
+/**
+ * select_symbols2:
+ * @self: The osk widget
+ * @key: The pressed key
+ *
+ * Check whether we should switch into or out of the symbols2 layer. If the layer
+ * didn't change, the current layer is returned.
+ *
+ * Returns: The resulting layer.
+ */
 static PosOskWidgetLayer
 select_symbols2 (PosOskWidget *self, PosOskKey *key)
 {
-  /* Only shift key can toggle symbols2 */
-  if (pos_osk_key_get_layer (key) != POS_OSK_WIDGET_LAYER_CAPS)
-    return self->layer;
-
-  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS)
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_CAPS) {
     return POS_OSK_WIDGET_LAYER_SYMBOLS2;
+  }
 
-  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2)
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_CAPS &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_SYMBOLS) {
+    return POS_OSK_WIDGET_LAYER_SYMBOLS2;
+  }
+
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2 &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_CAPS) {
     return POS_OSK_WIDGET_LAYER_SYMBOLS;
+  }
+
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2 &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_SYMBOLS) {
+    return POS_OSK_WIDGET_LAYER_NORMAL;
+  }
 
   return self->layer;
 }
