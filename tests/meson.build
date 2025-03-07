@@ -6,7 +6,7 @@ if get_option('tests')
   test_env.set('NO_AT_BRIDGE', '1')
   test_env.set('GSETTINGS_BACKEND', 'memory')
 
-  tests = ['grab-word', 'load-layouts', 'capitalize-by-template']
+  tests = ['grab-word', 'load-layouts', 'capitalize-by-template', 'osk-widget']
 
   foreach name : tests
     name = 'test-@0@'.format(name)

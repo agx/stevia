@@ -707,7 +707,7 @@ pos_osk_widget_set_key_pressed (PosOskWidget *self, PosOskKey *key, gboolean pre
 static void
 switch_layer (PosOskWidget *self, PosOskKey *key)
 {
-  PosOskWidgetLayer new_layer = self->layer;
+  PosOskWidgetLayer new_layer;
   PosOskWidgetLayer layer = pos_osk_key_get_layer (key);
 
   if (pos_osk_key_get_use (key) == POS_OSK_KEY_USE_TOGGLE) {
@@ -730,8 +730,10 @@ switch_layer (PosOskWidget *self, PosOskKey *key)
     }
     self->caps_lock = FALSE;
     /* Reset caps layer on every (non toggle) key press */
-  } else if (new_layer == POS_OSK_WIDGET_LAYER_CAPS && !self->caps_lock) {
+  } else if (self->layer == POS_OSK_WIDGET_LAYER_CAPS && !self->caps_lock) {
     new_layer = POS_OSK_WIDGET_LAYER_NORMAL;
+  } else {
+    return;
   }
 
   pos_osk_widget_set_layer (self, new_layer);
