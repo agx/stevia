@@ -12,8 +12,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_1">
             <property name="symbols">1</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -25,8 +25,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_2">
             <property name="symbols">2ABC</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -38,8 +38,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_3">
             <property name="symbols">3DEF</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -51,8 +51,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_4">
             <property name="symbols">4GHI</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -64,8 +64,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_5">
             <property name="symbols">5JKL</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -77,8 +77,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_6">
             <property name="symbols">6MNO</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -90,8 +90,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_7">
             <property name="symbols">7PQRS</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -103,8 +103,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_8">
             <property name="symbols">8TUV</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -116,8 +116,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_9">
             <property name="symbols">9WXYZ</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="letters-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
@@ -150,8 +150,8 @@
         <child>
           <object class="PosKeypadButton" id="btn_0">
             <property name="symbols">0+</property>
-            <property name="visible">True</property>
-            <property name="focus-on-click">False</property>
+            <property name="visible">1</property>
+            <property name="focus-on-click">0</property>
             <property name="show-symbols" bind-source="PosKeypad" bind-property="symbols-visible" bind-flags="sync-create"/>
             <signal name="clicked" handler="on_button_clicked" swapped="true"/>
           </object>
