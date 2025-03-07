@@ -14,6 +14,25 @@
 
 #include <glib.h>
 
+
+#define pos_assert_is_shift(w, l, i) G_STMT_START{ \
+  PosOskWidgetKeyboardLayer *__layer = pos_osk_widget_get_current_layer ((w)); \
+  PosOskWidgetRow *__shift_row = pos_osk_widget_get_row (w, __layer->n_rows) - 2; \
+  PosOskKey *__shift = g_ptr_array_index (__shift_row->keys, 0); \
+  g_assert_cmpstr (pos_osk_key_get_label (__shift), ==, (l)); \
+  g_assert_cmpstr (pos_osk_key_get_icon (__shift), ==, (i)); \
+}G_STMT_END
+
+
+#define pos_assert_is_symbols(w, l) G_STMT_START{ \
+  PosOskWidgetKeyboardLayer *__layer = pos_osk_widget_get_current_layer ((w)); \
+  PosOskWidgetRow *__sym_row = pos_osk_widget_get_row (w, __layer->n_rows) - 1; \
+  PosOskKey *__sym = g_ptr_array_index (__sym_row->keys, 0); \
+  g_assert_cmpstr (pos_osk_key_get_label (__sym), ==, (l)); \
+  g_assert_null (pos_osk_key_get_icon (__sym)); \
+}G_STMT_END
+
+
 static void
 test_switch_layer (void)
 {
@@ -54,43 +73,62 @@ test_switch_layer (void)
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_CAPS);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
+  pos_assert_is_symbols (osk_widget, "={<");
   /* …and back  to normal */
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
+  pos_assert_is_symbols (osk_widget, "123");
 
   /* symbols switches to symbols layer… */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
+  pos_assert_is_shift (osk_widget, "={<", NULL);
+  pos_assert_is_symbols (osk_widget, "ABC");
   /* …and back  to normal */
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
+  pos_assert_is_symbols (osk_widget, "123");
 
   /* symbols then shift switches to symbols2 layer… */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
   switch_layer (osk_widget, symbols);
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS2);
+  pos_assert_is_shift (osk_widget, "123", NULL);
+  pos_assert_is_symbols (osk_widget, "ABC");
   /* … shift then back  to symbols */
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
+  pos_assert_is_shift (osk_widget, "={<", NULL);
+  pos_assert_is_symbols (osk_widget, "ABC");
   /* … symbols then back to normal */
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
 
   /* shift then symbols switches to symbols2 layer… */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_CAPS);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS2);
+  pos_assert_is_shift (osk_widget, "123", NULL);
+  pos_assert_is_symbols (osk_widget, "ABC");
   /* … symbols then back to normal */
   switch_layer (osk_widget, symbols);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_NORMAL);
+  pos_assert_is_shift (osk_widget, NULL, "keyboard-shift-filled-symbolic");
   /* shift on symbols2 goes back to symbols */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_SYMBOLS2);
   switch_layer (osk_widget, shift);
   g_assert_cmpint (pos_osk_widget_get_layer (osk_widget), ==, POS_OSK_WIDGET_LAYER_SYMBOLS);
+  pos_assert_is_shift (osk_widget, "={<", NULL);
+  pos_assert_is_symbols (osk_widget, "ABC");
 
   /* shift switches caps lock back to normal */
   pos_osk_widget_set_layer (osk_widget, POS_OSK_WIDGET_LAYER_NORMAL);

@@ -326,15 +326,31 @@ add_common_keys_pre (PosOskWidget      *self,
                      guint              max_rows)
 {
   PosOskKey *key;
-  const char *label;
 
   if (rownum == max_rows - 2) {
     /* Only add a shift key to the normal layer if we have a caps layer */
     if (layer != POS_OSK_WIDGET_LAYER_NORMAL ||
         self->layout.layers[POS_OSK_WIDGET_LAYER_CAPS].width > 0.0) {
+      const char *label, *icon;
+      switch (layer) {
+      case POS_OSK_WIDGET_LAYER_SYMBOLS:
+        label = "={<";
+        icon = NULL;
+        break;
+      case POS_OSK_WIDGET_LAYER_SYMBOLS2:
+        label = "123";
+        icon = NULL;
+        break;
+      case POS_OSK_WIDGET_LAYER_NORMAL:
+      case POS_OSK_WIDGET_LAYER_CAPS:
+      default:
+        label = NULL;
+        icon = "keyboard-shift-filled-symbolic";
+      }
       key = g_object_new (POS_TYPE_OSK_KEY,
                           "use", POS_OSK_KEY_USE_TOGGLE,
-                          "icon", "keyboard-shift-filled-symbolic",
+                          "label", label,
+                          "icon", icon,
                           "width", 1.5,
                           "style", "toggle",
                           "layer", POS_OSK_WIDGET_LAYER_CAPS,
@@ -343,6 +359,8 @@ add_common_keys_pre (PosOskWidget      *self,
       g_ptr_array_insert (row->keys, 0, key);
     }
   } else if (rownum == max_rows - 1) {
+    const char *label;
+
     key = g_object_new (POS_TYPE_OSK_KEY,
                         "use", POS_OSK_KEY_USE_MENU,
                         "icon", "layout-menu-symbolic",
@@ -352,7 +370,18 @@ add_common_keys_pre (PosOskWidget      *self,
     row->width += pos_osk_key_get_width (key);
     g_ptr_array_insert (row->keys, 0, key);
 
-    label = (layer == POS_OSK_WIDGET_LAYER_SYMBOLS) ? "ABC" : "123";
+    switch (layer) {
+    case POS_OSK_WIDGET_LAYER_SYMBOLS:
+    case POS_OSK_WIDGET_LAYER_SYMBOLS2:
+      label = "ABC";
+      break;
+    case POS_OSK_WIDGET_LAYER_CAPS:
+      label = "={<";
+      break;
+    case POS_OSK_WIDGET_LAYER_NORMAL:
+    default:
+      label = "123";
+    }
     key = g_object_new (POS_TYPE_OSK_KEY,
                         "label", label,
                         "use", POS_OSK_KEY_USE_TOGGLE,
