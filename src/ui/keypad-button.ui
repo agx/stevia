@@ -5,14 +5,13 @@
     <property name="width-request">80</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <property name="valign">center</property>
         <property name="margin">3</property>
         <child>
           <object class="GtkLabel" id="label">
-            <property name="visible">True</property>
-            <property name="label"></property>
+            <property name="visible">1</property>
             <style>
               <class name="digit"/>
             </style>
@@ -20,9 +19,8 @@
         </child>
         <child>
           <object class="GtkLabel" id="secondary_label">
-            <property name="visible">True</property>
-            <property name="no-show-all">True</property>
-            <property name="label"></property>
+            <property name="visible">1</property>
+            <property name="no-show-all">1</property>
             <style>
               <class name="dim-label"/>
               <class name="letters"/>
