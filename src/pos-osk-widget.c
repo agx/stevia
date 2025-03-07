@@ -1739,7 +1739,7 @@ parse_lang (PosOskWidget *self, const char *layout, const char *variant)
  * @display_name: The display name. Should be used when displaying layout information
  *    to the user. (E.g. 'English (US)')
  * @layout: The name of the layout. to set e.g. `jp`, `de`, 'terminal'
- * @variant: The layout variant to set , e.g. `ch`
+ * @variant:(nullable): The layout variant to set , e.g. `ch`
  * @err: The error location
  *
  * Sets the widgets keyboard layout.
