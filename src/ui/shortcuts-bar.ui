@@ -2,21 +2,19 @@
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <template class="PosShortcutsBar" parent="GtkBox">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
+    <property name="visible">1</property>
     <property name="height-request">32</property>
     <child>
       <object class="GtkScrolledWindow" id="scrolled_window">
-        <property name="visible">True</property>
-        <property name="hexpand">True</property>
+        <property name="visible">1</property>
+        <property name="hexpand">1</property>
         <property name="vscrollbar-policy">never</property>
         <property name="min-content-width">200</property>
         <child>
           <object class="GtkFlowBox" id="shortcuts_box">
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="orientation">vertical</property>
-            <property name="hexpand">True</property>
-            <property name="activate-on-single-click">True</property>
+            <property name="hexpand">1</property>
             <property name="selection-mode">none</property>
             <property name="halign">center</property>
           </object>

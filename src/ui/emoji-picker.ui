@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <interface>
-  <requires lib="gtk+" version="3.20"/>>
+  <requires lib="gtk+" version="3.20"/>
   <template class="PosEmojiPicker" parent="GtkBox">
     <child>
       <object class="GtkBox">
@@ -18,7 +18,6 @@
             <child>
               <object class="GtkBox" id="emoji_box">
                 <property name="visible">1</property>
-                <property name="orientation">horizontal</property>
                 <property name="margin">6</property>
                 <property name="spacing">6</property>
                 <property name="vexpand">1</property>
@@ -36,7 +35,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="people.box">
                     <property name="visible">1</property>
@@ -51,7 +49,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="body.box">
                     <property name="visible">1</property>
@@ -66,7 +63,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="nature.box">
                     <property name="visible">1</property>
@@ -81,14 +77,12 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="food.box">
                     <property name="visible">1</property>
                     <property name="homogeneous">1</property>
                     <property name="selection-mode">none</property>
                     <property name="orientation">vertical</property>
-
                     <signal name="child-activated" handler="on_emoji_activated"/>
                   </object>
                 </child>
@@ -97,7 +91,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="travel.box">
                     <property name="visible">1</property>
@@ -112,7 +105,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="activities.box">
                     <property name="visible">1</property>
@@ -127,7 +119,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="objects.box">
                     <property name="visible">1</property>
@@ -142,7 +133,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="symbols.box">
                     <property name="visible">1</property>
@@ -157,7 +147,6 @@
                     <property name="visible">1</property>
                   </object>
                 </child>
-
                 <child>
                   <object class="GtkFlowBox" id="flags.box">
                     <property name="visible">1</property>
@@ -187,13 +176,12 @@
                 </style>
               </object>
             </child>
-
             <child>
               <object class="GtkScrolledWindow" id="scrolled_sections">
                 <property name="visible">1</property>
                 <property name="vscrollbar-policy">never</property>
                 <property name="min-content-width">200</property>
-                <property name="propagate-natural-width">True</property>
+                <property name="propagate-natural-width">1</property>
                 <style>
                   <class name="view"/>
                 </style>
@@ -345,7 +333,6 @@
                 </child>
               </object>
             </child>
-
             <child>
               <object class="GtkButton" id="backspace">
                 <property name="visible">1</property>

@@ -2,15 +2,15 @@
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <template class="PosInputSurface" parent="PhoshLayerSurface">
-    <property name="can-focus">False</property>
+    <property name="can-focus">0</property>
     <child>
       <object class="HdyClamp">
-        <property name="visible">True</property>
+        <property name="visible">1</property>
         <property name="maximum-size">1024</property>
         <property name="tightening-threshold">1024</property>
         <child>
           <object class="GtkBox">
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="PosCompletionBar" id="completion_bar">
@@ -18,29 +18,26 @@
                 <signal name="selected" handler="on_completion_selected" object="PosInputSurface" swapped="yes"/>
               </object>
             </child>
-
             <child>
               <object class="PosShortcutsBar" id="shortcuts_bar">
-                <property name="visible">False</property>
+                <property name="visible">0</property>
                 <signal name="shortcut-activated" handler="on_shortcut_activated" object="PosInputSurface" swapped="yes"/>
                 <signal name="notify::latched-modifiers" handler="on_latched_modifiers_changed" object="PosInputSurface" swapped="yes"/>
                 <signal name="notify::num-shortcuts" handler="on_num_shortcuts_changed" object="PosInputSurface" swapped="yes"/>
               </object>
             </child>
-
             <child>
               <object class="HdyDeck" id="deck">
-                <property name="visible">True</property>
-                <property name="vexpand">True</property>
+                <property name="visible">1</property>
+                <property name="vexpand">1</property>
                 <property name="valign">end</property>
-                <property name="can-swipe-back">True</property>
-                <property name="can-swipe-forward">True</property>
+                <property name="can-swipe-back">1</property>
+                <property name="can-swipe-forward">1</property>
                 <signal name="notify::visible-child" handler="on_visible_child_changed" object="PosInputSurface" swapped="yes"/>
-
+                <!-- The terminal layout -->
                 <child>
-                  <!-- The terminal layout -->
                   <object class="PosOskWidget" id="osk_terminal">
-                    <property name="visible">True</property>
+                    <property name="visible">1</property>
                     <signal name="key-down" handler="on_osk_key_down" object="PosInputSurface" swapped="yes"/>
                     <signal name="key-symbol" handler="on_osk_key_symbol" object="PosInputSurface" swapped="yes"/>
                     <signal name="notify::mode" handler="on_osk_mode_changed" object="PosInputSurface" swapped="yes"/>
@@ -48,43 +45,37 @@
                     <signal name="popover-hidden" handler="on_osk_popover_hidden" object="PosInputSurface" swapped="yes"/>
                   </object>
                 </child>
-
                 <child>
                   <object class="PosEmojiPicker" id="emoji_picker">
-                    <property name="visible">True</property>
+                    <property name="visible">1</property>
                     <signal name="delete-last" handler="on_emoji_picker_delete_last" object="PosInputSurface" swapped="yes"/>
                     <signal name="done" handler="on_emoji_picker_done" object="PosInputSurface" swapped="yes"/>
                     <signal name="emoji-picked" handler="on_emoji_picked" object="PosInputSurface" swapped="yes"/>
                   </object>
                 </child>
-
                 <child>
                   <object class="PosKeypad" id="keypad">
-                    <property name="visible">True</property>
+                    <property name="visible">1</property>
                     <signal name="done" handler="on_keypad_done" object="PosInputSurface" swapped="yes"/>
                     <signal name="key" handler="on_osk_key_symbol" object="PosInputSurface" swapped="yes"/>
                   </object>
                 </child>
-
               </object>
             </child>
-
           </object>
         </child>
-
       </object>
     </child>
   </template>
-
   <object class="GtkPopoverMenu" id="menu_popup">
     <property name="name">pos-menu-popup</property>
     <child>
       <object class="GtkBox">
-        <property name="visible">True</property>
+        <property name="visible">1</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox" id="menu_box_layouts">
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="orientation">vertical</property>
           </object>
         </child>
@@ -95,18 +86,18 @@
         </child>
         <child>
           <object class="GtkBox" id="menu_box_config">
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="orientation">vertical</property>
             <child>
               <object class="GtkModelButton" id="word_completion_btn">
-                <property name="visible">True</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Word completion</property>
                 <property name="action-name">win.word-completion</property>
               </object>
             </child>
             <child>
               <object class="GtkButton">
-                <property name="visible">True</property>
+                <property name="visible">1</property>
                 <property name="label" translatable="yes">Keyboard Settings</property>
                 <property name="action-name">win.settings</property>
                 <style>
@@ -116,23 +107,22 @@
             </child>
           </object>
         </child>
-
         <child>
           <object class="GtkButtonBox">
             <property name="name">cutnpaste</property>
             <property name="halign">center</property>
-            <property name="visible">True</property>
+            <property name="visible">1</property>
             <property name="margin-top">6</property>
             <property name="margin-bottom">6</property>
             <property name="layout-style">center</property>
             <child>
               <object class="GtkButton">
-                <property name="visible">True</property>
+                <property name="visible">1</property>
                 <property name="action-name">win.clipboard-paste</property>
-                <property name="hexpand">True</property>
+                <property name="hexpand">1</property>
                 <child>
                   <object class="GtkImage">
-                    <property name="visible">True</property>
+                    <property name="visible">1</property>
                     <property name="icon-name">edit-paste-symbolic</property>
                   </object>
                 </child>
@@ -143,7 +133,6 @@
             </child>
           </object>
         </child>
-
       </object>
     </child>
   </object>
