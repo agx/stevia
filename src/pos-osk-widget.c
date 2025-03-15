@@ -326,15 +326,31 @@ add_common_keys_pre (PosOskWidget      *self,
                      guint              max_rows)
 {
   PosOskKey *key;
-  const char *label;
 
   if (rownum == max_rows - 2) {
     /* Only add a shift key to the normal layer if we have a caps layer */
     if (layer != POS_OSK_WIDGET_LAYER_NORMAL ||
         self->layout.layers[POS_OSK_WIDGET_LAYER_CAPS].width > 0.0) {
+      const char *label, *icon;
+      switch (layer) {
+      case POS_OSK_WIDGET_LAYER_SYMBOLS:
+        label = "={<";
+        icon = NULL;
+        break;
+      case POS_OSK_WIDGET_LAYER_SYMBOLS2:
+        label = "123";
+        icon = NULL;
+        break;
+      case POS_OSK_WIDGET_LAYER_NORMAL:
+      case POS_OSK_WIDGET_LAYER_CAPS:
+      default:
+        label = NULL;
+        icon = "keyboard-shift-filled-symbolic";
+      }
       key = g_object_new (POS_TYPE_OSK_KEY,
                           "use", POS_OSK_KEY_USE_TOGGLE,
-                          "icon", "keyboard-shift-filled-symbolic",
+                          "label", label,
+                          "icon", icon,
                           "width", 1.5,
                           "style", "toggle",
                           "layer", POS_OSK_WIDGET_LAYER_CAPS,
@@ -343,6 +359,8 @@ add_common_keys_pre (PosOskWidget      *self,
       g_ptr_array_insert (row->keys, 0, key);
     }
   } else if (rownum == max_rows - 1) {
+    const char *label;
+
     key = g_object_new (POS_TYPE_OSK_KEY,
                         "use", POS_OSK_KEY_USE_MENU,
                         "icon", "layout-menu-symbolic",
@@ -352,7 +370,18 @@ add_common_keys_pre (PosOskWidget      *self,
     row->width += pos_osk_key_get_width (key);
     g_ptr_array_insert (row->keys, 0, key);
 
-    label = (layer == POS_OSK_WIDGET_LAYER_SYMBOLS) ? "ABC" : "123";
+    switch (layer) {
+    case POS_OSK_WIDGET_LAYER_SYMBOLS:
+    case POS_OSK_WIDGET_LAYER_SYMBOLS2:
+      label = "ABC";
+      break;
+    case POS_OSK_WIDGET_LAYER_CAPS:
+      label = "={<";
+      break;
+    case POS_OSK_WIDGET_LAYER_NORMAL:
+    default:
+      label = "123";
+    }
     key = g_object_new (POS_TYPE_OSK_KEY,
                         "label", label,
                         "use", POS_OSK_KEY_USE_TOGGLE,
@@ -675,19 +704,38 @@ pos_osk_widget_get_property (GObject    *object,
   }
 }
 
-
+/**
+ * select_symbols2:
+ * @self: The osk widget
+ * @key: The pressed key
+ *
+ * Check whether we should switch into or out of the symbols2 layer. If the layer
+ * didn't change, the current layer is returned.
+ *
+ * Returns: The resulting layer.
+ */
 static PosOskWidgetLayer
 select_symbols2 (PosOskWidget *self, PosOskKey *key)
 {
-  /* Only shift key can toggle symbols2 */
-  if (pos_osk_key_get_layer (key) != POS_OSK_WIDGET_LAYER_CAPS)
-    return self->layer;
-
-  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS)
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_CAPS) {
     return POS_OSK_WIDGET_LAYER_SYMBOLS2;
+  }
 
-  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2)
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_CAPS &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_SYMBOLS) {
+    return POS_OSK_WIDGET_LAYER_SYMBOLS2;
+  }
+
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2 &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_CAPS) {
     return POS_OSK_WIDGET_LAYER_SYMBOLS;
+  }
+
+  if (pos_osk_widget_get_layer (self) == POS_OSK_WIDGET_LAYER_SYMBOLS2 &&
+      pos_osk_key_get_layer (key) == POS_OSK_WIDGET_LAYER_SYMBOLS) {
+    return POS_OSK_WIDGET_LAYER_NORMAL;
+  }
 
   return self->layer;
 }
@@ -707,7 +755,7 @@ pos_osk_widget_set_key_pressed (PosOskWidget *self, PosOskKey *key, gboolean pre
 static void
 switch_layer (PosOskWidget *self, PosOskKey *key)
 {
-  PosOskWidgetLayer new_layer = self->layer;
+  PosOskWidgetLayer new_layer;
   PosOskWidgetLayer layer = pos_osk_key_get_layer (key);
 
   if (pos_osk_key_get_use (key) == POS_OSK_KEY_USE_TOGGLE) {
@@ -730,8 +778,10 @@ switch_layer (PosOskWidget *self, PosOskKey *key)
     }
     self->caps_lock = FALSE;
     /* Reset caps layer on every (non toggle) key press */
-  } else if (new_layer == POS_OSK_WIDGET_LAYER_CAPS && !self->caps_lock) {
+  } else if (self->layer == POS_OSK_WIDGET_LAYER_CAPS && !self->caps_lock) {
     new_layer = POS_OSK_WIDGET_LAYER_NORMAL;
+  } else {
+    return;
   }
 
   pos_osk_widget_set_layer (self, new_layer);
@@ -1739,7 +1789,7 @@ parse_lang (PosOskWidget *self, const char *layout, const char *variant)
  * @display_name: The display name. Should be used when displaying layout information
  *    to the user. (E.g. 'English (US)')
  * @layout: The name of the layout. to set e.g. `jp`, `de`, 'terminal'
- * @variant: The layout variant to set , e.g. `ch`
+ * @variant:(nullable): The layout variant to set , e.g. `ch`
  * @err: The error location
  *
  * Sets the widgets keyboard layout.

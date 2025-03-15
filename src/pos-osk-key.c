@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2022 Purism SPC
+ *               2025 The Phosh Developers
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -171,9 +172,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * What the key is used for.
    */
   props[PROP_USE] =
-    g_param_spec_enum ("use",
-                       "",
-                       "",
+    g_param_spec_enum ("use", "", "",
                        POS_TYPE_OSK_KEY_USE,
                        FALSE,
                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
@@ -183,12 +182,8 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * Width of key in "key units" (smallest key width).
    */
   props[PROP_WIDTH] =
-    g_param_spec_double ("width",
-                         "",
-                         "",
-                         1.0,
-                         10.0,
-                         1.0,
+    g_param_spec_double ("width", "", "",
+                         1.0, 10.0, 1.0,
                          G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
   /**
    * PosOskKey:symbol
@@ -196,9 +191,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * The symbol the key represents.
    */
   props[PROP_SYMBOL] =
-    g_param_spec_string ("symbol",
-                         "",
-                         "",
+    g_param_spec_string ("symbol", "", "",
                          NULL,
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -207,9 +200,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * Additional symbols the key represents (e.g. ä over a)
    */
   props[PROP_SYMBOLS] =
-    g_param_spec_boxed ("symbols",
-                        "",
-                        "",
+    g_param_spec_boxed ("symbols", "", "",
                         G_TYPE_STRV,
                         G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -218,9 +209,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * the label that is shown on the key. If unset the PosOskKey:symbol is used instead.
    */
   props[PROP_LABEL] =
-    g_param_spec_string ("label",
-                         "",
-                         "",
+    g_param_spec_string ("label", "", "",
                          NULL,
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -229,9 +218,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * the icon that is shown on the key.
    */
   props[PROP_ICON] =
-    g_param_spec_string ("icon",
-                         "",
-                         "",
+    g_param_spec_string ("icon", "", "",
                          NULL,
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -240,9 +227,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * Additional style classes
    */
   props[PROP_STYLE] =
-    g_param_spec_string ("style",
-                         "",
-                         "",
+    g_param_spec_string ("style", "", "",
                          NULL,
                          G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -251,9 +236,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * The layer the key toggles (if any)
    */
   props[PROP_LAYER] =
-    g_param_spec_enum ("layer",
-                       "",
-                       "",
+    g_param_spec_enum ("layer", "", "",
                        POS_TYPE_OSK_WIDGET_LAYER,
                        FALSE,
                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
@@ -263,9 +246,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * Whether the key expands to use free space in available in a row
    */
   props[PROP_EXPAND] =
-    g_param_spec_boolean ("expand",
-                          "",
-                          "",
+    g_param_spec_boolean ("expand", "", "",
                           FALSE,
                           G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
@@ -274,9 +255,7 @@ pos_osk_key_class_init (PosOskKeyClass *klass)
    * Whether the key is currently pressed
    */
   props[PROP_PRESSED] =
-    g_param_spec_boolean ("pressed",
-                          "",
-                          "",
+    g_param_spec_boolean ("pressed", "", "",
                           FALSE,
                           G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
@@ -299,7 +278,13 @@ pos_osk_key_new (const char *symbol)
   return POS_OSK_KEY (g_object_new (POS_TYPE_OSK_KEY, "symbol", symbol, NULL));
 }
 
-
+/**
+ * pos_osk_key_set_width:
+ * @self: The key
+ * @double: The key's width
+ *
+ * Sets the key's width in key units.
+ */
 void
 pos_osk_key_set_width (PosOskKey *self, double width)
 {
@@ -310,7 +295,14 @@ pos_osk_key_set_width (PosOskKey *self, double width)
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_WIDTH]);
 }
 
-
+/**
+ * pos_osk_key_get_width:
+ * @self: The key
+ *
+ * Gets the key's width in key units. See also [method@OskKey.get_box].
+ *
+ * Returns: The key's width
+ */
 double
 pos_osk_key_get_width (PosOskKey *self)
 {
@@ -319,7 +311,15 @@ pos_osk_key_get_width (PosOskKey *self)
   return self->width;
 }
 
-
+/**
+ * pos_osk_key_get_use:
+ * @self: The key
+ *
+ * Get what the key is used for (regular key, toggle another layer,
+ * etc.)
+ *
+ * Return: The key's use
+ */
 PosOskKeyUse
 pos_osk_key_get_use (PosOskKey *self)
 {
@@ -328,7 +328,14 @@ pos_osk_key_get_use (PosOskKey *self)
   return self->use;
 }
 
-
+/**
+ * pos_osk_key_get_pressed:
+ * @self: The key
+ *
+ * Gets the key's pressed state.
+ *
+ * Returns: Whether the key is pressed
+ */
 gboolean
 pos_osk_key_get_pressed (PosOskKey *self)
 {
@@ -337,7 +344,13 @@ pos_osk_key_get_pressed (PosOskKey *self)
   return self->pressed;
 }
 
-
+/**
+ * pos_osk_key_set_pressed:
+ * @self: The key
+ * @pressed: Whether the key is pressed
+ *
+ * Marks the key as currently pressed.
+ */
 void
 pos_osk_key_set_pressed (PosOskKey *self, gboolean pressed)
 {
@@ -350,7 +363,15 @@ pos_osk_key_set_pressed (PosOskKey *self, gboolean pressed)
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_PRESSED]);
 }
 
-
+/**
+ * pos_osk_key_get_label:
+ * @self: The key
+ *
+ * Get the label to be rendered on the key. This can differ from the
+ * key's primary symbol and it can be `NULL` if the key uses an icon.
+ *
+ * Returns: The key's label
+ */
 const char *
 pos_osk_key_get_label (PosOskKey *self)
 {
@@ -359,7 +380,31 @@ pos_osk_key_get_label (PosOskKey *self)
   return self->label;
 }
 
+/**
+ * pos_osk_key_get_icon:
+ * @self: The key
+ *
+ * Get the icon to be rendered on the key. This can be `NULL` if the
+ * key uses a label.
+ *
+ * Returns:(nullable) The icon
+ */
+const char *
+pos_osk_key_get_icon (PosOskKey *self)
+{
+  g_return_val_if_fail (POS_IS_OSK_KEY (self), NULL);
 
+  return self->icon;
+}
+
+/**
+ * pos_osk_key_get_symbol:
+ * @self: The key
+ *
+ * Get the key's primary symbol
+ *
+ * Returns: The key symbol
+ */
 const char *
 pos_osk_key_get_symbol (PosOskKey *self)
 {
@@ -368,7 +413,14 @@ pos_osk_key_get_symbol (PosOskKey *self)
   return self->symbol;
 }
 
-
+/**
+ * pos_osk_key_get_layer:
+ * @self: The key
+ *
+ * Get the layer a key is in.
+ *
+ * Returns: The key's layer
+ */
 PosOskWidgetLayer
 pos_osk_key_get_layer (PosOskKey *self)
 {
@@ -376,7 +428,6 @@ pos_osk_key_get_layer (PosOskKey *self)
 
   return self->layer;
 }
-
 
 /**
  * pos_osk_key_get_symbols:
@@ -395,14 +446,27 @@ pos_osk_key_get_symbols (PosOskKey *self)
   return self->symbols;
 }
 
-
+/**
+ * pos_osk_key_set_box:
+ * @self: The key
+ * @box: The key's box
+ *
+ * Set the keys box. This specifies the key's position and size.
+ */
 void
 pos_osk_key_set_box (PosOskKey *self, const GdkRectangle *box)
 {
   memmove (&self->box, box, sizeof (self->box));
 }
 
-
+/**
+ * pos_osk_key_get_box:
+ * @self: The key
+ *
+ * Get the key's position and size.
+ *
+ * Returns: The key's box
+ */
 const GdkRectangle *
 pos_osk_key_get_box (PosOskKey *self)
 {
@@ -411,6 +475,15 @@ pos_osk_key_get_box (PosOskKey *self)
   return &self->box;
 }
 
+/**
+ * pos_osk_key_get_expand:
+ * @self: The key
+ *
+ * Get whether the key expands to use free space in available in a
+ * row.
+ *
+ * Returns: The key's expand value
+ */
 gboolean
 pos_osk_key_get_expand (PosOskKey *self)
 {
