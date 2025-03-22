@@ -1,3 +1,13 @@
+phosh-osk-stub 0.46~rc1
+-----------------------
+Released March 2025
+* Improve key symbols for layer switching
+* Simplify switching to Symbols2 layer
+* Issues fixed:
+    * https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/43
+* Contributors:
+    * Guido Günther
+
 phosh-osk-stub 0.45.0
 ---------------------
 Released February 2025

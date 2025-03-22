@@ -1,3 +1,48 @@
+phosh-osk-stub (0.46~rc1) experimental; urgency=medium
+
+  * build: Update dotfiles from meta-phosh
+  * treewide: Format meson files
+  * ci: Update shared scripts to 0ed15ed
+  * ci: Check meson format
+  * char-popup: Simplify with gtk-builder-tool
+  * char-popup: Drop properties at their defaults for derived widgets
+  * completion-bar: Simplify with gtk-builder-tool
+  * completion-bar: Drop properties at their defaults for derived widgets
+  * emoji-picker: Simplify with gtk-builder-tool
+  * input-surface: Simplify with gtk-builder-tool
+  * input-surface: Simplify and drop properties at their defaults.
+    Do this for derived and Hdy widgets
+  * keypad-button: Simplify with gtk-builder-tool
+  * keypad: Simplify with gtk-builder-tool
+  * keypad: Simplify and drop properties at their defaults.
+    Do this for derived and Hdy widgets
+  * shortcuts-bar: Simplify with gtk-builder-tool
+  * shortcuts-bar: Simplify and drop properties at their defaults.
+    Do this for derived and Hdy widgets
+  * osk-widget: The variant can be NULL
+  * osk-key: Document some more methods
+  * osk-key: Add getter for `icon`
+    Will be useful in the tests
+  * tests: Simplify creating tests.
+    No need to define them individually
+  * osk-widget: Simplify logic flow a bit.
+    Don't set the new layer when it didn't change. This happened in
+    pos_osk_widget_set_layer anyway but this way it is more obvious.
+  * tests: Test layer switching.
+    Test the layer switching state machine so we don't accidentally break
+    things when making changes.
+  * osk-widget: Make it easier to switch to symbols2 layer.
+    So far one needed to press symbols -> shift. Allow shift -> symbols to
+    trigger that layer as well.
+    Also pressing the symbols key when caps lock is on triggers symbols2
+    and turns off caps lock (as all layer changes do so)
+    Closes: https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/43
+  * osk-widget: Improve key symbols.
+    Hint which symbol layer will be activated
+    Helps: https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/40
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 22 Mar 2025 09:37:21 +0100
+
 phosh-osk-stub (0.45.0) experimental; urgency=medium
 
   * Fix typo in man page
