@@ -61,6 +61,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.46.0" date="2025-03-29">
+      <description translate="no">
+        <ul>
+          <li>Improve key symbols for layer switching</li>
+          <li>Simplify switching to Symbols2 layer</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.45.0" date="2025-02-13">
       <description translate="no">
         <ul>

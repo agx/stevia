@@ -1,3 +1,9 @@
+phosh-osk-stub (0.46.0) experimental; urgency=medium
+
+  * Update metainfo
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 29 Mar 2025 14:57:24 +0100
+
 phosh-osk-stub (0.46~rc1) experimental; urgency=medium
 
   * build: Update dotfiles from meta-phosh

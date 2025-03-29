@@ -1,5 +1,5 @@
-phosh-osk-stub 0.46~rc1
------------------------
+phosh-osk-stub 0.46.0
+---------------------
 Released March 2025
 * Improve key symbols for layer switching
 * Simplify switching to Symbols2 layer
