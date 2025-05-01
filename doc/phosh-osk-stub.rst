@@ -209,6 +209,17 @@ not recommended. Instead enable it for a specific language via the
 The above would only enable govranam for Malayalam and Tamil while the
 English US layout would still use the default completer.
 
+ADDITIONAL COMPLETION SOURCES
+*****************************
+
+Completers can amend their results with matches from additional sources, the
+following ones currently exist:
+
+   - ``emoji``: Add emojis
+
+They can be enabled via the ``sm.puri.phosh.osk`` ``sources`` gsetting.
+
+
 TERMINAL SHORTCUTS
 ^^^^^^^^^^^^^^^^^^
 ``phosh-osk-stub`` can provide a row of keyboard shortcuts on the
