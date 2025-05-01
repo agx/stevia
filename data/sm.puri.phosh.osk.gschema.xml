@@ -1,7 +1,7 @@
 <schemalist>
   <schema id="sm.puri.phosh.osk"
           path="/sm/puri/phosh/osk/">
-    <key name="completion-mode" flags="sm.puri.phosh.osk.PhoshOskCompletionModeFlags">
+    <key name="completion-mode" flags="mobi.phosh.osk.PhoshOskCompletionModeFlags">
       <default>['hint']</default>
       <summary>When to enable the on screen keyboard's text completion</summary>
       <description>
@@ -10,7 +10,7 @@
       </description>
     </key>
 
-    <key name="osk-features" flags="sm.puri.phosh.osk.PhoshOskFeatures">
+    <key name="osk-features" flags="mobi.phosh.osk.PhoshOskFeatures">
       <default>[]</default>
       <summary>Features to enable on all layouts</summary>
       <description>
