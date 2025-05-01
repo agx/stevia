@@ -498,6 +498,8 @@ pos_completer_presage_init (PosCompleterPresage *self)
   self->max_completions = MAX_COMPLETIONS;
   self->preedit = g_string_new (NULL);
   self->name = "presage";
+  self->before_text = g_strdup ("");
+  self->after_text = g_strdup ("");
 }
 
 /**
