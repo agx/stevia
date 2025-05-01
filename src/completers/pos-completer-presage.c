@@ -41,6 +41,7 @@ enum {
   PROP_BEFORE_TEXT,
   PROP_AFTER_TEXT,
   PROP_COMPLETIONS,
+  PROP_DICT_DIR,
   PROP_LAST_PROP
 };
 static GParamSpec *props[PROP_LAST_PROP];
@@ -66,6 +67,7 @@ struct _PosCompleterPresage {
   char                 *presage_past;
   char                 *presage_future;
 
+  char                 *dict_dir;
   char                 *lang;
 
   gboolean              updating_preedit;
@@ -210,7 +212,7 @@ pos_completer_presage_set_language (PosCompleter *completer,
 #else
   dbfile = g_strdup_printf ("database_%s.db", lang);
 #endif
-  dbpath = g_build_path (G_DIR_SEPARATOR_S, PRESAGE_DICT_DIR, dbfile, NULL);
+  dbpath = g_build_path (G_DIR_SEPARATOR_S, self->dict_dir, dbfile, NULL);
 
   if (g_file_test (dbpath, G_FILE_TEST_EXISTS) == FALSE) {
     g_set_error (error,
@@ -269,6 +271,9 @@ pos_completer_presage_set_property (GObject      *object,
   case PROP_PREEDIT:
     pos_completer_presage_set_preedit (POS_COMPLETER (self), g_value_get_string (value));
     break;
+  case PROP_DICT_DIR:
+    self->dict_dir = g_value_dup_string (value);
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     break;
@@ -319,6 +324,7 @@ pos_completer_presage_finalize (GObject *object)
   g_clear_pointer (&self->presage_past, g_free);
   g_clear_pointer (&self->presage_future, g_free);
   g_clear_pointer (&self->lang, g_free);
+  g_clear_pointer (&self->dict_dir, g_free);
   presage_free (self->presage);
 
   G_OBJECT_CLASS (pos_completer_presage_parent_class)->finalize (object);
@@ -348,6 +354,12 @@ pos_completer_presage_class_init (PosCompleterPresageClass *klass)
 
   g_object_class_override_property (object_class, PROP_COMPLETIONS, "completions");
   props[PROP_COMPLETIONS] = g_object_class_find_property (object_class, "completions");
+
+  props[PROP_DICT_DIR] =
+    g_param_spec_string ("dict-dir", "", "",
+                         PRESAGE_DICT_DIR,
+                         G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
+  g_object_class_install_property (object_class, PROP_DICT_DIR, props[PROP_DICT_DIR]);
 }
 
 
