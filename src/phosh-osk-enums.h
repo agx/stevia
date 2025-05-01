@@ -41,4 +41,16 @@ typedef enum {
   PHOSH_OSK_FEATURE_KEY_DRAG = (1 << 0), /*< nick=key-drag >*/
 } PhoshOskFeatures;
 
+/**
+ * PhoshOskCompletionSourceFlags:
+ * @PHOSH_OSK_COMPLETION_SOURCE_NONE: No additional sources
+ * @PHOSH_OSK_COMPLETION_SOURCE_EMOJI: Add emojis to completions
+ *
+ * Additional sources for completion
+ */
+typedef enum {
+  PHOSH_OSK_COMPLETION_SOURCE_NONE = 0,
+  PHOSH_OSK_COMPLETION_SOURCE_EMOJI = (1 << 0),
+} PhoshOskCompletionSourceFlags;
+
 G_END_DECLS
