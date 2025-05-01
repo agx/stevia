@@ -18,10 +18,16 @@
       </object>
     </child>
     <child>
-      <object class="GtkBox" id="buttons">
+      <object class="GtkScrolledWindow" id="scrolled_window">
         <property name="visible">1</property>
         <property name="hexpand">1</property>
-        <property name="homogeneous">1</property>
+        <property name="vscrollbar-policy">never</property>
+        <property name="propagate-natural-width">True</property>
+        <child>
+      <object class="GtkBox" id="buttons">
+        <property name="visible">1</property>
+      </object>
+        </child>
       </object>
     </child>
   </template>
