@@ -10,18 +10,22 @@
 
 #include "pos-config.h"
 
+#include "pos-completer-base.h"
 #include "pos-completer-priv.h"
 #include "pos-completer-presage.h"
+#include "pos-emoji-db.h"
 
 #include "util.h"
 
 #include <presage.h>
 
+#include <gmobile.h>
 #include <gio/gio.h>
 
 #include <locale.h>
 
 #define MAX_COMPLETIONS 3
+#define MAX_ADDITIONAL_RESULTS 3
 
 #ifdef POS_HAVE_PRESAGE2
   #define CONFIG_NGRM_PREDICTOR "DefaultSmoothedNgramTriePredictor"
@@ -54,7 +58,7 @@ static GParamSpec *props[PROP_LAST_PROP];
  * Uses [presage](https://presage.sourceforge.io/) for completions
  */
 struct _PosCompleterPresage {
-  GObject               parent;
+  PosCompleterBase      parent;
 
   char                 *name;
   char                 *before_text;
@@ -77,21 +81,36 @@ struct _PosCompleterPresage {
 static void pos_completer_presage_interface_init (PosCompleterInterface *iface);
 static void pos_completer_presage_initable_interface_init (GInitableIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (PosCompleterPresage, pos_completer_presage, G_TYPE_OBJECT,
+G_DEFINE_TYPE_WITH_CODE (PosCompleterPresage, pos_completer_presage, POS_TYPE_COMPLETER_BASE,
                          G_IMPLEMENT_INTERFACE (POS_TYPE_COMPLETER,
                                                 pos_completer_presage_interface_init)
                          G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE,
                                                 pos_completer_presage_initable_interface_init)
   )
 
+
 static void
-pos_completer_presage_set_completions (PosCompleter *iface, GStrv completions)
+pos_completer_presage_set_completions (PosCompleter *iface,
+                                       GStrv         completions,
+                                       gboolean      additional_sources)
 {
   PosCompleterPresage *self = POS_COMPLETER_PRESAGE (iface);
+  g_auto (GStrv) additional_results = NULL;
+  g_auto (GStrv) caps_completions = NULL;
+  g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
 
+  if (additional_sources)
+    additional_results = pos_completer_base_get_additional_results (POS_COMPLETER_BASE (self),
+                                                                    self->preedit->str,
+                                                                    MAX_ADDITIONAL_RESULTS);
+
+  caps_completions = pos_completer_capitalize_by_template (self->preedit->str, completions);
+  if (caps_completions)
+    g_strv_builder_addv (builder, (const char **)caps_completions);
+  if (additional_results)
+    g_strv_builder_addv (builder, (const char **)additional_results);
   g_strfreev (self->completions);
-  self->completions = pos_completer_capitalize_by_template (self->preedit->str,
-                                                            completions);
+  self->completions = g_strv_builder_end (builder);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_COMPLETIONS]);
 }
@@ -104,11 +123,12 @@ pos_completer_presage_predict (PosCompleterPresage *self)
   g_auto (GStrv) completions = NULL;
 
   result = presage_predict (self->presage, &completions);
+
   if (result == PRESAGE_OK) {
-    pos_completer_presage_set_completions (POS_COMPLETER (self), completions);
+    pos_completer_presage_set_completions (POS_COMPLETER (self), completions, TRUE);
   } else {
     g_warning ("Failed to complete %s", self->preedit->str);
-    pos_completer_presage_set_completions (POS_COMPLETER (self), NULL);
+    pos_completer_presage_set_completions (POS_COMPLETER (self), NULL, FALSE);
   }
 }
 
@@ -135,7 +155,7 @@ pos_completer_presage_set_preedit (PosCompleter *iface, const char *preedit)
     g_string_append (self->preedit, preedit);
   else {
     /* No string: reset completions */
-    pos_completer_presage_set_completions (POS_COMPLETER (self), NULL);
+    pos_completer_presage_set_completions (POS_COMPLETER (self), NULL, FALSE);
   }
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_PREEDIT]);

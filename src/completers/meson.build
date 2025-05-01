@@ -4,7 +4,7 @@ if presage_dep.found()
   # Presage based completer
   libpos_completer_presage_sources = files('pos-completer-presage.c', 'pos-completer-presage.h')
 
-  libpos_completer_presage_deps = [gio_dep, glib_dep, gtk_dep, presage_dep]
+  libpos_completer_presage_deps = [gio_dep, glib_dep, gmobile_dep, gtk_dep, presage_dep]
 
   libpos_completer_presage_lib = static_library(
     'pos-completer-presage',
