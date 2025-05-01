@@ -17,5 +17,8 @@ G_BEGIN_DECLS
 G_DECLARE_FINAL_TYPE (PosCompleterHunspell, pos_completer_hunspell, POS, COMPLETER_HUNSPELL, GObject)
 
 PosCompleter *pos_completer_hunspell_new (GError **error);
-
+gboolean      pos_completer_hunspell_find_dict (const char  *lang,
+                                                const char  *region,
+                                                char       **aff_path,
+                                                char       **dict_path);
 G_END_DECLS
