@@ -59,6 +59,7 @@ typedef struct _PhoshOskStub {
   PosOskDbus          *osk_dbus;
   PosActivationFilter *activation_filter;
   PosHwTracker        *hw_tracker;
+  PosEmojiDb          *emoji_db;
 
   struct wl_display                       *display;
   struct zwlr_foreign_toplevel_manager_v1 *foreign_toplevel_manager;
@@ -526,6 +527,8 @@ pos_input_surface_finalize (GObject *object)
   if (self->input_surface)
     dispose_input_surface (self);
 
+  g_clear_object (&self->emoji_db);
+
   G_OBJECT_CLASS (phosh_osk_stub_parent_class)->finalize (object);
 }
 
@@ -545,6 +548,7 @@ phosh_osk_stub_init (PhoshOskStub *self)
   gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/osk-stub/icons");
 
   self->loop = g_main_loop_new (NULL, FALSE);
+  self->emoji_db = pos_emoji_db_get_default ();
 
   g_unix_signal_add (SIGTERM, quit_cb, self->loop);
   g_unix_signal_add (SIGINT, quit_cb, self->loop);
