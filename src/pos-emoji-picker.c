@@ -418,8 +418,7 @@ populate_emoji_chooser (gpointer data)
     self->iter = g_variant_iter_new (self->data);
     self->box = self->people.box;
   }
-  while ((item = g_variant_iter_next_value (self->iter)))
-  {
+  while ((item = g_variant_iter_next_value (self->iter))) {
     guint group;
 
     g_variant_get_child (item, 3, "u", &group);
