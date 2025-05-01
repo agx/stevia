@@ -134,13 +134,12 @@ populate_recent_section (PosEmojiPicker *self)
   variant = g_settings_get_value (self->settings, "recent-emoji");
   g_variant_iter_init (&iter, variant);
   while ((item = g_variant_iter_next_value (&iter))) {
-    GVariant *emoji_data;
+    g_autoptr (GVariant) emoji_data = NULL;
     gunichar modifier;
 
     emoji_data = g_variant_get_child_value (item, 0);
     g_variant_get_child (item, 1, "u", &modifier);
     add_emoji (self->recent.box, FALSE, emoji_data, modifier, self);
-    g_variant_unref (emoji_data);
     g_variant_unref (item);
     empty = FALSE;
   }
@@ -338,7 +337,7 @@ add_emoji (GtkWidget      *box,
 {
   GtkWidget *child;
   GtkWidget *label;
-  PangoAttrList *attrs;
+  g_autoptr (PangoAttrList) attrs = NULL;
   GVariant *codes;
   char text[64];
   char *p = text;
@@ -364,7 +363,6 @@ add_emoji (GtkWidget      *box,
   attrs = pango_attr_list_new ();
   pango_attr_list_insert (attrs, pango_attr_scale_new (PANGO_SCALE_X_LARGE));
   gtk_label_set_attributes (GTK_LABEL (label), attrs);
-  pango_attr_list_unref (attrs);
 
   layout = gtk_label_get_layout (GTK_LABEL (label));
   pango_layout_get_extents (layout, &rect, NULL);
@@ -409,12 +407,11 @@ populate_emoji_chooser (gpointer data)
   start = g_get_monotonic_time ();
 
   if (!self->data) {
-    GBytes *bytes;
+    g_autoptr (GBytes) bytes = NULL;
 
     bytes = get_emoji_data ();
 
     self->data = g_variant_ref_sink (g_variant_new_from_bytes (G_VARIANT_TYPE ("a(ausasu)"), bytes, TRUE));
-    g_bytes_unref (bytes);
   }
 
   if (!self->iter) {
@@ -570,19 +567,16 @@ pos_emoji_picker_init (PosEmojiPicker *self)
    * as multiply glyphs.
    */
   {
-    PangoLayout *layout = gtk_widget_create_pango_layout (GTK_WIDGET (self), "🙂");
-    PangoAttrList *attrs;
+    g_autoptr (PangoLayout) layout = gtk_widget_create_pango_layout (GTK_WIDGET (self), "🙂");
+    g_autoptr (PangoAttrList) attrs = NULL;
     PangoRectangle rect;
 
     attrs = pango_attr_list_new ();
     pango_attr_list_insert (attrs, pango_attr_scale_new (PANGO_SCALE_X_LARGE));
     pango_layout_set_attributes (layout, attrs);
-    pango_attr_list_unref (attrs);
 
     pango_layout_get_extents (layout, &rect, NULL);
     self->emoji_max_width = rect.width;
-
-    g_object_unref (layout);
   }
 
   self->recent_long_press = gtk_gesture_long_press_new (self->recent.box);
