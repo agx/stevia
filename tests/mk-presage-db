@@ -1,0 +1,14 @@
+#!/bin/sh
+
+set -e
+
+INPUT="$1"
+OUTPUT="$2"
+
+rm -f "${OUTPUT}"
+
+text2ngram -n1    -l -fsqlite -o"${OUTPUT}" "${INPUT}"
+text2ngram -n2 -a -l -fsqlite -o"${OUTPUT}" "${INPUT}"
+text2ngram -n3 -a -l -fsqlite -o"${OUTPUT}" "${INPUT}"
+
+exit 0
