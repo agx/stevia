@@ -557,7 +557,6 @@ pos_completer_grab_last_word (const char *text, char **new_text, char **word)
 GStrv
 pos_completer_capitalize_by_template (const char *template, const GStrv completions)
 {
-  int i;
   gboolean has_caps;
   glong templ_len;
   g_autoptr (GStrvBuilder) builder = NULL;
@@ -569,7 +568,7 @@ pos_completer_capitalize_by_template (const char *template, const GStrv completi
   utemplate = g_utf8_to_ucs4_fast (template, -1, &templ_len);
 
   has_caps = FALSE;
-  for (i = 0; i < templ_len; i++) {
+  for (int i = 0; i < templ_len; i++) {
     if (g_unichar_isupper (utemplate[i])) {
       has_caps = TRUE;
       break;
@@ -580,7 +579,7 @@ pos_completer_capitalize_by_template (const char *template, const GStrv completi
 
   builder = g_strv_builder_new ();
 
-  for (i = 0; i < g_strv_length (completions); i++) {
+  for (int i = 0; i < g_strv_length (completions); i++) {
     glong read_len, compl_len, read, written;
     g_autofree gunichar *ucompletion = NULL;
     g_autofree char *new_completion = NULL;
