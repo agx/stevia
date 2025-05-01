@@ -24,9 +24,9 @@
         <property name="vscrollbar-policy">never</property>
         <property name="propagate-natural-width">True</property>
         <child>
-      <object class="GtkBox" id="buttons">
-        <property name="visible">1</property>
-      </object>
+          <object class="GtkBox" id="buttons">
+            <property name="visible">1</property>
+          </object>
         </child>
       </object>
     </child>
