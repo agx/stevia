@@ -8,6 +8,7 @@
 
 #include "pos-test-completer.h"
 
+#include "pos.h"
 #include "pos-completer-presage.h"
 
 #include <gio/gio.h>
@@ -39,9 +40,17 @@ test_completer_presage_object (void)
 int
 main (int argc, char *argv[])
 {
+  gint ret;
+
   g_test_init (&argc, &argv, NULL);
+
+  pos_init ();
 
   g_test_add_func ("/pos/completer/presage/object", test_completer_presage_object);
 
-  return g_test_run ();
+  ret = g_test_run ();
+
+  pos_uninit ();
+
+  return ret;
 }
