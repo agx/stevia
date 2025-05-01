@@ -394,11 +394,10 @@ on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer data)
     dispose_input_surface (self);
     self->input_surface = NULL;
   } else if (self->input_surface == NULL) {
-    if (self && phosh_osk_stub_has_wl_protcols (self)) {
+    if (self && phosh_osk_stub_has_wl_protcols (self))
       create_input_surface (self);
-    } else {
-      g_warning ("Wayland globals not yet read");
-    }
+    else
+      g_debug ("Wayland globals not yet read");
   }
 }
 
