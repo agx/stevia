@@ -38,6 +38,8 @@ libpos_sources = files(
   'pos-clipboard-manager.h',
   'pos-completer-manager.c',
   'pos-completer-manager.h',
+  'pos-completer-base.c',
+  'pos-completer-base.h',
   'pos-completer.c',
   'pos-completer.h',
   'pos-completion-bar.c',
