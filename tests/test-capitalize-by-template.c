@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-#include "pos-completer-presage.h"
+#include "pos-completer.h"
 
 #include <glib.h>
 

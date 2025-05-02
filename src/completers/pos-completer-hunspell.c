@@ -189,29 +189,6 @@ pos_completer_hunspell_class_init (PosCompleterHunspellClass *klass)
 
 
 static gboolean
-find_dict (const char *lang, const char *region, char **aff_path, char **dict_path)
-{
-  g_auto (GStrv) paths = g_strsplit (POS_HUNSPELL_DICT_PATH, ":", -1);
-  g_autofree char *upcase_region = g_ascii_strup (region, -1);
-  g_autofree char *locale = NULL;
-
-  locale = g_strdup_printf ("%s_%s", lang, upcase_region);
-  for (int i = 0; paths[i] != NULL; i++) {
-    g_autofree char *dict = g_strdup_printf ("%s/%s.dic", paths[i], locale);
-    g_autofree char *aff = g_strdup_printf ("%s/%s.aff", paths[i], locale);
-
-    if (g_file_test (dict, G_FILE_TEST_EXISTS) &&
-        g_file_test (aff, G_FILE_TEST_EXISTS)) {
-      *aff_path = g_steal_pointer (&aff);
-      *dict_path = g_steal_pointer (&dict);
-      return TRUE;
-    }
-  }
-  return FALSE;
-}
-
-
-static gboolean
 pos_completer_hunspell_set_language (PosCompleter *completer,
                                      const char   *lang,
                                      const char   *region,
@@ -222,7 +199,7 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
   g_autofree char *aff_path = NULL;
   Hunhandle *handle = NULL;
 
-  if (find_dict (lang, region, &aff_path, &dict_path) == FALSE) {
+  if (pos_completer_hunspell_find_dict (lang, region, &aff_path, &dict_path) == FALSE) {
     g_set_error (error,
                  POS_COMPLETER_ERROR,
                  POS_COMPLETER_ERROR_ENGINE_INIT,
@@ -356,4 +333,44 @@ PosCompleter *
 pos_completer_hunspell_new (GError **err)
 {
   return POS_COMPLETER (g_initable_new (POS_TYPE_COMPLETER_HUNSPELL, NULL, err, NULL));
+}
+
+
+/**
+ * pos_completer_hunspell_find_dict:
+ * lang: The language to find the dictionary for
+ * region: The region to find the dictionary for
+ * aff_path: (out)(nullable): The location of the hunspell aff file
+ * dict_path: (out)(nullable): The location of the hunspell dict file
+ *
+ * Returns: `TRUE` if the huspell dictionary was found, otherwise `FALSE`
+ */
+gboolean
+pos_completer_hunspell_find_dict (const char  *lang,
+                                  const char  *region,
+                                  char       **aff_path,
+                                  char       **dict_path)
+{
+  g_auto (GStrv) paths = g_strsplit (POS_HUNSPELL_DICT_PATH, ":", -1);
+  g_autofree char *upcase_region = g_ascii_strup (region, -1);
+  g_autofree char *locale = NULL;
+
+  g_assert (lang);
+  g_assert (region);
+
+  locale = g_strdup_printf ("%s_%s", lang, upcase_region);
+  for (int i = 0; paths[i] != NULL; i++) {
+    g_autofree char *dict = g_strdup_printf ("%s/%s.dic", paths[i], locale);
+    g_autofree char *aff = g_strdup_printf ("%s/%s.aff", paths[i], locale);
+
+    if (g_file_test (dict, G_FILE_TEST_EXISTS) &&
+        g_file_test (aff, G_FILE_TEST_EXISTS)) {
+      if (aff_path)
+        *aff_path = g_steal_pointer (&aff);
+      if (dict_path)
+        *dict_path = g_steal_pointer (&dict);
+      return TRUE;
+    }
+  }
+  return FALSE;
 }

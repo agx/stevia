@@ -34,7 +34,7 @@ static GParamSpec *props[PROP_LAST_PROP];
 /**
  * PosCompleterPipe:
  *
- * A completer using a unix pipe like approach.
+ * A completer using a Unix pipe like approach.
  *
  * This completer feeds the preedit to standard input
  * of the given executable and reads the possible completioins
