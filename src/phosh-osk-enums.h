@@ -47,12 +47,14 @@ typedef enum {
  * PhoshOskCompletionSourceFlags:
  * @PHOSH_OSK_COMPLETION_SOURCE_NONE: No additional sources
  * @PHOSH_OSK_COMPLETION_SOURCE_EMOJI: Add emojis to completions
+ * @PHOSH_OSK_COMPLETION_SOURCE_KEYWORD: Expand certain keywoards
  *
  * Additional sources for completion
  */
 typedef enum {
   PHOSH_OSK_COMPLETION_SOURCE_NONE = 0,
   PHOSH_OSK_COMPLETION_SOURCE_EMOJI = (1 << 0),
+  PHOSH_OSK_COMPLETION_SOURCE_KEYWORD = (2 << 0),
 } PhoshOskCompletionSourceFlags;
 
 G_END_DECLS
