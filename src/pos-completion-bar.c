@@ -25,9 +25,10 @@ static guint signals[N_SIGNALS];
  * is picked.
  */
 struct _PosCompletionBar {
-  GtkBox                parent;
+  GtkBox             parent;
 
-  GtkWidget            *buttons;
+  GtkBox            *buttons;
+  GtkScrolledWindow *scrolled_window;
 };
 G_DEFINE_TYPE (PosCompletionBar, pos_completion_bar, GTK_TYPE_BOX)
 
@@ -48,6 +49,7 @@ pos_completion_bar_class_init (PosCompletionBarClass *klass)
   gtk_widget_class_set_template_from_resource (widget_class,
                                                "/mobi/phosh/osk-stub/ui/completion-bar.ui");
   gtk_widget_class_bind_template_child (widget_class, PosCompletionBar, buttons);
+  gtk_widget_class_bind_template_child (widget_class, PosCompletionBar, scrolled_window);
 
   gtk_widget_class_set_css_name (widget_class, "pos-completion-bar");
 }
@@ -85,6 +87,9 @@ on_button_clicked (PosCompletionBar *self, GtkButton *btn)
 void
 pos_completion_bar_set_completions (PosCompletionBar *self, GStrv completions)
 {
+  guint swidth, bwidth;
+  gboolean overflow;
+
   g_return_if_fail (POS_IS_COMPLETION_BAR (self));
 
   gtk_container_foreach (GTK_CONTAINER (self->buttons), (GtkCallback) gtk_widget_destroy, NULL);
@@ -92,12 +97,15 @@ pos_completion_bar_set_completions (PosCompletionBar *self, GStrv completions)
   if (completions == NULL)
     return;
 
+  gtk_widget_set_hexpand (GTK_WIDGET (self->buttons), TRUE);
+  gtk_box_set_homogeneous (self->buttons, TRUE);
+  gtk_widget_set_halign (GTK_WIDGET (self->buttons), GTK_ALIGN_FILL);
+
   for (int i = 0; i < g_strv_length (completions); i++) {
     GtkWidget *lbl, *btn;
 
     lbl = g_object_new (GTK_TYPE_LABEL,
                         "label", completions[i],
-                        "ellipsize", PANGO_ELLIPSIZE_MIDDLE,
                         "visible", TRUE,
                         NULL);
     btn = g_object_new (GTK_TYPE_BUTTON,
@@ -108,5 +116,16 @@ pos_completion_bar_set_completions (PosCompletionBar *self, GStrv completions)
 
     g_signal_connect_swapped (btn, "clicked", G_CALLBACK (on_button_clicked), self);
     gtk_container_add (GTK_CONTAINER (self->buttons), btn);
+  }
+
+  swidth = gtk_widget_get_allocated_width (GTK_WIDGET (self->scrolled_window));
+  bwidth = gtk_widget_get_allocated_width (GTK_WIDGET (self->buttons));
+
+  overflow = (bwidth > swidth);
+  /* If elements don't fit turn off homogeneous to fit more of them */
+  if (overflow) {
+    gtk_box_set_homogeneous (self->buttons, FALSE);
+    gtk_widget_set_halign (GTK_WIDGET (self->buttons), GTK_ALIGN_CENTER);
+    //gtk_widget_queue_draw (GTK_WIDGET (self->buttons));
   }
 }
