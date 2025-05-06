@@ -11,6 +11,7 @@
  * Author: Matthias Clasen <mclasen@redhat.com>
  */
 
+#include "pos-emoji-db.h"
 #include "pos-emoji-picker.h"
 
 #define BOX_SPACE 6
@@ -391,11 +392,6 @@ add_emoji (GtkWidget      *box,
   gtk_flow_box_insert (GTK_FLOW_BOX (box), child, prepend ? 0 : -1);
 }
 
-static GBytes *
-get_emoji_data (void)
-{
-  return g_resources_lookup_data ("/mobi/phosh/osk-stub/emoji/en.data", 0, NULL);
-}
 
 static gboolean
 populate_emoji_chooser (gpointer data)
@@ -407,19 +403,16 @@ populate_emoji_chooser (gpointer data)
   start = g_get_monotonic_time ();
 
   if (!self->data) {
-    g_autoptr (GBytes) bytes = NULL;
+    PosEmojiDb *emoji_db = pos_emoji_db_get_default ();
 
-    bytes = get_emoji_data ();
-
-    self->data = g_variant_ref_sink (g_variant_new_from_bytes (G_VARIANT_TYPE ("a(ausasu)"), bytes, TRUE));
+    self->data = g_variant_ref (pos_emoji_db_get_data (emoji_db));
   }
 
   if (!self->iter) {
     self->iter = g_variant_iter_new (self->data);
     self->box = self->people.box;
   }
-  while ((item = g_variant_iter_next_value (self->iter)))
-  {
+  while ((item = g_variant_iter_next_value (self->iter))) {
     guint group;
 
     g_variant_get_child (item, 3, "u", &group);

@@ -555,7 +555,7 @@ pos_completer_grab_last_word (const char *text, char **new_text, char **word)
  * Returns: (transfer full): copy of completions with changed capitalization
  */
 GStrv
-pos_completer_capitalize_by_template (const char *template, const GStrv completions)
+pos_completer_capitalize_by_template (const char  *template, const GStrv  completions)
 {
   gboolean has_caps;
   glong templ_len;

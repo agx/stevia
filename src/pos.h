@@ -13,6 +13,7 @@ G_BEGIN_DECLS
 #include "pos-activation-filter.h"
 #include "pos-clipboard-manager.h"
 #include "pos-completer-manager.h"
+#include "pos-emoji-db.h"
 #include "pos-hw-tracker.h"
 #include "pos-enums.h"
 #include "pos-osk-dbus.h"

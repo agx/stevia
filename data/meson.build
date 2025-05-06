@@ -27,7 +27,7 @@ generate_enums_schema = gnome.mkenums(
   sources: schema_enum_headers,
   comments: '<!-- @comment@ -->',
   fhead: '<schemalist>',
-  vhead: '  <@type@ id="sm.puri.phosh.osk.@EnumName@">',
+  vhead: '  <@type@ id="mobi.phosh.osk.@EnumName@">',
   vprod: '    <value nick="@valuenick@" value="@valuenum@"/>',
   vtail: '  </@type@>',
   ftail: '</schemalist>',

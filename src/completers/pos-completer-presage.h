@@ -7,6 +7,7 @@
 #pragma once
 
 #include "pos-completer.h"
+#include "pos-completer-base.h"
 
 #include <glib-object.h>
 
@@ -14,7 +15,8 @@ G_BEGIN_DECLS
 
 #define POS_TYPE_COMPLETER_PRESAGE (pos_completer_presage_get_type ())
 
-G_DECLARE_FINAL_TYPE (PosCompleterPresage, pos_completer_presage, POS, COMPLETER_PRESAGE, GObject)
+G_DECLARE_FINAL_TYPE (PosCompleterPresage, pos_completer_presage, POS, COMPLETER_PRESAGE,
+                      PosCompleterBase)
 
 PosCompleter *pos_completer_presage_new (GError **err);
 

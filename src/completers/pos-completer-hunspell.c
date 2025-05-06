@@ -1,5 +1,6 @@
 /*
  * Copyright (C) 2022 Purism SPC
+ *               2025 The Phosh Developers
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
@@ -10,6 +11,7 @@
 
 #include "pos-config.h"
 
+#include "pos-completer-base.h"
 #include "pos-completer-priv.h"
 #include "pos-completer-hunspell.h"
 
@@ -18,6 +20,7 @@
 #include <hunspell.h>
 
 #define MAX_COMPLETIONS 3
+#define MAX_ADDITIONAL_RESULTS 3
 
 enum {
   PROP_0,
@@ -39,7 +42,7 @@ static GParamSpec *props[PROP_LAST_PROP];
  * based on typo corrections.
  */
 struct _PosCompleterHunspell {
-  GObject               parent;
+  PosCompleterBase      parent;
 
   char                 *name;
   GString              *preedit;
@@ -53,7 +56,7 @@ struct _PosCompleterHunspell {
 static void pos_completer_hunspell_interface_init (PosCompleterInterface *iface);
 static void pos_completer_hunspell_initable_interface_init (GInitableIface *iface);
 
-G_DEFINE_TYPE_WITH_CODE (PosCompleterHunspell, pos_completer_hunspell, G_TYPE_OBJECT,
+G_DEFINE_TYPE_WITH_CODE (PosCompleterHunspell, pos_completer_hunspell, POS_TYPE_COMPLETER_BASE,
                          G_IMPLEMENT_INTERFACE (POS_TYPE_COMPLETER,
                                                 pos_completer_hunspell_interface_init)
                          G_IMPLEMENT_INTERFACE (G_TYPE_INITABLE,
@@ -63,7 +66,17 @@ static void
 pos_completer_hunspell_take_completions (PosCompleter *iface, GStrv completions)
 {
   PosCompleterHunspell *self = POS_COMPLETER_HUNSPELL (iface);
+  g_auto (GStrv) additional_results = NULL;
+  g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
 
+  additional_results = pos_completer_base_get_additional_results (POS_COMPLETER_BASE (self),
+                                                                  self->preedit->str,
+                                                                  MAX_ADDITIONAL_RESULTS);
+
+  if (completions)
+    g_strv_builder_addv (builder, (const char **)completions);
+  if (additional_results)
+    g_strv_builder_addv (builder, (const char **)additional_results);
   g_strfreev (self->completions);
   self->completions = completions;
 
