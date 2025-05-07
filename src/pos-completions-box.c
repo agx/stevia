@@ -35,8 +35,129 @@ G_DEFINE_TYPE (PosCompletionsBox, pos_completions_box, GTK_TYPE_BOX)
 
 
 static void
+pos_completions_box_size_allocate (GtkWidget *widget, GtkAllocation *allocation)
+{
+  PosCompletionsBox *self = POS_COMPLETIONS_BOX (widget);
+  g_autoptr (GList) all_children = NULL;
+  GtkTextDirection direction = gtk_widget_get_direction (widget);
+  GList *children;
+  int n_children;
+  int size, child_size, i, spacing, x = 0, max_width = 0, extra = 0;
+  GtkAllocation child_allocation;
+  g_autofree GtkRequestedSize *sizes = NULL;
+  gboolean homogeneous = FALSE;
+
+  g_assert (gtk_orientable_get_orientation (GTK_ORIENTABLE (self)) == GTK_ORIENTATION_HORIZONTAL);
+
+  GTK_WIDGET_CLASS (pos_completions_box_parent_class)->size_allocate (widget, allocation);
+
+  all_children = gtk_container_get_children (GTK_CONTAINER (self));
+  n_children = g_list_length (all_children);
+  if (!n_children)
+    return;
+
+  spacing = gtk_box_get_spacing (GTK_BOX (self));
+  size = allocation->width - (n_children - 1) * spacing;
+  sizes = g_new0 (GtkRequestedSize, n_children);
+
+  /* Retrieve desired size each completions */
+  for (children = all_children, i = 0; children; children = children->next, i++) {
+    GtkWidget *child = children->data;
+
+    /* All completions must be visible */
+    g_assert (gtk_widget_get_visible (widget));
+
+    gtk_widget_get_preferred_width_for_height (child,
+                                               allocation->height,
+                                               &sizes[i].minimum_size,
+                                               &sizes[i].natural_size);
+
+    if (sizes[i].minimum_size < 0){
+      g_error ("PosCompletionsBox child %s minimum %s: %d < 0 for %s %d",
+               gtk_widget_get_name (GTK_WIDGET (child)),
+               "width",
+               sizes[i].minimum_size,
+               "height",
+               allocation->height);
+    }
+
+    if (sizes[i].natural_size < sizes[i].minimum_size){
+      g_error ("PosCompletionsBox child %s natural %s: %d < minimum %d for %s %d",
+               gtk_widget_get_name (GTK_WIDGET (child)),
+               "width",
+               sizes[i].natural_size,
+               sizes[i].minimum_size,
+               "height",
+               allocation->height);
+    }
+
+    size -= sizes[i].minimum_size;
+    sizes[i].data = child;
+
+    if (sizes[i].natural_size > max_width)
+      max_width = sizes[i].natural_size;
+  }
+
+  /* With enough space distribute children homogeneously */
+  if (((max_width * n_children) + ((n_children - 1) * spacing))  < allocation->width)
+    homogeneous = TRUE;
+
+  if (homogeneous) {
+    size = allocation->width - (n_children - 1) * spacing;
+  } else {
+    /* Bring children up to size first */
+    size = gtk_distribute_natural_allocation (MAX (0, size), n_children, sizes);
+    extra = size / n_children;
+  }
+
+  g_debug ("allocated width: %d, size: %d, homogeneous: %d, extra: %d",
+           allocation->width,
+           size,
+           homogeneous,
+           extra);
+
+  /* Allocate child sizes. */
+  for (i = 0, children = all_children; children; children = children->next, i++) {
+    /* Assign the child's size. */
+    if (homogeneous)
+      child_size = size / n_children;
+    else
+      child_size = sizes[i].minimum_size + extra;
+
+    sizes[i].natural_size = child_size;
+  }
+
+  /* Allocate child positions. */
+  child_allocation.y = allocation->y;
+  child_allocation.height = MAX (1, allocation->height);
+  x = allocation->x;
+
+  for (i = 0, children = all_children; children; children = children->next, i++) {
+    GtkWidget *child = children->data;
+
+    child_size = sizes[i].natural_size;
+
+    child_allocation.width = child_size;
+    child_allocation.x = x + (child_size - child_allocation.width) / 2;
+
+    x += child_size + spacing;
+
+    if (direction == GTK_TEXT_DIR_RTL)
+      child_allocation.x = allocation->x + allocation->width -
+                           (child_allocation.x - allocation->x) - child_allocation.width;
+
+    gtk_widget_size_allocate_with_baseline (child, &child_allocation, -1);
+  }
+}
+
+
+static void
 pos_completions_box_class_init (PosCompletionsBoxClass *klass)
 {
+  GtkWidgetClass *widget_class = GTK_WIDGET_CLASS (klass);
+
+  widget_class->size_allocate = pos_completions_box_size_allocate;
+
   signals[SELECTED] = g_signal_new ("selected",
                                     G_TYPE_FROM_CLASS (klass),
                                     G_SIGNAL_RUN_LAST,
@@ -51,6 +172,7 @@ static void
 pos_completions_box_init (PosCompletionsBox *self)
 {
   gtk_orientable_set_orientation (GTK_ORIENTABLE (self), GTK_ORIENTATION_HORIZONTAL);
+  gtk_box_set_spacing (GTK_BOX (self), 6);
 }
 
 
