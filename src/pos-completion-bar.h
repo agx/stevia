@@ -19,6 +19,3 @@ void              pos_completion_bar_set_completions (PosCompletionBar *self,
                                                       GStrv             completions);
 
 G_END_DECLS
-
-
-
