@@ -1,3 +1,12 @@
+phosh-osk-stub 0.47~rc1
+-----------------------
+Released May 2025
+* Add emojis to completions
+* Contributors:
+    * Guido Günther
+* UI translations:
+    * iramosu (ar)
+
 phosh-osk-stub 0.46.0
 ---------------------
 Released March 2025
