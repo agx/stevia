@@ -24,8 +24,9 @@
         <property name="vscrollbar-policy">never</property>
         <property name="propagate-natural-width">True</property>
         <child>
-          <object class="GtkBox" id="buttons">
+          <object class="PosCompletionsBox" id="completions_box">
             <property name="visible">1</property>
+            <signal name="selected" handler="on_completion_selected" object="PosCompletionBar" swapped="yes"/>
           </object>
         </child>
       </object>
