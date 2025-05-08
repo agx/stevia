@@ -281,7 +281,7 @@ pos_osk_key_new (const char *symbol)
 /**
  * pos_osk_key_set_width:
  * @self: The key
- * @double: The key's width
+ * @width: The key's width
  *
  * Sets the key's width in key units.
  */
@@ -387,7 +387,7 @@ pos_osk_key_get_label (PosOskKey *self)
  * Get the icon to be rendered on the key. This can be `NULL` if the
  * key uses a label.
  *
- * Returns:(nullable) The icon
+ * Returns:(nullable): The icon
  */
 const char *
 pos_osk_key_get_icon (PosOskKey *self)
