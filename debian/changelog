@@ -1,3 +1,65 @@
+phosh-osk-stub (0.47~rc1) experimental; urgency=medium
+
+  [ Guido Günther ]
+  * emoji-picker: Use more automatic cleanup
+  * completer: Scope loop variable
+  * osk-stub: Avoid warning on startup.
+    This is only a debugging help
+  * tests: Don't use presage specific header.
+    The test isn't presage specific
+  * tests: Use subdir_done()
+    Saves one indent level
+  * tests: Depend on schemas.
+    Upcoming tests will lookup gsettings
+  * presage: Allow to set dictionary directory.
+    Useful in tests
+  * presage: Return empty string for initial before and after text.
+    This makes it consistent with other completers like `pipe`
+  * hunspell: Make find_dict public.
+    Useful to find out whether we should skip the test
+  * packaging: Depend on presage and hunspell.
+    We want text2ngram to build a small test corpus for presage and a default
+    dictionary for the hunspell completer to init successfully.
+    For that to be found we switch the `prefix` used in CI to `/usr`
+  * tests: Add smoketests for our completers.
+    This makes sure creating the object and accessing the properties
+    doesn't raise any criticals and eases testing under valgrind.
+    We have presage in a separate test as it needs a bit more setup
+    and we want to create more tests later on.
+  * completion-bar: Use more horizontal space.
+    Disabling `homogeneous` when elements don't allows us to fit
+    more elements. If they still don't fit we make things scrollable.
+    This avoids ellipsizing elements which makes them hard to read.
+  * completion-bar: Reindent ui.  No other changes
+  * data: Move schema flags to canonical domain
+  * emoji-db: New class to hold emojis
+  * osk-stub: Instantiate emoji db.
+    This ensures a clear life cycle of the singleton.
+  * emoji-picker: Use our emoji singleton.
+    No need to track the data in two places.
+  * presage: Init resource in tests.
+    Will be needed in follow up commits when we lookup emojis
+  * completion: Add flags for additional sources
+  * completer-base: New base class for completer.
+    These can be used to handle common properties. The base
+    class is currently "opt-in" (not a requirement of the
+    `PosCompleter` interface) but that might change in the future.
+  * presage: Check for emojis too by using PosCompleterBase
+  * hunspell: Check for emojis too by using PosCompleterBase
+  * doc: Document additional completion sources
+  * emoji-db: Drop unused property.
+    Fixes 39d130241 ("emoji-db: New class to hold emojis")
+  * completion-bar: Move completion box to separate widget.
+    This will allow us to better deal with size allocations
+  * pos-completer-box: Better use available space.
+    Make list homogeneous when we have enough space, otherwise
+    distribute the available space.
+
+  [ iramosu ]
+  * po: Add Arabic translation
+
+ -- Guido Günther <agx@sigxcpu.org>  Thu, 08 May 2025 09:03:01 +0200
+
 phosh-osk-stub (0.46.0) experimental; urgency=medium
 
   * Update metainfo
