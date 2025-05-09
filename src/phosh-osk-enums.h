@@ -35,10 +35,12 @@ typedef enum {
  *   [signal@PosOskWiddget:key-up] for the old key and a
  *   [signal@PosOskWiddget:key-down] for the newly touched key. Without
  *   this flags the key press is canceled.
+ * @PHOSH_OSK_FEATURE_KEY_INDICATOR: Indicate currently pressed key with a small popover
  */
 typedef enum {
-  PHOSH_OSK_FEATURE_DEFAULT  = 0,        /*< skip >*/
-  PHOSH_OSK_FEATURE_KEY_DRAG = (1 << 0), /*< nick=key-drag >*/
+  PHOSH_OSK_FEATURE_DEFAULT  = 0,             /*< skip >*/
+  PHOSH_OSK_FEATURE_KEY_DRAG = (1 << 0),      /*< nick=key-drag >*/
+  PHOSH_OSK_FEATURE_KEY_INDICATOR = (1 << 1), /*< nick=key-indicator >*/
 } PhoshOskFeatures;
 
 /**
