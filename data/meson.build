@@ -23,7 +23,7 @@ i18n.merge_file(
 #generate XML enum definitions for GSettings schema
 schema_enum_headers = files('../src/phosh-osk-enums.h')
 generate_enums_schema = gnome.mkenums(
-  'sm.puri.phosh.osk.enums.xml',
+  'mobi.phosh.osk.enums.xml',
   sources: schema_enum_headers,
   comments: '<!-- @comment@ -->',
   fhead: '<schemalist>',
@@ -38,11 +38,11 @@ generate_enums_schema = gnome.mkenums(
 #workaround due to https://github.com/mesonbuild/meson/issues/1687
 copy_schema = custom_target(
   'copy-gschema-to-builddir',
-  input: 'sm.puri.phosh.osk.gschema.xml',
-  output: 'sm.puri.phosh.osk.gschema.xml',
+  input: 'mobi.phosh.osk.gschema.xml',
+  output: 'mobi.phosh.osk.gschema.xml',
   command: ['cp', '@INPUT@', '@OUTPUT@'],
 )
-schemas = ['sm.puri.phosh.osk.gschema.xml']
+schemas = ['mobi.phosh.osk.gschema.xml']
 compile_schemas = custom_target(
   'glib-compile-schemas',
   build_by_default: true,
