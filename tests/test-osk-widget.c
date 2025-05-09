@@ -151,9 +151,16 @@ test_switch_layer (void)
 int
 main (int argc, char *argv[])
 {
+  int ret;
+
   gtk_test_init (&argc, &argv, NULL);
+
+  pos_init ();
 
   g_test_add_func ("/pos/osk-widget/switch_layer", test_switch_layer);
 
-  return g_test_run ();
+  ret = g_test_run ();
+
+  pos_uninit ();
+  return ret;
 }
