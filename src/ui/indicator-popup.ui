@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+  <requires lib="gtk+" version="3.20"/>
+  <template class="PosIndicatorPopup" parent="GtkPopover">
+    <child>
+      <object class="GtkLabel" id="label">
+        <property name="visible">1</property>
+      </object>
+    </child>
+  </template>
+</interface>

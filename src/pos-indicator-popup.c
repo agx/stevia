@@ -135,7 +135,6 @@ pos_indicator_popup_hide (PosIndicatorPopup *self, gboolean now)
   g_assert (POS_IS_INDICATOR_POPUP (self));
 
   g_clear_handle_id (&self->timeout_id, g_source_remove);
-  gtk_widget_set_visible (GTK_WIDGET (self), FALSE);
 
   if (now) {
     gtk_widget_hide (GTK_WIDGET (self));
