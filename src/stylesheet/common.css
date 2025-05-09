@@ -89,6 +89,19 @@ pos-char-popup button:active {
 }
 
 /*
+ * pressed key indicator popover
+ */
+pos-indicator-popup label {
+  font-size: 175%;
+  font-weight: bold;
+  margin: 5px 10px 10px 10px;
+}
+
+pos-indicator-popup {
+  border-radius: 10px;
+}
+
+/*
  * completion bar
  */
 pos-completion-bar button {
