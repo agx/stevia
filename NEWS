@@ -1,7 +1,13 @@
-phosh-osk-stub 0.47~rc1
+phosh-osk-stub 0.47~rc2
 -----------------------
 Released May 2025
-* Add emojis to completions
+* Add popover to indicate the currently typed character
+  (optional, off by default)
+* Add emojis to completions (optional, on by default)
+* Add special keywords like "today" to completion (optional, on by
+  default)
+* Issues fixed:
+    * https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/58
 * Contributors:
     * Guido Günther
 * UI translations:
