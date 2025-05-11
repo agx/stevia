@@ -56,7 +56,7 @@ pos_emoji_db_init (PosEmojiDb *self)
 
   bytes = g_resources_lookup_data ("/mobi/phosh/osk-stub/emoji/en.data", 0, &err);
   if (!bytes) {
-    g_critical ("Failed ot load emoji data: %s", err->message);
+    g_critical ("Failed to load emoji data: %s", err->message);
   } else {
     self->emoji_data = g_variant_ref_sink (g_variant_new_from_bytes (G_VARIANT_TYPE ("a(ausasu)"),
                                                                      bytes,

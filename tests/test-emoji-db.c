@@ -1,5 +1,5 @@
 /*
- * Copyright © 2025 The Phosh Develpers
+ * Copyright © 2025 The Phosh Developers
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *

@@ -1,3 +1,26 @@
+phosh-osk-stub (0.47~rc2) experimental; urgency=medium
+
+  * schema: Use canonical prefix
+  * osk-enums: Add key-indicator feature
+  * input-surface: Update features of OSK layout too.
+    It's not part of the language layout hash table.
+  * tests: Init resources in osk-widget test.
+    This will be needed in follow up commits as the osk-widget needs the
+    resources for the indicator popover.
+  * indicator-popup: New widget to show currently pressed down key.
+    As the finger often covers the currently touched character it
+    can be helpful to indicate the current key. This popup is meant
+    to make that possible.
+  * osk-widget: Show indicator popup when enabled.
+    When the gsetting is flipped show the indicator popup.
+    Closes: https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/58
+  * completer-base: Complete some special keywords.
+    This eases inserting things like current date and time
+  * data: Enable keyword completer by default
+  * doc: Document keyword completer flag
+
+ -- Guido Günther <agx@sigxcpu.org>  Sun, 11 May 2025 11:18:52 +0200
+
 phosh-osk-stub (0.47~rc1) experimental; urgency=medium
 
   [ Guido Günther ]
