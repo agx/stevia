@@ -15,9 +15,9 @@
 #include "phosh-osk-enums.h"
 #include "pos-enums.h"
 #include "pos-enum-types.h"
+#include "pos-indicator-popup.h"
 #include "pos-osk-key.h"
 #include "pos-osk-widget.h"
-#include "pos-virtual-keyboard.h"
 
 #include <json-glib/json-glib.h>
 #include <pango/pangocairo.h>
@@ -146,6 +146,8 @@ struct _PosOskWidget {
   GdkEventSequence    *sequence;
   GtkWidget           *char_popup;
   guint                repeat_id;
+
+  PosIndicatorPopup   *indicator_popup;
 
   /* Cursor movement */
   GtkGesture          *cursor_drag;
@@ -869,10 +871,28 @@ key_repeat_cancel (PosOskWidget *self)
 
 
 static void
+pos_osk_widget_show_indicator_popup (PosOskWidget *self, PosOskKey *key)
+{
+  const char *symbol;
+
+  if (!(self->features & PHOSH_OSK_FEATURE_KEY_INDICATOR))
+    return;
+
+  symbol = pos_osk_key_get_symbol (key);
+  if (!symbol || strlen (symbol) != 1 || g_str_equal (symbol, POS_OSK_SYMBOL_SPACE))
+      return;
+
+  pos_indicator_popup_show_key (self->indicator_popup, key);
+}
+
+
+static void
 pos_osk_widget_key_press_action (PosOskWidget *self, PosOskKey *key)
 {
   self->current = key;
   pos_osk_widget_set_key_pressed (self, key, TRUE);
+
+  pos_osk_widget_show_indicator_popup (self, key);
 
   g_signal_emit (self, signals[OSK_KEY_DOWN], 0, pos_osk_key_get_symbol (key));
 }
@@ -925,6 +945,8 @@ get_popup_pos (PosOskKey *key, GdkRectangle *out)
 
   out->x = box->x + (0.5 * box->width);
   out->y = box->y + (0.5 * box->height);
+  out->width = 0;
+  out->height = 0;
 }
 
 
@@ -952,8 +974,10 @@ pos_osk_widget_key_release_action (PosOskWidget *self, PosOskKey *key)
     switch_layer (self, key);
     break;
 
-  case POS_OSK_KEY_USE_DELETE:
   case POS_OSK_KEY_USE_KEY:
+    pos_indicator_popup_hide (self->indicator_popup, FALSE);
+    G_GNUC_FALLTHROUGH;
+  case POS_OSK_KEY_USE_DELETE:
     pos_osk_widget_set_key_pressed (self, self->current, FALSE);
     g_signal_emit (self, signals[OSK_KEY_UP], 0, pos_osk_key_get_symbol (key));
     g_signal_emit (self, signals[OSK_KEY_SYMBOL], 0, pos_osk_key_get_symbol (key));
@@ -1010,6 +1034,8 @@ pos_osk_widget_cancel_press (PosOskWidget *self)
   pos_osk_widget_set_key_pressed (self, self->current, FALSE);
   g_signal_emit (self, signals[OSK_KEY_CANCELLED], 0, pos_osk_key_get_symbol (self->current));
   self->current = NULL;
+
+  pos_indicator_popup_hide (self->indicator_popup, TRUE);
 }
 
 
@@ -1692,6 +1718,9 @@ pos_osk_widget_init (PosOskWidget *self)
                     "swapped-signal::cancel",
                     G_CALLBACK (on_drag_cancel), self,
                     NULL);
+
+  self->indicator_popup = pos_indicator_popup_new ();
+  gtk_popover_set_relative_to (GTK_POPOVER (self->indicator_popup), GTK_WIDGET (self));
 }
 
 

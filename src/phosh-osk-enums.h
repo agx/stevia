@@ -29,16 +29,18 @@ typedef enum {
 /**
  * PhoshOskFeatures:
  *
- * PHOSH_OSK_FEATURE_DEFAULT: no special features
- * PHOSH_OSK_FEATURE_KEY_DRAG: When set crossing a key boundary
+ * @PHOSH_OSK_FEATURE_DEFAULT: no special features
+ * @PHOSH_OSK_FEATURE_KEY_DRAG: When set crossing a key boundary
  *   by dragging the finger across the keyboard sends a
  *   [signal@PosOskWiddget:key-up] for the old key and a
  *   [signal@PosOskWiddget:key-down] for the newly touched key. Without
  *   this flags the key press is canceled.
+ * @PHOSH_OSK_FEATURE_KEY_INDICATOR: Indicate currently pressed key with a small popover
  */
 typedef enum {
-  PHOSH_OSK_FEATURE_DEFAULT  = 0,        /*< skip >*/
-  PHOSH_OSK_FEATURE_KEY_DRAG = (1 << 0), /*< nick=key-drag >*/
+  PHOSH_OSK_FEATURE_DEFAULT  = 0,             /*< skip >*/
+  PHOSH_OSK_FEATURE_KEY_DRAG = (1 << 0),      /*< nick=key-drag >*/
+  PHOSH_OSK_FEATURE_KEY_INDICATOR = (1 << 1), /*< nick=key-indicator >*/
 } PhoshOskFeatures;
 
 /**

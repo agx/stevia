@@ -53,6 +53,8 @@ libpos_sources = files(
   'pos-enums.h',
   'pos-hw-tracker.c',
   'pos-hw-tracker.h',
+  'pos-indicator-popup.c',
+  'pos-indicator-popup.h',
   'pos-input-method.c',
   'pos-input-method.h',
   'pos-input-surface.c',

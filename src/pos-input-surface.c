@@ -1008,6 +1008,7 @@ pos_input_surface_set_osk_features (PosInputSurface *self, PhoshOskFeatures osk_
 
   self->osk_features = osk_features;
   g_hash_table_foreach (self->osks, update_osk_features, self);
+  pos_osk_widget_set_features (POS_OSK_WIDGET (self->osk_terminal), self->osk_features);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_OSK_FEATURES]);
 }

@@ -4,6 +4,7 @@
     <file preprocess="xml-stripblanks">ui/char-popup.ui</file>
     <file preprocess="xml-stripblanks">ui/completion-bar.ui</file>
     <file preprocess="xml-stripblanks">ui/emoji-picker.ui</file>
+    <file preprocess="xml-stripblanks">ui/indicator-popup.ui</file>
     <file preprocess="xml-stripblanks">ui/input-surface.ui</file>
     <file preprocess="xml-stripblanks">ui/keypad.ui</file>
     <file preprocess="xml-stripblanks">ui/keypad-button.ui</file>
