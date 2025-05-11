@@ -17,7 +17,9 @@
 
 #include <gmobile.h>
 
-#define EMOJI_MIN_LEN 3
+#include <glib/gi18n.h>
+
+#define MATCH_MIN_LEN 3
 
 /**
  * PosCompleterBase:
@@ -37,6 +39,35 @@ typedef struct _PosCompleterBasePrivate {
 } PosCompleterBasePrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE (PosCompleterBase, pos_completer_base, G_TYPE_OBJECT)
+
+
+static char *
+pos_completer_base_match_keyword (PosCompleterBase *self, const char *match)
+{
+  if (!match)
+    return NULL;
+
+  /* Translators: Used to auto complete the current date, should be a single word */
+  if (g_str_has_prefix (_("today"), match)) {
+    g_autoptr (GDateTime) now = g_date_time_new_now_local ();
+
+    return g_date_time_format (now, "%x");
+    /* Translators: Used to auto complete the a date, should be a single word */
+  } else if (g_str_has_prefix (_("tomorrow"), match)) {
+    g_autoptr (GDateTime) now = g_date_time_new_now_local ();
+    g_autoptr (GDateTime) tomorrow = NULL;
+
+    tomorrow = g_date_time_add_days (now, 1);
+    return g_date_time_format (tomorrow, "%x");
+    /* Translators: Used to auto complete the current time, should be a single word */
+  } else if g_str_equal (match, _("now")) {
+    g_autoptr (GDateTime) now = g_date_time_new_now_local ();
+
+    return g_date_time_format (now, "%X");
+  }
+
+  return NULL;
+}
 
 
 static void
@@ -125,17 +156,35 @@ pos_completer_base_get_additional_results (PosCompleterBase *self,
 {
   PosEmojiDb *emoji_db = pos_emoji_db_get_default ();
   PosCompleterBasePrivate *priv = pos_completer_base_get_instance_private (self);
+  g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
+  guint remain = max_results;
 
   g_assert (POS_IS_COMPLETER_BASE (self));
 
   if (gm_str_is_null_or_empty (match))
     return NULL;
 
-  if (!(priv->sources & PHOSH_OSK_COMPLETION_SOURCE_EMOJI))
-    return NULL;
+  if (priv->sources & PHOSH_OSK_COMPLETION_SOURCE_KEYWORD &&
+      match && strlen (match) >= MATCH_MIN_LEN &&
+      remain > 1) {
+    char *result = pos_completer_base_match_keyword (self, match);
 
-  if (!match || strlen (match) < EMOJI_MIN_LEN)
-    return NULL;
+    if (!gm_str_is_null_or_empty (result)) {
+      g_strv_builder_take (builder, result);
+      remain--;
+    }
+  }
 
-  return pos_emoji_db_match_by_name (emoji_db, match, max_results);
+  if (priv->sources & PHOSH_OSK_COMPLETION_SOURCE_EMOJI &&
+      match && strlen (match) >= MATCH_MIN_LEN &&
+      remain > 1) {
+    g_auto (GStrv) results = pos_emoji_db_match_by_name (emoji_db, match, remain);
+
+    if (!gm_strv_is_null_or_empty (results)) {
+      g_strv_builder_addv (builder, (const char **)results);
+      remain -= g_strv_length (results);
+    }
+  }
+
+  return g_strv_builder_end (builder);
 }

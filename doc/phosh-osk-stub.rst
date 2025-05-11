@@ -216,6 +216,7 @@ Completers can amend their results with matches from additional sources, the
 following ones currently exist:
 
    - ``emoji``: Add emojis
+   - ``keyword``: Complete special keywords (e.g. ``today``)
 
 They can be enabled via the ``sm.puri.phosh.osk`` ``sources`` gsetting.
 

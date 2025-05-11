@@ -1,5 +1,6 @@
 data/sm.puri.OSK0.desktop.in.in
 data/completers/hunspell.desktop.in
 data/completers/presage.desktop.in
+src/pos-completer-base.c
 src/pos-input-surface.c
 src/ui/input-surface.ui
