@@ -261,16 +261,34 @@ connected hardware keyboard. To make it show nevertheless use
    gsettings set sm.puri.phosh.osk ignore-hw-keyboards false
 
 
-KEY PRESS
-^^^^^^^^^
+ADDITIONAL FEATURES
+^^^^^^^^^^^^^^^^^^^
 
-By default moving the finger while pressing a character will cancel
-the gesture and not input it. This can be changed by enabling
-`key-drag`:
+The ``osk-features`` setting is a ``flag`` type setting enabling
+features that apply to all character layouts.
+
+* ``key-drag``: By default moving the finger while pressing a
+  character will cancel the gesture and not input it. This can be
+  changed by enabling `key-drag`:
 
 ::
 
    gsettings set sm.puri.phosh.osk osk-features "['key-drag']"
+
+* ``key-indicator``: Setting this flag enables an additional popover
+  indicating the currently pressed key:
+
+::
+
+   gsettings set sm.puri.phosh.osk osk-features "['key-indicator']"
+
+
+Note that all of the above use the same gsetting key as it is a ``flag``
+type. If you want to set multiple options separate them with a comma (``,``):
+
+::
+
+   gsettings set sm.puri.phosh.osk osk-features "['key-drag', 'key-indicator']"
 
 
 ENVIRONMENT VARIABLES
