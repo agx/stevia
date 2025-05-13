@@ -1,6 +1,6 @@
 [library]
 version = "@VERSION@"
-description = "Phosh On Screen Keyboard Stub"
+description = "Stevia On Screen"
 authors = "Guido Günther"
 license = "GPL-3-or-later"
 browse_url = "https://gitlab.gnome.org/guidog/phosh-osk-stub/"

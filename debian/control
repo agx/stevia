@@ -1,4 +1,4 @@
-Source: phosh-osk-stub
+Source: phosh-osk-stevia
 Section: x11
 Priority: optional
 Maintainer: Guido Günther <agx@sigxcpu.org>
@@ -30,7 +30,7 @@ Standards-Version: 4.1.3
 Homepage: https://gitlab.gnome.org/guidog/phosh-osk-stub/
 Rules-Requires-Root: no
 
-Package: phosh-osk-stub
+Package: phosh-osk-stevia
 Architecture: any
 Recommends:
  fonts-noto-core,
@@ -43,7 +43,7 @@ Depends:
 Breaks:
  libgtk-3-0 (<< 3.24.35)
 Description: An alternative on screen keyboard for Phosh
- phosh-osk-stub is an on screen keyboard (OSK) for Phosh. It features
+ Stevia is an on screen keyboard (OSK) for Phosh. It features
  .
   * Character popovers
   * Emoji layout
@@ -56,14 +56,14 @@ Description: An alternative on screen keyboard for Phosh
  .
  If you're looking for flexible layouts customization look at squeekboard.
 
-Package: phosh-osk-stub-doc
+Package: phosh-osk-stevia-doc
 Architecture: all
 Section: doc
 Build-Profiles: <!nodoc>
 Depends:
  ${misc:Depends},
 Description: API documentation for Phosh's OSK stub
- phosh-osk-stub implements phosh's keyboard interface for ease of
+ Stevia implements phosh's keyboard interface for ease of
  experimentation. The focus is on ease of change and debugging rather than
  stability. It features character popoversa and gesture based cursor
  navigation.

@@ -2,7 +2,7 @@
 Type=Application
 Name=On-screen keyboard
 Comment=On-screen keyboard
-Exec=@bindir@/phosh-osk-stub --allow-replacement
+Exec=@bindir@/phosh-osk-stevia --allow-replacement
 Categories=System;GNOME;Core;
 OnlyShowIn=Phosh;
 Icon=input-keyboard-symbolic

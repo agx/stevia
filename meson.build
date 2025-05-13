@@ -1,14 +1,14 @@
 project(
-  'phosh-osk-stub',
+  'phosh-osk-stevia',
   'c',
-  version: '0.47.0',
+  version: '0.48-dev',
   license: 'GPLv3+',
   meson_version: '>= 0.60.0',
   default_options: ['warning_level=1', 'buildtype=debugoptimized', 'c_std=gnu11'],
 )
 
 
-app_id = 'mobi.phosh.OskStub'
+app_id = 'mobi.phosh.Stevia'
 
 prefix = get_option('prefix')
 bindir = join_paths(prefix, get_option('bindir'))
@@ -150,9 +150,9 @@ if completers.length() == 0
 endif
 
 config_h = configuration_data()
-config_h.set_quoted('GETTEXT_PACKAGE', 'phosh-osk-stub')
+config_h.set_quoted('GETTEXT_PACKAGE', 'phosh-osk-stevia')
 config_h.set_quoted('LOCALEDIR', localedir)
-config_h.set_quoted('PHOSH_OSK_STUB_VERSION', meson.project_version())
+config_h.set_quoted('PHOSH_OSK_STEVIA_VERSION', meson.project_version())
 config_h.set('POS_HAVE_FZF', fzf.found())
 config_h.set('POS_HAVE_HUNSPELL', hunspell_dep.found())
 config_h.set('POS_HAVE_PRESAGE', presage_dep.found())

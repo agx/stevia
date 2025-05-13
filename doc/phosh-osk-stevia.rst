@@ -1,8 +1,8 @@
-.. _phosh-osk-stub(1):
+.. _phosh-osk-stevia(1):
 
-==============
-phosh-osk-stub
-==============
+================
+phosh-osk-stevia
+================
 
 -------------------------------
 An on screen keyboard for Phosh
@@ -10,16 +10,16 @@ An on screen keyboard for Phosh
 
 SYNOPSIS
 --------
-|   **phosh-osk-stub** [OPTIONS...]
+|   **phosh-osk-stevia** [OPTIONS...]
 
 
 DESCRIPTION
 -----------
 
-``phosh-osk-stub`` is an on screen keyboard (OSK) for phosh. It can
+``phosh-osk-stevia`` is an on screen keyboard (OSK) for phosh. It can
 replace Phosh's default keyboard ``squeekboard(1)``.
 
-``phosh-osk-stub`` has two modes of operation. If the application
+``phosh-osk-stevia`` has two modes of operation. If the application
 supports and uses ``text-input-unstable-v3`` the Wayland compositor
 will use the ``input-method-unstable-v2`` protocol to interact with
 the OSK. This allows it to
@@ -50,7 +50,7 @@ OPTIONS
    (Temporarily) Give up the `sm.puri.OSK0` DBus name if another OSK
    requests it. This also unregisters the Wayland input-method-v1 so another
    OSK can act as input method.
-   If the name becomes available again it is grabbed again and phosh-osk-stub
+   If the name becomes available again it is grabbed again and phosh-osk-stevia
    registers itself as input method again.
 
 ``-v``, ``--version``
@@ -60,7 +60,7 @@ OPTIONS
 SETUP
 -----
 
-In order to be used by Phosh as OSK, phosh-osk-stub needs to be started from
+In order to be used by Phosh as OSK, phosh-osk-stevia needs to be started from
 the `/usr/share/applications/sm.puri.OSK0.desktop` desktop file. On Debian
 systems this can be achieved by running
 
@@ -68,13 +68,13 @@ systems this can be achieved by running
 
    update-alternatives --config Phosh-OSK
 
-as root and selecting the entry ending in ``sm.puri.Phosh.OskStub.desktop``.
+as root and selecting the entry ending in ``sm.puri.Phosh.Stevia.desktop``.
 
 
 CONFIGURATION
 -------------
 
-``phosh-osk-stub`` is configured via ``GSettings``. This includes
+``phosh-osk-stevia`` is configured via ``GSettings``. This includes
 configuration of the loaded layouts from
 ``org.gnome.desktop.input-sources`` via the ``sources`` and
 ``xkb-options`` keys, whether the OSK is enabled at all via the
@@ -93,7 +93,7 @@ For the keyboard to fold and unfold automatically make sure
 WORD COMPLETION
 ^^^^^^^^^^^^^^^
 
-``phosh-osk-stub`` has support for word completion and correction via various
+``phosh-osk-stevia`` has support for word completion and correction via various
 completers (see below). It has several modes of operation represented
 by flags that can be combined:
 
@@ -122,14 +122,14 @@ Note that completion is always disabled when
 
 - No usable completers are found on startup
 - Terminal or emoji layout is in use
-- The application doesn't support text-input so ``phosh-osk-stub`` is
+- The application doesn't support text-input so ``phosh-osk-stevia`` is
   falling back virtual-keyboard mode.
 
 
 AVAILABLE COMPLETERS
 ####################
 
-The available completers depend on how ``phosh-osk-stub`` was
+The available completers depend on how ``phosh-osk-stevia`` was
 built. Available are currently at most
 
   - ``hunspell``: word correction based on the hunspell library
@@ -145,7 +145,7 @@ The default word completer is selected via the
 
   gsettings set sm.puri.phosh.osk.Completers default hunspell
 
-You need to restart ``phosh-osk-stub`` for the new default completer
+You need to restart ``phosh-osk-stevia`` for the new default completer
 to become active.
 
 
@@ -179,13 +179,13 @@ file and expects the executable to output possible completions on
 stdout. The executable to invoke is configured via the
 ``sm.puri.phosh.osk.Completers.Pipe`` ``command`` GSetting. It defaults
 to ``cat``. This can be used to experiment with different completion
-patterns without having to modify ``phosh-osk-stub`` itself.
+patterns without having to modify ``phosh-osk-stevia`` itself.
 
 ::
 
   gsettings set sm.puri.phosh.osk.Completers.Pipe command 'wc -c'
 
-You need to restart ``phosh-osk-stub`` for the new command to become
+You need to restart ``phosh-osk-stevia`` for the new command to become
 active. A commonly used executable is swipeGuess: https://git.sr.ht/~earboxer/swipeGuess
 
 
@@ -223,7 +223,7 @@ They can be enabled via the ``sm.puri.phosh.osk`` ``sources`` gsetting.
 
 TERMINAL SHORTCUTS
 ^^^^^^^^^^^^^^^^^^
-``phosh-osk-stub`` can provide a row of keyboard shortcuts on the
+``phosh-osk-stevia`` can provide a row of keyboard shortcuts on the
 terminal layout. These are configured via the ``shortcuts`` GSetting
 
 ::
@@ -294,7 +294,7 @@ type. If you want to set multiple options separate them with a comma (``,``):
 ENVIRONMENT VARIABLES
 ---------------------
 
-``phosh-osk-stub`` honors the following environment variables for debugging purposes:
+``phosh-osk-stevia`` honors the following environment variables for debugging purposes:
 
 - ``POS_DEBUG``: A comma separated list of flags:
 
@@ -303,7 +303,7 @@ ENVIRONMENT VARIABLES
   - ``force-completion``: Force text completion to ignoring the `completion-mode` GSetting.
 - ``POS_TEST_LAYOUT``: Load the given layout instead of the ones configured via GSetting.
 - ``POS_TEST_COMPLETER``: Use the given completer instead of the configured ones.
-  The available values depend on how phosh-osk-stub was built (see above).
+  The available values depend on how phosh-osk-stevia was built (see above).
 - ``G_MESSAGES_DEBUG``, ``G_DEBUG`` and other environment variables supported
   by glib. https://docs.gtk.org/glib/running.html
 - ``GTK_DEBUG`` and other environment variables supported by GTK, see

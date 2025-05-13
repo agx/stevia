@@ -1,9 +1,11 @@
 Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
-Upstream-Name: phosh-osk-stub
+Upstream-Name: phosh-osk-stevia
 Source: https://gitlab.gnome.org/guidog/phosh-osk-stub
 
 Files: *
-Copyright: 2022 Purism SPC
+Copyright:
+  2022 Purism SPC
+  2022-2025 The Phosh Developers
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
