@@ -40,7 +40,10 @@ Depends:
  ${misc:Depends},
  ${shlibs:Depends},
   gsettings-desktop-schemas (>= 47),
+Provides: phosh-osk-stub (= 0.47)
+Replaces: phosh-osk-stub (<< 0.48~)
 Breaks:
+ phosh-osk-stub (<< 0.48~),
  libgtk-3-0 (<< 3.24.35)
 Description: An alternative on screen keyboard for Phosh
  Stevia is an on screen keyboard (OSK) for Phosh. It features
