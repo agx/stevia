@@ -1,3 +1,9 @@
+phosh-osk-stub (0.47.0) experimental; urgency=medium
+
+  * No changes over rc2
+
+ -- Guido Günther <agx@sigxcpu.org>  Thu, 15 May 2025 11:17:23 +0200
+
 phosh-osk-stub (0.47~rc2) experimental; urgency=medium
 
   * schema: Use canonical prefix

@@ -1,5 +1,5 @@
-phosh-osk-stub 0.47~rc2
------------------------
+phosh-osk-stub 0.47.0
+---------------------
 Released May 2025
 * Add popover to indicate the currently typed character
   (optional, off by default)
