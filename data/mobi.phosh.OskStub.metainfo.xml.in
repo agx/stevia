@@ -61,6 +61,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.47.0" date="2025-05-15">
+      <description translate="no">
+        <ul>
+          <li>Add optional popover to indicate the currently typed character (optional, off by default)</li>
+          <li>Add emojis and keyword completions (optional, on by default)</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.46.0" date="2025-03-29">
       <description translate="no">
         <ul>
