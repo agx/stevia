@@ -4,8 +4,8 @@ if get_option('gtk_doc')
   toml_data.set('VERSION', meson.project_version())
 
   pos_toml = configure_file(
-    input: 'phosh-osk-stub.toml.in',
-    output: 'phosh-osk-stub.toml',
+    input: 'phosh-osk-stevia.toml.in',
+    output: 'phosh-osk-stevia.toml',
     configuration: toml_data,
   )
 
@@ -22,7 +22,7 @@ if get_option('gtk_doc')
   docs_dir = datadir / 'doc'
 
   custom_target(
-    'phosh-osk-stub',
+    'phosh-osk-stevia',
     input: [pos_toml, pos_gir[0]],
     output: 'pos-0',
     command: [
@@ -45,7 +45,7 @@ if get_option('gtk_doc')
 endif
 
 if get_option('man')
-  manpages = [['phosh-osk-stub', 1]]
+  manpages = [['phosh-osk-stevia', 1]]
 
   rst2man = find_program('rst2man', 'rst2man.py', required: false)
   rst2man_flags = ['--syntax-highlight=none']

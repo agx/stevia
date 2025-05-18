@@ -1,10 +1,10 @@
-# Arabic translation for phosh-osk-stub.
+# Arabic translation for phosh-osk-stevia.
 # This file is distributed under the same license as the phosh package.
 # Ahmed Najmawi <iramosu@protonmail.com>, 2025.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: phosh-osk-stub\n"
+"Project-Id-Version: phosh-osk-stevia\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-05-03 13:07+0300\n"
 "PO-Revision-Date: \n"

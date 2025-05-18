@@ -5,11 +5,10 @@
          xmlns:gnome="http://api.gnome.org/doap-extensions#"
          xmlns="http://usefulinc.com/ns/doap#">
 
-  <name>phosh-osk-stub</name>
-  <shortname>phosh-osk-stub</shortname>
-  <shortdesc>An on screen keyboard stub for Phosh</shortdesc>
-  <description>An On Screen Keyboard and debugging tool
-   for keyboard and input related issues in phosh.</description>
+  <name>phosh-osk-stevia</name>
+  <shortname>Stevia</shortname>
+  <shortdesc>An on screen keyboard for Phosh</shortdesc>
+  <description>A sweet on Screen Keyboard for Phosh</description>
   <homepage rdf:resource="https://gitlab.gnome.org/World/Phosh/phosh/" />
   <license rdf:resource="http://usefulinc.com/doap/licenses/gpl" />
 

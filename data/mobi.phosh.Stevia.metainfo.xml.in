@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="inputmethod">
-  <id>sm.puri.phosh.osk-stub</id>
+  <id>mobi.phosh.stevia</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Phosh OSK</name>
@@ -28,6 +28,9 @@
       This keyboard is still in development. <em>Use with care</em>.
     </p>
   </description>
+  <provides>
+    <id>sm.puri.phosh.osk-stub</id>
+  </provides>
 
   <keywords>
     <keyword>input-method</keyword>

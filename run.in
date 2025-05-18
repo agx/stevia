@@ -7,9 +7,9 @@ ABS_SRCDIR='@ABS_SRCDIR@'
 export GSETTINGS_SCHEMA_DIR="${ABS_BUILDDIR}/data"
 
 if [ "${POS_GDB}" = 1 ]; then
-    echo "Running phosh-osk-stub under gdb"
+    echo "Running phosh-osk-stevia under gdb"
     WRAPPER="gdb --args"
 fi
 
 set -x
-exec ${WRAPPER} "${ABS_BUILDDIR}/src/phosh-osk-stub" "$@"
+exec ${WRAPPER} "${ABS_BUILDDIR}/src/phosh-osk-stevia" "$@"

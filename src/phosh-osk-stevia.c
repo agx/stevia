@@ -1,13 +1,13 @@
 /*
  * Copyright (C) 2018 Purism SPC
- *               2022-2024 The Phosh Developers
+ *               2022-2025 The Phosh Developers
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
  * Author: Guido Günther <agx@sigxcpu.org>
  */
 
-#define G_LOG_DOMAIN "phosh-osk-stub"
+#define G_LOG_DOMAIN "phosh-osk-stevia"
 
 #include "pos-config.h"
 #include "pos.h"
@@ -49,7 +49,7 @@ typedef enum _PosDebugFlags {
   POS_DEBUG_FLAG_DEBUG_SURFACE     = 1 << 2,
 } PosDebugFlags;
 
-typedef struct _PhoshOskStub {
+typedef struct _PhoshOskStevia {
   GObject              parent_instance;
 
   PosInputSurface     *input_surface;
@@ -70,11 +70,11 @@ typedef struct _PhoshOskStub {
   struct wl_seat                          *seat;
   struct zwp_virtual_keyboard_manager_v1  *virtual_keyboard_manager;
   struct zwlr_data_control_manager_v1     *wlr_data_control_manager;
-} PhoshOskStub;
+} PhoshOskStevia;
 
-#define PHOSH_TYPE_OSK_STUB (phosh_osk_stub_get_type ())
-G_DECLARE_FINAL_TYPE (PhoshOskStub, phosh_osk_stub, PHOSH, OSK_STUB, GObject)
-G_DEFINE_TYPE (PhoshOskStub, phosh_osk_stub, G_TYPE_OBJECT)
+#define PHOSH_TYPE_OSK_STEVIA (phosh_osk_stevia_get_type ())
+G_DECLARE_FINAL_TYPE (PhoshOskStevia, phosh_osk_stevia, PHOSH, OSK_STEVIA, GObject)
+G_DEFINE_TYPE (PhoshOskStevia, phosh_osk_stevia, G_TYPE_OBJECT)
 
 
 PosDebugFlags _debug_flags;
@@ -86,7 +86,7 @@ PosDebugFlags _debug_flags;
 static void G_GNUC_NORETURN
 print_version (void)
 {
-  g_message ("OSK stub %s\n", PHOSH_OSK_STUB_VERSION);
+  g_message ("OSK stub %s\n", PHOSH_OSK_STEVIA_VERSION);
   exit (0);
 }
 
@@ -214,7 +214,7 @@ set_surface_prop_surface_visible (GBinding     *binding,
                                   GValue       *to_value,
                                   gpointer      user_data)
 {
-  PhoshOskStub *self = PHOSH_OSK_STUB (user_data);
+  PhoshOskStevia *self = PHOSH_OSK_STEVIA (user_data);
   gboolean enabled, visible = g_value_get_boolean (from_value);
 
   if (_debug_flags & POS_DEBUG_FLAG_FORCE_SHOW) {
@@ -264,9 +264,9 @@ static void on_input_surface_gone (gpointer data, GObject *unused);
 static void on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer unused);
 
 static void
-dispose_input_surface (PhoshOskStub *self)
+dispose_input_surface (PhoshOskStevia *self)
 {
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
   g_assert (POS_IS_INPUT_SURFACE (self->input_surface));
 
   /* Remove weak ref so input-surface doesn't get recreated */
@@ -277,9 +277,9 @@ dispose_input_surface (PhoshOskStub *self)
 #define INPUT_SURFACE_HEIGHT 200
 
 static gboolean
-phosh_osk_stub_has_wl_protcols (PhoshOskStub *self)
+phosh_osk_stevia_has_wl_protcols (PhoshOskStevia *self)
 {
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
 
   return (self->foreign_toplevel_manager &&
           self->input_method_manager &&
@@ -292,7 +292,7 @@ phosh_osk_stub_has_wl_protcols (PhoshOskStub *self)
 
 
 static void
-create_input_surface (PhoshOskStub *self)
+create_input_surface (PhoshOskStevia *self)
 {
   g_autoptr (PosVirtualKeyboard) virtual_keyboard = NULL;
   g_autoptr (PosVkDriver) vk_driver = NULL;
@@ -301,7 +301,7 @@ create_input_surface (PhoshOskStub *self)
   g_autoptr (PosClipboardManager) clipboard_manager = NULL;
   gboolean force_completion;
 
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
   g_assert (self->seat);
   g_assert (self->virtual_keyboard_manager);
   g_assert (self->input_method_manager);
@@ -373,9 +373,9 @@ create_input_surface (PhoshOskStub *self)
 static void
 on_input_surface_gone (gpointer data, GObject *unused)
 {
-  PhoshOskStub *self = PHOSH_OSK_STUB (data);
+  PhoshOskStevia *self = PHOSH_OSK_STEVIA (data);
 
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
 
   g_debug ("Input surface gone, recreating");
   create_input_surface (self);
@@ -385,7 +385,7 @@ on_input_surface_gone (gpointer data, GObject *unused)
 static void
 on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer data)
 {
-  PhoshOskStub *self = PHOSH_OSK_STUB (data);
+  PhoshOskStevia *self = PHOSH_OSK_STEVIA (data);
   gboolean has_name;
 
   has_name = pos_osk_dbus_has_name (dbus);
@@ -395,7 +395,7 @@ on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer data)
     dispose_input_surface (self);
     self->input_surface = NULL;
   } else if (self->input_surface == NULL) {
-    if (self && phosh_osk_stub_has_wl_protcols (self))
+    if (self && phosh_osk_stevia_has_wl_protcols (self))
       create_input_surface (self);
     else
       g_debug ("Wayland globals not yet read");
@@ -410,9 +410,9 @@ registry_handle_global (void               *data,
                         const char         *interface,
                         uint32_t            version)
 {
-  PhoshOskStub *self = PHOSH_OSK_STUB (data);
+  PhoshOskStevia *self = PHOSH_OSK_STEVIA (data);
 
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
 
   if (strcmp (interface, zwp_input_method_manager_v2_interface.name) == 0) {
     self->input_method_manager = wl_registry_bind (registry, name,
@@ -440,7 +440,7 @@ registry_handle_global (void               *data,
                                                        &zwlr_data_control_manager_v1_interface, 1);
   }
 
-  if (phosh_osk_stub_has_wl_protcols (self) && !self->input_surface) {
+  if (phosh_osk_stevia_has_wl_protcols (self) && !self->input_surface) {
     g_debug ("Found all wayland protocols. Creating listeners and surfaces.");
     create_input_surface (self);
   }
@@ -464,11 +464,11 @@ static const struct wl_registry_listener registry_listener = {
 
 /* TODO: this could happen in constructed */
 static gboolean
-phosh_osk_stub_setup_input_method (PhoshOskStub *self, PosOskDbus *osk_dbus)
+phosh_osk_stevia_setup_input_method (PhoshOskStevia *self, PosOskDbus *osk_dbus)
 {
   GdkDisplay *gdk_display;
 
-  g_assert (PHOSH_IS_OSK_STUB (self));
+  g_assert (PHOSH_IS_OSK_STEVIA (self));
   g_assert (POS_IS_OSK_DBUS (osk_dbus));
 
   self->osk_dbus = g_object_ref (osk_dbus);
@@ -516,7 +516,7 @@ parse_debug_env (void)
 static void
 pos_input_surface_finalize (GObject *object)
 {
-  PhoshOskStub *self = PHOSH_OSK_STUB (object);
+  PhoshOskStevia *self = PHOSH_OSK_STEVIA (object);
 
   g_clear_object (&self->osk_dbus);
   g_clear_object (&self->activation_filter);
@@ -529,12 +529,12 @@ pos_input_surface_finalize (GObject *object)
 
   g_clear_object (&self->emoji_db);
 
-  G_OBJECT_CLASS (phosh_osk_stub_parent_class)->finalize (object);
+  G_OBJECT_CLASS (phosh_osk_stevia_parent_class)->finalize (object);
 }
 
 
 static void
-phosh_osk_stub_class_init (PhoshOskStubClass *klass)
+phosh_osk_stevia_class_init (PhoshOskSteviaClass *klass)
 {
   GObjectClass *object_class = G_OBJECT_CLASS (klass);
 
@@ -543,7 +543,7 @@ phosh_osk_stub_class_init (PhoshOskStubClass *klass)
 
 
 void
-phosh_osk_stub_init (PhoshOskStub *self)
+phosh_osk_stevia_init (PhoshOskStevia *self)
 {
   gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/osk-stub/icons");
 
@@ -558,7 +558,7 @@ phosh_osk_stub_init (PhoshOskStub *self)
 
 
 static void
-phosh_osk_stub_run (PhoshOskStub *self)
+phosh_osk_stevia_run (PhoshOskStevia *self)
 {
   g_main_loop_run (self->loop);
 }
@@ -569,7 +569,7 @@ main (int argc, char *argv[])
 {
   g_autoptr (GOptionContext) opt_context = NULL;
   g_autoptr (GError) err = NULL;
-  PhoshOskStub *osk_stub;
+  PhoshOskStevia *stevia;
   g_autoptr (PosOskDbus) osk_dbus = NULL;
   gboolean version = FALSE, replace = FALSE, allow_replace = FALSE;
   GBusNameOwnerFlags flags;
@@ -600,18 +600,18 @@ main (int argc, char *argv[])
   _debug_flags = parse_debug_env ();
   gtk_init (&argc, &argv);
 
-  osk_stub = g_object_new (PHOSH_TYPE_OSK_STUB, NULL);
+  stevia = g_object_new (PHOSH_TYPE_OSK_STEVIA, NULL);
 
   flags = (allow_replace ? G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT : 0) |
     (replace ? G_BUS_NAME_OWNER_FLAGS_REPLACE : 0);
   osk_dbus = pos_osk_dbus_new (flags);
 
-  if (!phosh_osk_stub_setup_input_method (osk_stub, osk_dbus))
+  if (!phosh_osk_stevia_setup_input_method (stevia, osk_dbus))
     return EXIT_FAILURE;
 
-  phosh_osk_stub_run (osk_stub);
+  phosh_osk_stevia_run (stevia);
 
-  g_clear_object (&osk_stub);
+  g_clear_object (&stevia);
   pos_uninit ();
 
   return EXIT_SUCCESS;

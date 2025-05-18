@@ -1,9 +1,9 @@
-# Phosh OSK Stub
+# Stevia
 
-An alternative keyboard for Phosh. It can replace the default OSK
+Stevia is an alternative keyboard for Phosh. It can replace the default OSK
 [squeekboard][].
 
-The purpose of phosh-osk-stub:
+The purpose of phosh-osk-stevia:
 
 - allow experimentation without the risk of breaking end user systems
 - be helpful when debugging input-method related issues
@@ -32,7 +32,7 @@ Features:
 
 ## License
 
-phosh-osk-stub is licensed under the GPLv3+.
+phosh-osk-stevia is licensed under the GPLv3+.
 
 ## Getting the source
 
@@ -57,7 +57,7 @@ For an explicit list of dependencies check the `Build-Depends` entry in the
 
 ## Building
 
-We use the meson (and thereby Ninja) build system for phosh-osk-stub.
+We use the meson (and thereby Ninja) build system for phosh-osk-stevia.
 The quickest way to get going is to do the following:
 
 ```sh
@@ -73,14 +73,14 @@ We're disabling the doc build above as it reduces build time a lot.
 ### Running from the source tree
 
 When running from the source tree first start *[phosh][]*.
-Then start *phosh-osk-stub* using:
+Then start *phosh-osk-stevia* using:
 
 ```sh
 _build/run --replace
 ```
 
 Note that there's no need to install any files outside the source tree. The
-`--replace` option *temporarily* replaces a running `phosh-osk-stub` so there's
+`--replace` option *temporarily* replaces a running `phosh-osk-stevia` so there's
 no need to stop a running instance.
 
 The result should look something like this:
@@ -91,7 +91,7 @@ The result should look something like this:
 
 ## Word completion
 
-``phosh-osk-stub`` has support for word completion. There are different
+``phosh-osk-stevia`` has support for word completion. There are different
 completers built in and it's easy to add more. See the [manpage][] on
 available completers and how to configure them.
 
@@ -105,7 +105,7 @@ The API documentation is available at
 ### End User Documentation
 
 For end user documentation see the [manpage][] (or in the installed
-system via `man phosh-osk-stub`).
+system via `man phosh-osk-stevia`).
 
 ## Getting in Touch
 
@@ -119,4 +119,4 @@ system via `man phosh-osk-stub`).
 [squeekboard]: https://gitlab.gnome.org/World/Phosh/squeekboard
 [sm.puri.OSK0]: https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/src/dbus/sm.puri.OSK0.xml
 [phosh-osk-data]: https://gitlab.gnome.org/guidog/phosh-osk-data/
-[manpage]: ./doc/phosh-osk-stub.rst
+[manpage]: ./doc/phosh-osk-stevia.rst

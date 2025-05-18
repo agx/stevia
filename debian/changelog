@@ -1,3 +1,10 @@
+phosh-osk-stevia (0.48-dev) UNRELEASED; urgency=medium
+
+  * Rename from phosh-osk-stub to Stevia. This name is less confusing
+    and it's a full OSK since some time.
+
+ -- Guido Günther <agx@sigxcpu.org>  Tue, 13 May 2025 11:46:53 +0200
+
 phosh-osk-stub (0.47.0) experimental; urgency=medium
 
   * No changes over rc2

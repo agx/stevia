@@ -24,7 +24,7 @@ libpos_deps = [
 
 pos_resources = gnome.compile_resources(
   'pos-resources',
-  'phosh-osk-stub.gresources.xml',
+  'phosh-osk-stevia.gresources.xml',
   extra_args: '--manual-register',
   c_name: 'pos',
 )
@@ -125,8 +125,8 @@ libpos_dep = declare_dependency(
 )
 
 executable(
-  'phosh-osk-stub',
-  'phosh-osk-stub.c',
+  'phosh-osk-stevia',
+  'phosh-osk-stevia.c',
   include_directories: pos_includes,
   install: true,
   dependencies: libpos_dep,

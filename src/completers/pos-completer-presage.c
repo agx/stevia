@@ -21,6 +21,7 @@
 
 #include <gmobile.h>
 #include <gio/gio.h>
+#include <glib/gstdio.h>
 
 #include <locale.h>
 
@@ -206,6 +207,20 @@ pos_completer_presage_set_surrounding_text (PosCompleter *iface,
 }
 
 
+static void
+maybe_migrate_data (const char *newdir, const char *olddir)
+{
+  if (!g_file_test (olddir, G_FILE_TEST_EXISTS))
+    return;
+
+  if (g_file_test (newdir, G_FILE_TEST_EXISTS))
+    return;
+
+  g_message ("Migrating completion data from %s to %s", olddir, newdir);
+  g_rename (olddir, newdir);
+}
+
+
 static gboolean
 pos_completer_presage_set_language (PosCompleter *completer,
                                     const char   *lang,
@@ -214,6 +229,7 @@ pos_completer_presage_set_language (PosCompleter *completer,
 {
   PosCompleterPresage *self = POS_COMPLETER_PRESAGE (completer);
   g_autofree char *dbdir = NULL;
+  g_autofree char *old_dbdir = NULL;
   g_autofree char *dbfile = NULL;
   g_autofree char *dbpath = NULL;
   gboolean ret;
@@ -254,7 +270,11 @@ pos_completer_presage_set_language (PosCompleter *completer,
   g_clear_pointer (&dbpath, g_free);
 
   /* presage example uses a single file, we use one file per language */
-  dbdir = g_build_path ("/", g_get_user_data_dir (), "phosh-osk-stub", NULL);
+  dbdir = g_build_path ("/", g_get_user_data_dir (), "phosh-osk-stevia", NULL);
+  old_dbdir = g_build_path ("/", g_get_user_data_dir (), "phosh-osk-stub", NULL);
+
+  maybe_migrate_data (dbdir, old_dbdir);
+
   dbpath = g_strdup_printf ("%s/lm_%s.db", dbdir, lang);
   ret = g_mkdir_with_parents (dbdir, 0755);
   if (ret != 0) {

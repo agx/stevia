@@ -10,10 +10,10 @@ vgdump
 .vscode/
 *.gcov
 po/missing
-po/phosh-osk-stub.pot
+po/phosh-osk-stevia.pot
 debian/files
 debian/*.substvars
 debian/*debhelper*
-debian/phosh-osk-stub/
-debian/phosh-osk-stub-doc/
+debian/phosh-osk-stevia/
+debian/phosh-osk-stevia-doc/
 debian/tmp/
