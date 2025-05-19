@@ -27,7 +27,7 @@ Build-Depends:
  xauth <!nocheck>,
  xvfb <!nocheck>,
 Standards-Version: 4.7.2
-Homepage: https://gitlab.gnome.org/guidog/phosh-osk-stub/
+Homepage: https://gitlab.gnome.org/guidog/stevia/
 Rules-Requires-Root: no
 
 Package: phosh-osk-stevia
@@ -65,6 +65,10 @@ Section: doc
 Build-Profiles: <!nodoc>
 Depends:
  ${misc:Depends},
+Provides: phosh-osk-stub-doc (= 0.47)
+Replaces: phosh-osk-stub-doc (<< 0.48~)
+Breaks:
+ phosh-osk-stub-doc (<< 0.48~),
 Description: API documentation for Phosh's OSK stub
  Stevia implements phosh's keyboard interface for ease of
  experimentation. The focus is on ease of change and debugging rather than

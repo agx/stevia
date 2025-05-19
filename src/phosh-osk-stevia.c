@@ -86,7 +86,7 @@ PosDebugFlags _debug_flags;
 static void G_GNUC_NORETURN
 print_version (void)
 {
-  g_message ("OSK stub %s\n", PHOSH_OSK_STEVIA_VERSION);
+  g_message ("Stevia %s\n", PHOSH_OSK_STEVIA_VERSION);
   exit (0);
 }
 
@@ -584,7 +584,7 @@ main (int argc, char *argv[])
     { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
   };
 
-  opt_context = g_option_context_new ("- A OSK stub for phosh");
+  opt_context = g_option_context_new ("- A OSK for phosh");
   g_option_context_add_main_entries (opt_context, options, NULL);
   if (!g_option_context_parse (opt_context, &argc, &argv, &err)) {
     g_warning ("%s", err->message);
