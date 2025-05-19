@@ -5,7 +5,7 @@ Stevia is an alternative keyboard for Phosh. It can replace the default OSK
 
 The purpose of Stevia is:
 
-- allow experimentation without the risk of breaking end user systems
+- to allow experimentation without the risk of breaking end user systems
 - be helpful when debugging input-method related issues
 - be quick and easy to (cross)compile
 - allow to move GObject bits and Widgets over to squeekboard easily if
@@ -24,9 +24,10 @@ Features:
 - cursor navigation via space-bar long-press
 - word correction via hunspell
 - use any program as completer via a `pipe` completer ([Example](https://social.librem.one/@agx/110260534404795348))
-- experimental [word completion](https://social.librem.one/@agx/109428599061094716)
+- [word completion](https://social.librem.one/@agx/109428599061094716)
   based on the presage library
 - experimental input of Indic languages using [varnam](https://github.com/varnamproject)
+- allow for secondary completers to amend completion results
 - allow to prevent keyboard unfold for certain apps (via app-id)
 - allow to prevent keyboard unfold when a hardware keyboard is present
 
