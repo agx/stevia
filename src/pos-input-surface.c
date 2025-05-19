@@ -1505,7 +1505,7 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
   g_type_ensure (POS_TYPE_SHORTCUTS_BAR);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/input-surface.ui");
+                                               "/mobi/phosh/stevia/ui/input-surface.ui");
   gtk_widget_class_bind_template_child (widget_class, PosInputSurface, completion_bar);
   gtk_widget_class_bind_template_child (widget_class, PosInputSurface, deck);
   gtk_widget_class_bind_template_child (widget_class, PosInputSurface, emoji_picker);

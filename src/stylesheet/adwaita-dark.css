@@ -3,7 +3,7 @@
 @define-color pos_fg_color @theme_fg_color;
 @define-color pos_bg_color #242424;
 
-@import url("resource:///mobi/phosh/osk-stub/stylesheet/common.css");
+@import url("resource:///mobi/phosh/stevia/stylesheet/common.css");
 
 pos-key {
   box-shadow:0 1px 1px 0 rgba(0,0,0,0.2);

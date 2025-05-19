@@ -1853,9 +1853,9 @@ pos_osk_widget_set_layout (PosOskWidget *self,
   self->layout_id = g_strdup (layout_id);
 
   if (!STR_IS_NULL_OR_EMPTY (variant))
-    path = g_strdup_printf ("/mobi/phosh/osk-stub/layouts/%s+%s.json", layout, variant);
+    path = g_strdup_printf ("/mobi/phosh/stevia/layouts/%s+%s.json", layout, variant);
   else
-    path = g_strdup_printf ("/mobi/phosh/osk-stub/layouts/%s.json", layout);
+    path = g_strdup_printf ("/mobi/phosh/stevia/layouts/%s.json", layout);
 
   data = g_resources_lookup_data (path, 0, err);
   if (data == NULL) {

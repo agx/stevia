@@ -75,7 +75,7 @@ pos_indicator_popup_class_init (PosIndicatorPopupClass *klass)
   widget_class->show = pos_indicator_popup_show;
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/indicator-popup.ui");
+                                               "/mobi/phosh/stevia/ui/indicator-popup.ui");
 
   gtk_widget_class_bind_template_child (widget_class, PosIndicatorPopup, label);
 

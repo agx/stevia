@@ -680,7 +680,7 @@ pos_vk_driver_set_terminal_keymap (PosVkDriver *self)
   g_debug ("Setting terminal keymap");
   g_clear_pointer (&self->layout_id, g_free);
   self->layout_id = g_strdup (layout_id);
-  data = g_resources_lookup_data ("/mobi/phosh/osk-stub/keymap.txt", 0, NULL);
+  data = g_resources_lookup_data ("/mobi/phosh/stevia/keymap.txt", 0, NULL);
   g_assert (data);
   keymap = (char*) g_bytes_get_data (data, &size);
 

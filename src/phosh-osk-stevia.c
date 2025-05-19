@@ -545,7 +545,7 @@ phosh_osk_stevia_class_init (PhoshOskSteviaClass *klass)
 void
 phosh_osk_stevia_init (PhoshOskStevia *self)
 {
-  gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/osk-stub/icons");
+  gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/stevia/icons");
 
   self->loop = g_main_loop_new (NULL, FALSE);
   self->emoji_db = pos_emoji_db_get_default ();

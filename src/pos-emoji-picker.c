@@ -688,7 +688,7 @@ pos_emoji_picker_class_init (PosEmojiPickerClass *klass)
                   G_TYPE_NONE, 0);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/emoji-picker.ui");
+                                               "/mobi/phosh/stevia/ui/emoji-picker.ui");
 
   gtk_widget_class_bind_template_child (widget_class, PosEmojiPicker, scrolled_window);
   gtk_widget_class_bind_template_child (widget_class, PosEmojiPicker, scrolled_sections);

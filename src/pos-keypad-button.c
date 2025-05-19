@@ -142,7 +142,7 @@ pos_keypad_button_class_init (PosKeypadButtonClass *klass)
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/keypad-button.ui");
+                                               "/mobi/phosh/stevia/ui/keypad-button.ui");
   gtk_widget_class_bind_template_child (widget_class, PosKeypadButton, label);
   gtk_widget_class_bind_template_child (widget_class, PosKeypadButton, secondary_label);
 }

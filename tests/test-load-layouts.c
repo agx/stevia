@@ -36,7 +36,7 @@ test_load_layouts (void)
   g_assert_nonnull (pos_resource);
 
   names = g_resource_enumerate_children (pos_resource,
-                                         "/mobi/phosh/osk-stub/layouts",
+                                         "/mobi/phosh/stevia/layouts",
                                          G_RESOURCE_LOOKUP_FLAGS_NONE,
                                          &err);
   g_assert_no_error (err);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/mobi/phosh/osk-stub/">
+  <gresource prefix="/mobi/phosh/stevia/">
     <file preprocess="xml-stripblanks">ui/char-popup.ui</file>
     <file preprocess="xml-stripblanks">ui/completion-bar.ui</file>
     <file preprocess="xml-stripblanks">ui/emoji-picker.ui</file>
@@ -76,7 +76,7 @@
     <!-- emoji -->
     <file>emoji/en.data</file>
   </gresource>
-  <gresource prefix="/mobi/phosh/osk-stub/icons/">
+  <gresource prefix="/mobi/phosh/stevia/icons/">
     <file alias="keyboard-enter-symbolic.svg">../data/icons/keyboard-enter-symbolic.svg</file>
     <file alias="keyboard-shift-filled-symbolic.svg">../data/icons/keyboard-shift-filled-symbolic.svg</file>
     <file alias="layout-menu-symbolic.svg">../data/icons/layout-menu-symbolic.svg</file>
