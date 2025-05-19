@@ -591,9 +591,8 @@ main (int argc, char *argv[])
     return EXIT_FAILURE;
   }
 
-  if (version) {
+  if (version)
     print_version ();
-  }
 
   pos_init ();
   lfb_init (APP_ID, NULL);

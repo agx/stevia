@@ -658,8 +658,8 @@ pos_emoji_picker_class_init (PosEmojiPickerClass *klass)
                   0,
                   NULL, NULL,
                   NULL,
-                  G_TYPE_NONE, 1, G_TYPE_STRING|G_SIGNAL_TYPE_STATIC_SCOPE);
- /**
+                  G_TYPE_NONE, 1, G_TYPE_STRING | G_SIGNAL_TYPE_STATIC_SCOPE);
+  /**
    * PosEmojiPicker::done:
    *
    * The user is done picking emojis.
@@ -670,7 +670,7 @@ pos_emoji_picker_class_init (PosEmojiPickerClass *klass)
                   G_SIGNAL_RUN_LAST,
                   0, NULL, NULL, NULL,
                   G_TYPE_NONE, 0);
- /**
+  /**
    * PosEmojiPicker::delete-last:
    *
    * Delete the last entered character.

@@ -1858,9 +1858,8 @@ pos_osk_widget_set_layout (PosOskWidget *self,
     path = g_strdup_printf ("/mobi/phosh/stevia/layouts/%s.json", layout);
 
   data = g_resources_lookup_data (path, 0, err);
-  if (data == NULL) {
+  if (data == NULL)
     return FALSE;
-  }
 
   g_ptr_array_free (self->symbols, TRUE);
   self->symbols = g_ptr_array_new ();
