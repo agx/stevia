@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <component type="inputmethod">
-  <id>mobi.phosh.stevia</id>
+  <id>mobi.phosh.Stevia</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-3.0-or-later</project_license>
   <name>Phosh OSK</name>
@@ -49,17 +49,17 @@
     <control>touch</control>
   </recommends>
 
-  <url type="homepage">https://gitlab.gnome.org/guidog/phosh-osk-stub</url>
-  <url type="bugtracker">https://gitlab.gnome.org/guidog/phosh-osk-stub</url>
+  <url type="homepage">https://gitlab.gnome.org/guidog/stevia</url>
+  <url type="bugtracker">https://gitlab.gnome.org/guidog/stevia</url>
 
   <screenshots>
     <screenshot type="default">
       <caption>Character Popover</caption>
-      <image>https://gitlab.gnome.org//guidog/phosh-osk-stub/-/raw/main/screenshots/pos-popover.png?inline=false</image>
+      <image>https://gitlab.gnome.org//guidog/stevia/-/raw/main/screenshots/pos-popover.png?inline=false</image>
     </screenshot>
     <screenshot type="default">
       <caption>Emoji Layout</caption>
-      <image>https://gitlab.gnome.org//guidog/phosh-osk-stub/-/raw/main/screenshots/pos-emoji.png?inline=false</image>
+      <image>https://gitlab.gnome.org//guidog/stevia/-/raw/main/screenshots/pos-emoji.png?inline=false</image>
     </screenshot>
   </screenshots>
 

@@ -101,7 +101,7 @@ pos_char_popup_class_init (PosCharPopupClass *klass)
   gtk_widget_class_set_css_name (widget_class, "pos-char-popup");
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/char-popup.ui");
+                                               "/mobi/phosh/stevia/ui/char-popup.ui");
   gtk_widget_class_bind_template_child (widget_class, PosCharPopup, symbols_grid);
 }
 

@@ -3,7 +3,7 @@
 @define-color pos_fg_color @theme_fg_color;
 @define-color pos_bg_color shade(@theme_base_color, 0.9);
 
-@import url("resource:///mobi/phosh/osk-stub/stylesheet/common.css");
+@import url("resource:///mobi/phosh/stevia/stylesheet/common.css");
 
 pos-osk-widget {
   background-color: @pos_bg_color;

@@ -113,7 +113,7 @@ def main(argv):
         "-o", "--output-dir", action="store", default="_build/screenshots/360x720@1"
     )
     parser.add_argument(
-        "-b", "--binary", action="store", default="_build/src/phosh-osk-stub"
+        "-b", "--binary", action="store", default="_build/src/phosh-osk-stevia"
     )
     args = parser.parse_args(argv[1:])
 

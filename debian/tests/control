@@ -1,4 +1,4 @@
-Test-Command: /usr/bin/phosh-osk-stub --help
+Test-Command: /usr/bin/phosh-osk-stevia --help
 Restrictions: superficial
 Depends: @
 

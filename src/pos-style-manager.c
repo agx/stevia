@@ -243,9 +243,9 @@ pos_style_manager_get_stylesheet (const char *theme_name)
   const char *style;
 
   if (g_strcmp0 (theme_name, "HighContrast") == 0)
-    style = "/mobi/phosh/osk-stub/stylesheet/adwaita-hc-light.css";
+    style = "/mobi/phosh/stevia/stylesheet/adwaita-hc-light.css";
   else
-    style = "/mobi/phosh/osk-stub/stylesheet/adwaita-dark.css";
+    style = "/mobi/phosh/stevia/stylesheet/adwaita-dark.css";
 
   return style;
 }

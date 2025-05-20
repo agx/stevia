@@ -99,7 +99,7 @@ else
 fi
 
 REGISTRY="registry.gitlab.gnome.org"
-REPO="guidog/phosh-osk-stub"
+REPO="guidog/stevia"
 TAG="${REGISTRY}/${REPO}/${base}:${base_version}"
 
 if [ $build == 1 ]; then

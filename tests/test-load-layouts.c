@@ -26,9 +26,9 @@ test_load_layouts (void)
                                             G_REGEX_MATCH_DEFAULT,
                                             NULL);
   g_autoptr (GRegex) region_re = g_regex_new ("^[a-z]{2,8}$",
-                                            G_REGEX_DEFAULT,
-                                            G_REGEX_MATCH_DEFAULT,
-                                            NULL);
+                                              G_REGEX_DEFAULT,
+                                              G_REGEX_MATCH_DEFAULT,
+                                              NULL);
   g_autoptr (GnomeXkbInfo) xkbinfo = gnome_xkb_info_new ();
 
   pos_init ();
@@ -36,7 +36,7 @@ test_load_layouts (void)
   g_assert_nonnull (pos_resource);
 
   names = g_resource_enumerate_children (pos_resource,
-                                         "/mobi/phosh/osk-stub/layouts",
+                                         "/mobi/phosh/stevia/layouts",
                                          G_RESOURCE_LOOKUP_FLAGS_NONE,
                                          &err);
   g_assert_no_error (err);
@@ -51,8 +51,19 @@ test_load_layouts (void)
     g_test_message ("Loading layout %s", layout_id);
 
     if (g_strcmp0 (names[i], "terminal.json")) {
-      g_assert_true (gnome_xkb_info_get_layout_info (xkbinfo, layout_id, NULL, NULL, &layout, &variant));
-      pos_osk_widget_set_layout (osk_widget, "doesnotmatter", layout_id, "Test", layout, variant, &err);
+      g_assert_true (gnome_xkb_info_get_layout_info (xkbinfo,
+                                                     layout_id,
+                                                     NULL,
+                                                     NULL,
+                                                     &layout,
+                                                     &variant));
+      pos_osk_widget_set_layout (osk_widget,
+                                 "doesnotmatter",
+                                 layout_id,
+                                 "Test",
+                                 layout,
+                                 variant,
+                                 &err);
       g_assert_nonnull (pos_osk_widget_get_lang (osk_widget));
       g_assert_nonnull (pos_osk_widget_get_region (osk_widget));
       g_assert_true (g_regex_match (lang_re, pos_osk_widget_get_lang (osk_widget),

@@ -287,7 +287,7 @@ pos_keypad_class_init (PosKeypadClass *klass)
 
   g_type_ensure (POS_TYPE_KEYPAD_BUTTON);
 
-  gtk_widget_class_set_template_from_resource (widget_class, "/mobi/phosh/osk-stub/ui/keypad.ui");
+  gtk_widget_class_set_template_from_resource (widget_class, "/mobi/phosh/stevia/ui/keypad.ui");
 
   gtk_widget_class_bind_template_child (widget_class, PosKeypad, grid);
   gtk_widget_class_bind_template_child (widget_class, PosKeypad, decimal_separator_label);

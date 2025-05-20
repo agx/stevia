@@ -3,9 +3,9 @@
 Stevia is an alternative keyboard for Phosh. It can replace the default OSK
 [squeekboard][].
 
-The purpose of phosh-osk-stevia:
+The purpose of Stevia is:
 
-- allow experimentation without the risk of breaking end user systems
+- to allow experimentation without the risk of breaking end user systems
 - be helpful when debugging input-method related issues
 - be quick and easy to (cross)compile
 - allow to move GObject bits and Widgets over to squeekboard easily if
@@ -19,26 +19,27 @@ Features:
 - no language boundaries within the codebase to lower the entrance barrier
 - use current GTK and GObject patterns (actions, bindings, …)
 - use GNOME libs and technologies wherever possible (GSettings, json-glib, …)
-- [character popover](https://gitlab.gnome.org/guidog/phosh-osk-stub/-/raw/main/screenshots/pos-popover.png)
-- [emoji layout](https://gitlab.gnome.org/guidog/phosh-osk-stub/-/raw/main/screenshots/pos-emoji.png)
+- [character popover](https://gitlab.gnome.org/guidog/stevia/-/raw/main/screenshots/pos-popover.png)
+- [emoji layout](https://gitlab.gnome.org/guidog/stevia/-/raw/main/screenshots/pos-emoji.png)
 - cursor navigation via space-bar long-press
 - word correction via hunspell
 - use any program as completer via a `pipe` completer ([Example](https://social.librem.one/@agx/110260534404795348))
-- experimental [word completion](https://social.librem.one/@agx/109428599061094716)
+- [word completion](https://social.librem.one/@agx/109428599061094716)
   based on the presage library
 - experimental input of Indic languages using [varnam](https://github.com/varnamproject)
+- allow for secondary completers to amend completion results
 - allow to prevent keyboard unfold for certain apps (via app-id)
 - allow to prevent keyboard unfold when a hardware keyboard is present
 
 ## License
 
-phosh-osk-stevia is licensed under the GPLv3+.
+Stevia is licensed under the GPLv3+.
 
 ## Getting the source
 
 ```sh
-git clone https://gitlab.gnome.org/guidog/phosh-osk-stub
-cd phosh-osk-stub
+git clone https://gitlab.gnome.org/guidog/stevia
+cd stevia
 ```
 
 The [main][] branch has the current development version.
@@ -100,7 +101,7 @@ available completers and how to configure them.
 ### Development Documentation
 
 The API documentation is available at
-<https://guidog.pages.gitlab.gnome.org/phosh-osk-stub>.
+<https://guidog.pages.gitlab.gnome.org/stevia>.
 
 ### End User Documentation
 
@@ -109,12 +110,12 @@ system via `man phosh-osk-stevia`).
 
 ## Getting in Touch
 
-- Issue tracker: <https://gitlab.gnome.org/guidog/phosh-osk-stub/issues>
+- Issue tracker: <https://gitlab.gnome.org/guidog/stevia/issues>
 - Matrix: <https://matrix.to/#/#phosh:sigxcpu.org>
 
-[main]: https://gitlab.gnome.org/guidog/phosh-osk-stub/-/tree/main
-[.gitlab-ci.yml]: https://gitlab.gnome.org/guidog/phosh-osk-stub/-/blob/main/.gitlab-ci.yml
-[debian/control]:https://gitlab.gnome.org/guidog/phosh-osk-stub/-/blob/main/debian/control
+[main]: https://gitlab.gnome.org/guidog/stevia/-/tree/main
+[.gitlab-ci.yml]: https://gitlab.gnome.org/guidog/stevia/-/blob/main/.gitlab-ci.yml
+[debian/control]:https://gitlab.gnome.org/guidog/stevia/-/blob/main/debian/control
 [phosh]: https://gitlab.gnome.org/World/Phosh/phosh
 [squeekboard]: https://gitlab.gnome.org/World/Phosh/squeekboard
 [sm.puri.OSK0]: https://gitlab.gnome.org/World/Phosh/phosh/-/blob/main/src/dbus/sm.puri.OSK0.xml

@@ -3,9 +3,9 @@ version = "@VERSION@"
 description = "Stevia On Screen"
 authors = "Guido Günther"
 license = "GPL-3-or-later"
-browse_url = "https://gitlab.gnome.org/guidog/phosh-osk-stub/"
-repository_url = "https://gitlab.gnome.org/guidog/phosh-osk-stub.git"
-website_url = "https://gitlab.gnome.org/guidog/phosh-osk-stub/"
+browse_url = "https://gitlab.gnome.org/guidog/stevia/"
+repository_url = "https://gitlab.gnome.org/guidog/stevia.git"
+website_url = "https://gitlab.gnome.org/guidog/stevia/"
 dependencies = [
   "GObject-2.0",
   "Gtk-3.0",
@@ -36,6 +36,6 @@ show_class_hierarchy = true
 
 [source-location]
 # The base URL for the web UI
-base_url = "https://gitlab.gnome.org/guidog/phosh-osk-stub//-/blob/main/"
+base_url = "https://gitlab.gnome.org/guidog/stevia//-/blob/main/"
 # The format for links, using "filename" and "line" for the format
 file_format = "{filename}#L{line}"

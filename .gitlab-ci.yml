@@ -3,7 +3,9 @@ include:
   - project: 'guidog/meta-phosh'
     ref: '8f0308dec0c6b1f949748459aee73ccd7796e94c'
     file: '/ci/phosh-common-jobs.yml'
-  - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/6a40df92957c8ce9ee741aaccc5daaaf70545b1e/templates/ci-fairy.yml'
+  - project: 'Infrastructure/freedesktop-ci-templates'
+    ref: '6a40df92957c8ce9ee741aaccc5daaaf70545b1e'
+    file: '/templates/ci-fairy.yml'
 
 stages:
   - build
@@ -36,8 +38,8 @@ workflow:
 
 variables:
   # For ci-fairy
-  FDO_UPSTREAM_REPO: guidog/phosh-osk-stub
-  DEBIAN_IMAGE: $CI_REGISTRY/guidog/phosh-osk-stub/debian:v0.0.2025-02-09
+  FDO_UPSTREAM_REPO: guidog/stevia
+  DEBIAN_IMAGE: $CI_REGISTRY/guidog/stevia/debian:v0.0.2025-05-19
   XVFB_RUN: xvfb-run -a -s -noreset
   COMMON_BUILD_OPTS: --werror -Db_coverage=true -Dprefix=/usr
   ALPINE_EDGE_DEPS: alpine-sdk feedbackd-dev git glib-dev gnome-desktop-dev
@@ -225,4 +227,3 @@ pages:
       - public
   only:
     - main
-

@@ -60,7 +60,7 @@ pos_completion_bar_class_init (PosCompletionBarClass *klass)
   g_type_ensure (POS_TYPE_COMPLETIONS_BOX);
 
   gtk_widget_class_set_template_from_resource (widget_class,
-                                               "/mobi/phosh/osk-stub/ui/completion-bar.ui");
+                                               "/mobi/phosh/stevia/ui/completion-bar.ui");
   gtk_widget_class_bind_template_child (widget_class, PosCompletionBar, completions_box);
   gtk_widget_class_bind_template_child (widget_class, PosCompletionBar, scrolled_window);
 

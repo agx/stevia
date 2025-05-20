@@ -86,7 +86,7 @@ PosDebugFlags _debug_flags;
 static void G_GNUC_NORETURN
 print_version (void)
 {
-  g_message ("OSK stub %s\n", PHOSH_OSK_STEVIA_VERSION);
+  g_message ("Stevia %s\n", PHOSH_OSK_STEVIA_VERSION);
   exit (0);
 }
 
@@ -545,7 +545,7 @@ phosh_osk_stevia_class_init (PhoshOskSteviaClass *klass)
 void
 phosh_osk_stevia_init (PhoshOskStevia *self)
 {
-  gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/osk-stub/icons");
+  gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/stevia/icons");
 
   self->loop = g_main_loop_new (NULL, FALSE);
   self->emoji_db = pos_emoji_db_get_default ();
@@ -584,16 +584,15 @@ main (int argc, char *argv[])
     { NULL, 0, 0, G_OPTION_ARG_NONE, NULL, NULL, NULL }
   };
 
-  opt_context = g_option_context_new ("- A OSK stub for phosh");
+  opt_context = g_option_context_new ("- A OSK for phosh");
   g_option_context_add_main_entries (opt_context, options, NULL);
   if (!g_option_context_parse (opt_context, &argc, &argv, &err)) {
     g_warning ("%s", err->message);
     return EXIT_FAILURE;
   }
 
-  if (version) {
+  if (version)
     print_version ();
-  }
 
   pos_init ();
   lfb_init (APP_ID, NULL);
