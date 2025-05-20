@@ -3,7 +3,9 @@ include:
   - project: 'guidog/meta-phosh'
     ref: '8f0308dec0c6b1f949748459aee73ccd7796e94c'
     file: '/ci/phosh-common-jobs.yml'
-  - remote: 'https://gitlab.freedesktop.org/freedesktop/ci-templates/-/raw/6a40df92957c8ce9ee741aaccc5daaaf70545b1e/templates/ci-fairy.yml'
+  - project: 'Infrastructure/freedesktop-ci-templates'
+    ref: '6a40df92957c8ce9ee741aaccc5daaaf70545b1e'
+    file: '/templates/ci-fairy.yml'
 
 stages:
   - build
@@ -225,4 +227,3 @@ pages:
       - public
   only:
     - main
-
