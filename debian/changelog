@@ -1,9 +1,19 @@
-phosh-osk-stevia (0.48~dev) UNRELEASED; urgency=medium
+phosh-osk-stevia (0.48~alpha1) experimental; urgency=medium
 
+  [ Guido Günther ]
   * Rename from phosh-osk-stub to Stevia. This name is less confusing
     and it's a full OSK since some time.
+  * doc: Update features
+  * treewide: Rename resources as well
 
- -- Guido Günther <agx@sigxcpu.org>  Tue, 13 May 2025 11:46:53 +0200
+  [ chri2 ]
+  * pipe-completer: Add a demo as a head start
+    https://gitlab.gnome.org/guidog/phosh-osk-stub/-/issues/60
+
+  [ Paul Black ]
+  * layout: Added us+dvorak
+
+ -- Guido Günther <agx@sigxcpu.org>  Mon, 26 May 2025 09:25:17 +0200
 
 phosh-osk-stub (0.47.0) experimental; urgency=medium
 
