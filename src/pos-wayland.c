@@ -24,6 +24,13 @@
  */
 
 enum {
+  PROP_0,
+  PROP_OUTPUTS,
+  PROP_LAST_PROP,
+};
+static GParamSpec *props[PROP_LAST_PROP];
+
+enum {
   READY,
   N_SIGNALS
 };
@@ -42,6 +49,7 @@ struct _PosWayland {
   struct zxdg_output_manager_v1           *zxdg_output_manager_v1;
   struct zphoc_device_state_v1            *zphoc_device_state_v1;
   struct zwlr_data_control_manager_v1     *wlr_data_control_manager;
+  GPtrArray                               *outputs;
 
   gboolean                                 ready;
 };
@@ -82,6 +90,13 @@ registry_handle_global (void               *data,
   } else if (!strcmp (interface, zwlr_data_control_manager_v1_interface.name)) {
     self->wlr_data_control_manager = wl_registry_bind (registry, name,
                                                        &zwlr_data_control_manager_v1_interface, 1);
+  } else if (!strcmp (interface, "wl_output")) {
+    struct wl_output *wl_output = wl_registry_bind (registry, name, &wl_output_interface, 4);
+    PosOutput *output = pos_output_new (g_steal_pointer (&wl_output));
+
+    g_object_set_data (G_OBJECT (output), "wl-name", GINT_TO_POINTER (name));
+    g_ptr_array_add (self->outputs, output);
+    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_OUTPUTS]);
   } else if (!strcmp (interface, zxdg_output_manager_v1_interface.name)) {
     self->zxdg_output_manager_v1 = wl_registry_bind (registry,
                                                      name,
@@ -102,6 +117,21 @@ registry_handle_global_remove (void               *data,
                                struct wl_registry *registry,
                                uint32_t            name)
 {
+  PosWayland *self = data;
+
+  for (int i = 0; i < self->outputs->len; i++) {
+    PosOutput *output = g_ptr_array_index (self->outputs, i);
+    uint32_t output_name;
+
+    output_name = GPOINTER_TO_INT (g_object_get_data (G_OBJECT (output), "wl-name"));
+    if (output_name == name) {
+      g_debug ("Output %d removed", name);
+      g_ptr_array_remove_index (self->outputs, i);
+      g_object_notify_by_pspec (G_OBJECT (self), props[PROP_OUTPUTS]);
+      return;
+    }
+  }
+
   g_warning ("Global %d removed but not handled", name);
 }
 
@@ -110,6 +140,25 @@ static const struct wl_registry_listener registry_listener = {
   registry_handle_global,
   registry_handle_global_remove
 };
+
+
+static void
+pos_wayland_get_property (GObject    *object,
+                          guint       property_id,
+                          GValue     *value,
+                          GParamSpec *pspec)
+{
+  PosWayland *self = POS_WAYLAND (object);
+
+  switch (property_id) {
+  case PROP_OUTPUTS:
+    g_value_set_boxed (value, self->outputs);
+    break;
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    break;
+  }
+}
 
 
 static void
@@ -163,6 +212,8 @@ pos_wayland_dispose (GObject *object)
   g_clear_pointer (&self->zphoc_device_state_v1, zphoc_device_state_v1_destroy);
   g_clear_pointer (&self->wlr_data_control_manager, zwlr_data_control_manager_v1_destroy);
 
+  g_clear_pointer (&self->outputs, g_ptr_array_unref);
+
   G_OBJECT_CLASS (pos_wayland_parent_class)->dispose (object);
 }
 
@@ -174,6 +225,17 @@ pos_wayland_class_init (PosWaylandClass *klass)
 
   object_class->constructed = pos_wayland_constructed;
   object_class->dispose = pos_wayland_dispose;
+
+  object_class->get_property = pos_wayland_get_property;
+
+  props[PROP_OUTPUTS] =
+    g_param_spec_boxed ("outputs",
+                        "The known outputs",
+                        "The currently known outputs",
+                        G_TYPE_PTR_ARRAY,
+                        G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 
   signals[READY] =
     g_signal_new ("ready",
@@ -187,6 +249,7 @@ pos_wayland_class_init (PosWaylandClass *klass)
 static void
 pos_wayland_init (PosWayland *self)
 {
+  self->outputs = g_ptr_array_new_with_free_func (g_object_unref);
 }
 
 /**
@@ -279,6 +342,38 @@ pos_wayland_get_zwlr_data_control_manager_v1 (PosWayland *self)
   g_assert (POS_IS_WAYLAND (self));
 
   return self->wlr_data_control_manager;
+}
+
+/**
+ * pos_wayland_get_outputs:
+ * @self: The #PosWayland singleton
+ *
+ * Get the currently known outputs
+ *
+ * Returns: (transfer none)(element-type PosOutput): A current outputs
+ */
+GPtrArray *
+pos_wayland_get_outputs (PosWayland *self)
+{
+  g_assert (POS_IS_WAYLAND (self));
+
+  return self->outputs;
+}
+
+/**
+ * pos_wayland_get_n_outputs:
+ * @self: The #PosWayland singleton
+ *
+ * Get the current number of outputs.
+ *
+ * Returns: The current number of outputs
+ */
+guint
+pos_wayland_get_n_outputs (PosWayland *self)
+{
+  g_assert (POS_IS_WAYLAND (self));
+
+  return self->outputs->len;
 }
 
 

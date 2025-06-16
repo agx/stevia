@@ -19,6 +19,7 @@ G_BEGIN_DECLS
 #include "pos-osk-dbus.h"
 #include "pos-input-method.h"
 #include "pos-input-surface.h"
+#include "pos-output.h"
 #include "pos-vk-driver.h"
 #include "pos-virtual-keyboard.h"
 #include "pos-wayland.h"
