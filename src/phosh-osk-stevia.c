@@ -574,6 +574,7 @@ main (int argc, char *argv[])
   g_autoptr (PosOskDbus) osk_dbus = NULL;
   gboolean version = FALSE, replace = FALSE, allow_replace = FALSE;
   GBusNameOwnerFlags flags;
+  g_autoptr (PosWayland) wayland = NULL;
 
   const GOptionEntry options [] = {
     {"replace", 0, 0, G_OPTION_ARG_NONE, &replace,
@@ -600,6 +601,7 @@ main (int argc, char *argv[])
   _debug_flags = parse_debug_env ();
   gtk_init (&argc, &argv);
 
+  wayland = pos_wayland_get_default ();
   stevia = g_object_new (PHOSH_TYPE_OSK_STEVIA, NULL);
 
   flags = (allow_replace ? G_BUS_NAME_OWNER_FLAGS_ALLOW_REPLACEMENT : 0) |

@@ -21,5 +21,6 @@ G_BEGIN_DECLS
 #include "pos-input-surface.h"
 #include "pos-vk-driver.h"
 #include "pos-virtual-keyboard.h"
+#include "pos-wayland.h"
 
 G_END_DECLS
