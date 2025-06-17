@@ -83,6 +83,8 @@ libpos_sources = files(
   'pos-virtual-keyboard.h',
   'pos-vk-driver.c',
   'pos-vk-driver.h',
+  'pos-wayland.c',
+  'pos-wayland.h',
   'pos.h',
 )
 
