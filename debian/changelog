@@ -1,3 +1,9 @@
+phosh-osk-stevia (0.48~rc1) experimental; urgency=medium
+
+  * doc: Fix typo in hardware keyboard chapter
+
+ -- Guido Günther <agx@sigxcpu.org>  Sat, 21 Jun 2025 23:52:21 +0200
+
 phosh-osk-stevia (0.48~alpha1) experimental; urgency=medium
 
   [ Guido Günther ]

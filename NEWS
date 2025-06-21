@@ -1,6 +1,6 @@
-phosh-osk-stevia 0.48~alpha1
-----------------------------
-Released May 2025
+phosh-osk-stevia 0.48~rc1
+-------------------------
+Released June 2025
 * Rename to stevia
 * Add pipe completer example
 * New layouts:
@@ -8,6 +8,7 @@ Released May 2025
 * Contributors:
     * chri2
     * Guido Günther
+    * Michael
     * Paul Black
 
 phosh-osk-stub 0.47.0
