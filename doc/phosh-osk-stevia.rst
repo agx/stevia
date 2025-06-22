@@ -253,7 +253,7 @@ button in Phosh). To determine an applications app-id you can use the
 HARDWARE KEYBOARDS
 ^^^^^^^^^^^^^^^^^^
 
-By default the on screen keyboard will now show if it detects a
+By default the on screen keyboard will not show if it detects a
 connected hardware keyboard. To make it show nevertheless use
 
 ::
