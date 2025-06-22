@@ -211,6 +211,7 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
   g_autofree char *dict_path = NULL;
   g_autofree char *aff_path = NULL;
   Hunhandle *handle = NULL;
+  const char *encoding;
 
   if (pos_completer_hunspell_find_dict (lang, region, &aff_path, &dict_path) == FALSE) {
     g_set_error (error,
@@ -227,6 +228,15 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
                          POS_COMPLETER_ERROR,
                          POS_COMPLETER_ERROR_ENGINE_INIT,
                          "Failed to init hunspell");
+    return FALSE;
+  }
+
+  encoding = Hunspell_get_dic_encoding (handle);
+  if (g_strcmp0 (encoding, "UTF-8")) {
+    g_set_error (error,
+                 POS_COMPLETER_ERROR,
+                 POS_COMPLETER_ERROR_ENGINE_INIT,
+                 "Invalid dictionary encoding '%s'", encoding);
     return FALSE;
   }
 
