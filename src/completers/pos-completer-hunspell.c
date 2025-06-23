@@ -49,6 +49,7 @@ struct _PosCompleterHunspell {
   GStrv                 completions;
   guint                 max_completions;
   GIConv                iconv_out;
+  GIConv                iconv_in;
 
   Hunhandle            *handle;
 };
@@ -170,6 +171,10 @@ pos_completer_hunspell_close_iconv (PosCompleterHunspell *self)
     g_iconv_close (self->iconv_out);
     self->iconv_out = (GIConv) -1;
   }
+  if (self->iconv_in != (GIConv) -1) {
+    g_iconv_close (self->iconv_in);
+    self->iconv_in = (GIConv) -1;
+  }
 }
 
 
@@ -255,6 +260,16 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
                    "Invalid dictionary encoding '%s'", encoding);
       return FALSE;
     }
+    self->iconv_in = g_iconv_open (encoding, "UTF-8");
+    if (self->iconv_in == (GIConv) -1) {
+      g_set_error (error,
+                   POS_COMPLETER_ERROR,
+                   POS_COMPLETER_ERROR_ENGINE_INIT,
+                   "Invalid dictionary encoding '%s'", encoding);
+
+      pos_completer_hunspell_close_iconv (self);
+      return FALSE;
+    }
   }
 
   g_clear_pointer (&self->handle, Hunspell_destroy);
@@ -321,11 +336,36 @@ convert_to_utf8 (PosCompleterHunspell *self, const char *to_convert)
 }
 
 
+static char *
+convert_from_utf8 (PosCompleterHunspell *self, const char *utf8)
+{
+  if (self->iconv_in != (GIConv) -1) {
+    g_autoptr (GError) err = NULL;
+    char *converted = g_convert_with_iconv (utf8,
+                                            -1,
+                                            self->iconv_in,
+                                            NULL,
+                                            NULL,
+                                            &err);
+    if (!converted) {
+      g_warning ("Failed to convert suggestion: '%s'", err->message);
+      /* For input to the completer we prefer UTF-8 over inputing nothing */
+      return g_strdup (utf8);
+    }
+
+    return converted;
+  } else {
+    return g_strdup (utf8);
+  }
+}
+
+
 static gboolean
 pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
 {
   PosCompleterHunspell *self = POS_COMPLETER_HUNSPELL (iface);
   g_autofree char *preedit = g_strdup (self->preedit->str);
+  g_autofree char *input = NULL;
   g_autoptr (GPtrArray) completions = g_ptr_array_new ();
   char **suggestions;
   int ret;
@@ -349,10 +389,11 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
 
   g_debug ("Looking up string '%s'", self->preedit->str);
 
-  if (Hunspell_spell (self->handle, self->preedit->str))
+  input = convert_from_utf8 (self, self->preedit->str);
+  if (Hunspell_spell (self->handle, input))
     g_ptr_array_add (completions, g_strdup (self->preedit->str));
 
-  ret = Hunspell_suggest (self->handle, &suggestions, self->preedit->str);
+  ret = Hunspell_suggest (self->handle, &suggestions, input);
   if (ret > 0) {
     for (int i = 0; i < ret && i < self->max_completions; i++) {
       char *utf8 = convert_to_utf8 (self, suggestions[i]);
@@ -387,6 +428,7 @@ pos_completer_hunspell_init (PosCompleterHunspell *self)
   self->preedit = g_string_new (NULL);
   self->name = "hunspell";
   self->iconv_out = (GIConv) -1;
+  self->iconv_in = (GIConv) -1;
 }
 
 /**
