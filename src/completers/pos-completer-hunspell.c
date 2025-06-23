@@ -48,6 +48,7 @@ struct _PosCompleterHunspell {
   GString              *preedit;
   GStrv                 completions;
   guint                 max_completions;
+  GIConv                iconv_out;
 
   Hunhandle            *handle;
 };
@@ -163,6 +164,16 @@ pos_completer_hunspell_get_property (GObject    *object,
 
 
 static void
+pos_completer_hunspell_close_iconv (PosCompleterHunspell *self)
+{
+  if (self->iconv_out != (GIConv) -1) {
+    g_iconv_close (self->iconv_out);
+    self->iconv_out = (GIConv) -1;
+  }
+}
+
+
+static void
 pos_completer_hunspell_finalize (GObject *object)
 {
   PosCompleterHunspell *self = POS_COMPLETER_HUNSPELL(object);
@@ -170,6 +181,7 @@ pos_completer_hunspell_finalize (GObject *object)
   g_clear_pointer (&self->handle, Hunspell_destroy);
   g_clear_pointer (&self->completions, g_strfreev);
   g_string_free (self->preedit, TRUE);
+  pos_completer_hunspell_close_iconv (self);
 
   G_OBJECT_CLASS (pos_completer_hunspell_parent_class)->finalize (object);
 }
@@ -213,6 +225,8 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
   Hunhandle *handle = NULL;
   const char *encoding;
 
+  pos_completer_hunspell_close_iconv (self);
+
   if (pos_completer_hunspell_find_dict (lang, region, &aff_path, &dict_path) == FALSE) {
     g_set_error (error,
                  POS_COMPLETER_ERROR,
@@ -233,11 +247,14 @@ pos_completer_hunspell_set_language (PosCompleter *completer,
 
   encoding = Hunspell_get_dic_encoding (handle);
   if (g_strcmp0 (encoding, "UTF-8")) {
-    g_set_error (error,
-                 POS_COMPLETER_ERROR,
-                 POS_COMPLETER_ERROR_ENGINE_INIT,
-                 "Invalid dictionary encoding '%s'", encoding);
-    return FALSE;
+    self->iconv_out = g_iconv_open ("UTF-8", encoding);
+    if (self->iconv_out == (GIConv) -1) {
+      g_set_error (error,
+                   POS_COMPLETER_ERROR,
+                   POS_COMPLETER_ERROR_ENGINE_INIT,
+                   "Invalid dictionary encoding '%s'", encoding);
+      return FALSE;
+    }
   }
 
   g_clear_pointer (&self->handle, Hunspell_destroy);
@@ -283,6 +300,27 @@ pos_completer_hunspell_get_name (PosCompleter *iface)
 }
 
 
+static char *
+convert_to_utf8 (PosCompleterHunspell *self, const char *to_convert)
+{
+  if (self->iconv_out != (GIConv) -1) {
+    g_autoptr (GError) err = NULL;
+    char *utf8 = g_convert_with_iconv (to_convert,
+                                       -1,
+                                       self->iconv_out,
+                                       NULL,
+                                       NULL,
+                                       &err);
+    if (!utf8)
+      g_warning ("Failed to convert suggestion: '%s'", err->message);
+
+    return utf8;
+  } else {
+    return g_strdup (to_convert);
+  }
+}
+
+
 static gboolean
 pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
 {
@@ -316,8 +354,12 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
 
   ret = Hunspell_suggest (self->handle, &suggestions, self->preedit->str);
   if (ret > 0) {
-    for (int i = 0; i < ret && i < self->max_completions; i++)
-      g_ptr_array_add (completions, g_strdup (suggestions[i]));
+    for (int i = 0; i < ret && i < self->max_completions; i++) {
+      char *utf8 = convert_to_utf8 (self, suggestions[i]);
+
+      if (utf8)
+        g_ptr_array_add (completions, g_steal_pointer (&utf8));
+    }
   }
   g_ptr_array_add (completions, NULL);
 
@@ -344,6 +386,7 @@ pos_completer_hunspell_init (PosCompleterHunspell *self)
   self->max_completions = MAX_COMPLETIONS;
   self->preedit = g_string_new (NULL);
   self->name = "hunspell";
+  self->iconv_out = (GIConv) -1;
 }
 
 /**
