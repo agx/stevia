@@ -13,13 +13,6 @@
 #include "pos-config.h"
 #include "pos.h"
 
-#include "input-method-unstable-v2-client-protocol.h"
-#include "phoc-device-state-unstable-v1-client-protocol.h"
-#include "virtual-keyboard-unstable-v1-client-protocol.h"
-#include "wlr-data-control-unstable-v1-client-protocol.h"
-#include "wlr-foreign-toplevel-management-unstable-v1-client-protocol.h"
-
-
 #include <gio/gio.h>
 #include <glib-unix.h>
 
@@ -61,16 +54,6 @@ typedef struct _PhoshOskStevia {
   PosActivationFilter *activation_filter;
   PosHwTracker        *hw_tracker;
   PosEmojiDb          *emoji_db;
-
-  struct wl_display                       *display;
-  struct zwlr_foreign_toplevel_manager_v1 *foreign_toplevel_manager;
-  struct zwp_input_method_manager_v2      *input_method_manager;
-  struct zwlr_layer_shell_v1              *layer_shell;
-  struct zphoc_device_state_v1            *phoc_device_state;
-  struct wl_registry                      *registry;
-  struct wl_seat                          *seat;
-  struct zwp_virtual_keyboard_manager_v1  *virtual_keyboard_manager;
-  struct zwlr_data_control_manager_v1     *wlr_data_control_manager;
 } PhoshOskStevia;
 
 #define PHOSH_TYPE_OSK_STEVIA (phosh_osk_stevia_get_type ())
@@ -277,20 +260,6 @@ dispose_input_surface (PhoshOskStevia *self)
 
 #define INPUT_SURFACE_HEIGHT 200
 
-static gboolean
-phosh_osk_stevia_has_wl_protcols (PhoshOskStevia *self)
-{
-  g_assert (PHOSH_IS_OSK_STEVIA (self));
-
-  return (self->foreign_toplevel_manager &&
-          self->input_method_manager &&
-          self->layer_shell &&
-          self->phoc_device_state &&
-          self->seat &&
-          self->virtual_keyboard_manager &&
-          self->wlr_data_control_manager);
-}
-
 
 static void
 create_input_surface (PhoshOskStevia *self)
@@ -300,26 +269,29 @@ create_input_surface (PhoshOskStevia *self)
   g_autoptr (PosInputMethod) im = NULL;
   g_autoptr (PosCompleterManager) completer_manager = NULL;
   g_autoptr (PosClipboardManager) clipboard_manager = NULL;
+  PosWayland *wayland = pos_wayland_get_default ();
   gboolean force_completion;
 
   g_assert (PHOSH_IS_OSK_STEVIA (self));
-  g_assert (self->seat);
-  g_assert (self->virtual_keyboard_manager);
-  g_assert (self->input_method_manager);
-  g_assert (self->layer_shell);
   g_assert (POS_IS_OSK_DBUS (self->osk_dbus));
 
-  virtual_keyboard = pos_virtual_keyboard_new (self->virtual_keyboard_manager, self->seat);
+  virtual_keyboard =
+    pos_virtual_keyboard_new (pos_wayland_get_zwp_virtual_keyboard_manager_v1 (wayland),
+                              pos_wayland_get_wl_seat (wayland));
   vk_driver = pos_vk_driver_new (virtual_keyboard);
   completer_manager = pos_completer_manager_new ();
-  clipboard_manager = pos_clipboard_manager_new (self->wlr_data_control_manager, self->seat);
+  clipboard_manager =
+    pos_clipboard_manager_new (pos_wayland_get_zwlr_data_control_manager_v1 (wayland),
+                               pos_wayland_get_wl_seat (wayland));
 
-  im = pos_input_method_new (self->input_method_manager, self->seat);
+  im =
+    pos_input_method_new (pos_wayland_get_zwp_input_method_manager_v2 (wayland),
+                          pos_wayland_get_wl_seat (wayland));
 
   force_completion = !!(_debug_flags & POS_DEBUG_FLAG_FORCE_COMPLETEION);
   self->input_surface = g_object_new (POS_TYPE_INPUT_SURFACE,
                                       /* layer-surface */
-                                      "layer-shell", self->layer_shell,
+                                      "layer-shell", pos_wayland_get_zwlr_layer_shell_v1 (wayland),
                                       "height", INPUT_SURFACE_HEIGHT,
                                       "anchor", ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
                                       ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT |
@@ -396,7 +368,7 @@ on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer data)
     dispose_input_surface (self);
     self->input_surface = NULL;
   } else if (self->input_surface == NULL) {
-    if (self && phosh_osk_stevia_has_wl_protcols (self))
+    if (self && pos_wayland_has_wl_protcols (pos_wayland_get_default ()))
       create_input_surface (self);
     else
       g_debug ("Wayland globals not yet read");
@@ -405,86 +377,29 @@ on_has_dbus_name_changed (PosOskDbus *dbus, GParamSpec *pspec, gpointer data)
 
 
 static void
-registry_handle_global (void               *data,
-                        struct wl_registry *registry,
-                        uint32_t            name,
-                        const char         *interface,
-                        uint32_t            version)
+on_wayland_ready (PhoshOskStevia *self, PosWayland *wayland)
 {
-  PhoshOskStevia *self = PHOSH_OSK_STEVIA (data);
-
   g_assert (PHOSH_IS_OSK_STEVIA (self));
+  g_assert (POS_IS_WAYLAND (wayland));
+  g_assert (pos_wayland_has_wl_protcols (wayland));
 
-  if (strcmp (interface, zwp_input_method_manager_v2_interface.name) == 0) {
-    self->input_method_manager = wl_registry_bind (registry, name,
-                                                   &zwp_input_method_manager_v2_interface, 1);
-  } else if (strcmp (interface, wl_seat_interface.name) == 0) {
-    self->seat = wl_registry_bind (registry, name, &wl_seat_interface, version);
-  } else if (!strcmp (interface, zwlr_layer_shell_v1_interface.name)) {
-    self->layer_shell = wl_registry_bind (registry, name, &zwlr_layer_shell_v1_interface, 1);
-  } else if (!strcmp (interface, zwlr_foreign_toplevel_manager_v1_interface.name)) {
-    self->foreign_toplevel_manager = wl_registry_bind (registry, name,
-                                                       &zwlr_foreign_toplevel_manager_v1_interface,
-                                                       1);
-    self->activation_filter = pos_activation_filter_new (self->foreign_toplevel_manager);
-  } else if (!strcmp (interface, zwp_virtual_keyboard_manager_v1_interface.name)) {
-    self->virtual_keyboard_manager = wl_registry_bind (registry, name,
-                                                       &zwp_virtual_keyboard_manager_v1_interface,
-                                                       1);
-  } else if (!strcmp (interface, zphoc_device_state_v1_interface.name)) {
-    self->phoc_device_state = wl_registry_bind (registry, name,
-                                                &zphoc_device_state_v1_interface,
-                                                MIN (2, version));
-    self->hw_tracker = pos_hw_tracker_new (self->phoc_device_state);
-  } else if (!strcmp (interface, zwlr_data_control_manager_v1_interface.name)) {
-    self->wlr_data_control_manager = wl_registry_bind (registry, name,
-                                                       &zwlr_data_control_manager_v1_interface, 1);
-  }
-
-  if (phosh_osk_stevia_has_wl_protcols (self) && !self->input_surface) {
-    g_debug ("Found all wayland protocols. Creating listeners and surfaces.");
-    create_input_surface (self);
-  }
+  self->activation_filter =
+    pos_activation_filter_new (pos_wayland_get_zwlr_foreign_toplevel_manager_v1 (wayland));
+  self->hw_tracker =
+    pos_hw_tracker_new (pos_wayland_get_zphoc_device_state_v1 (wayland));
 }
-
-
-static void
-registry_handle_global_remove (void               *data,
-                               struct wl_registry *registry,
-                               uint32_t            name)
-{
-  g_warning ("Global %d removed but not handled", name);
-}
-
-
-static const struct wl_registry_listener registry_listener = {
-  registry_handle_global,
-  registry_handle_global_remove
-};
 
 
 /* TODO: this could happen in constructed */
 static gboolean
 phosh_osk_stevia_setup_input_method (PhoshOskStevia *self, PosOskDbus *osk_dbus)
 {
-  GdkDisplay *gdk_display;
-
   g_assert (PHOSH_IS_OSK_STEVIA (self));
   g_assert (POS_IS_OSK_DBUS (osk_dbus));
 
   self->osk_dbus = g_object_ref (osk_dbus);
   g_signal_connect (osk_dbus, "notify::has-name", G_CALLBACK (on_has_dbus_name_changed), self);
 
-  gdk_set_allowed_backends ("wayland");
-  gdk_display = gdk_display_get_default ();
-  self->display = gdk_wayland_display_get_wl_display (gdk_display);
-  if (self->display == NULL) {
-    g_critical ("Failed to get display: %m\n");
-    return FALSE;
-  }
-
-  self->registry = wl_display_get_registry (self->display);
-  wl_registry_add_listener (self->registry, &registry_listener, self);
   return TRUE;
 }
 
@@ -546,6 +461,8 @@ phosh_osk_stevia_class_init (PhoshOskSteviaClass *klass)
 void
 phosh_osk_stevia_init (PhoshOskStevia *self)
 {
+  PosWayland *wayland = pos_wayland_get_default ();
+
   gtk_icon_theme_add_resource_path (gtk_icon_theme_get_default (), "/mobi/phosh/stevia/icons");
 
   self->loop = g_main_loop_new (NULL, FALSE);
@@ -555,6 +472,14 @@ phosh_osk_stevia_init (PhoshOskStevia *self)
   g_unix_signal_add (SIGINT, quit_cb, self->loop);
 
   self->session_proxy = pos_session_register (APP_ID, self->loop);
+
+  g_signal_connect_object (wayland,
+                           "ready",
+                           G_CALLBACK (on_wayland_ready),
+                           self,
+                           G_CONNECT_SWAPPED);
+  if (pos_wayland_has_wl_protcols (wayland))
+    on_wayland_ready (self, wayland);
 }
 
 
@@ -600,6 +525,7 @@ main (int argc, char *argv[])
   lfb_init (APP_ID, NULL);
   _debug_flags = parse_debug_env ();
   gtk_init (&argc, &argv);
+  gdk_set_allowed_backends ("wayland");
 
   wayland = pos_wayland_get_default ();
   stevia = g_object_new (PHOSH_TYPE_OSK_STEVIA, NULL);
