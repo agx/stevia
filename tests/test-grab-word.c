@@ -34,7 +34,9 @@ test_grab_last_word(void)
 
   g_assert_true (pos_completer_grab_last_word ("ends with word", &new_before, &word));
   g_assert_cmpstr (new_before, ==, "ends with ");
+  g_clear_pointer (&new_before, g_free);
   g_assert_cmpstr (word, ==, "word");
+  g_clear_pointer (&word, g_free);
 }
 
 
