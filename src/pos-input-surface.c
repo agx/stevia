@@ -933,16 +933,36 @@ pos_input_surface_set_completer (PosInputSurface *self, PosCompleter *completer)
 
 
 static void
+on_default_completer_changed (PosInputSurface *self)
+{
+  /* Handle completer change as layout switch as it will recheck the
+   * completer to be used */
+  g_debug ("Default completer changed, updating layout");
+  on_visible_child_changed (self);
+}
+
+
+static void
 pos_input_surface_set_completer_manager (PosInputSurface     *self,
                                          PosCompleterManager *completer_manager)
 {
   if (self->completer_manager == completer_manager)
     return;
 
+  if (self->completer_manager)
+    g_signal_handlers_disconnect_by_data (self->completer_manager, self);
+
   g_set_object (&self->completer_manager, completer_manager);
 
+  if (self->completer_manager) {
+    g_signal_connect_swapped (self->completer_manager,
+                              "notify::default",
+                              G_CALLBACK (on_default_completer_changed),
+                              self);
+  }
+
   /* Switch completion */
-  if (self->last_layout)
+  if (self->last_layout && self->completer_manager)
     pos_input_surface_switch_completion (self, POS_OSK_WIDGET (self->last_layout));
 }
 
@@ -1334,7 +1354,7 @@ pos_input_surface_finalize (GObject *object)
   g_clear_object (&self->xkbinfo);
   g_clear_object (&self->clipboard_manager);
   g_clear_object (&self->completer);
-  g_clear_object (&self->completer_manager);
+  pos_input_surface_set_completer_manager (self, NULL);
   g_clear_object (&self->swipe_down);
   g_clear_object (&self->style_manager);
   g_clear_pointer (&self->osks, g_hash_table_destroy);
