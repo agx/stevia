@@ -9,7 +9,7 @@ test_env.set('NO_AT_BRIDGE', '1')
 test_env.set('GSETTINGS_BACKEND', 'memory')
 test_env.set('GSETTINGS_SCHEMA_DIR', meson.project_build_root() / 'data')
 
-tests = ['grab-word', 'load-layouts', 'osk-widget', 'completers', 'emoji-db']
+tests = ['grab-word', 'completer-hunspell', 'load-layouts', 'osk-widget', 'completers', 'emoji-db']
 foreach name : tests
   name = 'test-@0@'.format(name)
   test = executable(name, '@0@.c'.format(name), pie: true, dependencies: libpos_dep)
