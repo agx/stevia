@@ -19,6 +19,7 @@ test_completer_presage_object (void)
 {
   PosCompleter *presage;
   g_autoptr (GError) err = NULL;
+  g_auto (GStrv) completions = NULL;
 
   presage = g_initable_new (POS_TYPE_COMPLETER_PRESAGE,
                             NULL,
@@ -31,7 +32,8 @@ test_completer_presage_object (void)
   pos_completer_feed_symbol (presage, "t");
   /* TODO: For exact matches we need specify presage.xml as otherwise we might get results
    * from the system wide one or the users personal dictionary */
-  g_assert_cmpint (g_strv_length (pos_completer_get_completions (presage)), >, 0);
+  completions = pos_completer_get_completions (presage);
+  g_assert_cmpint (g_strv_length (completions), >, 0);
 
   g_assert_finalize_object (presage);
 }
