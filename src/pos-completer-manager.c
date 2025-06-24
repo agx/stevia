@@ -162,9 +162,11 @@ on_default_completer_changed (PosCompleterManager *self)
     g_clear_error (&err);
   }
 
-  if (default_ != NULL) {
+  if (default_ != NULL && self->default_ != default_) {
     g_debug ("Switching default completer to '%s'", pos_completer_get_name (default_));
+
     self->default_ = default_;
+    g_object_notify_by_pspec (G_OBJECT (self), props[PROP_DEFAULT]);
   }
 }
 
@@ -218,7 +220,7 @@ pos_completer_manager_class_init (PosCompleterManagerClass *klass)
   props[PROP_DEFAULT] =
     g_param_spec_object ("default", "", "",
                          POS_TYPE_COMPLETER,
-                         G_PARAM_READABLE | G_PARAM_STATIC_STRINGS);
+                         G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 }
