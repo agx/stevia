@@ -188,7 +188,10 @@
             <child>
               <object class="GtkLabel">
                 <property name="visible">1</property>
-                <property name="margin">3</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+                <property name="margin-start">3</property>
+                <property name="margin-end">3</property>
                 <property name="label">ABC</property>
               </object>
             </child>
@@ -233,7 +236,10 @@
               <object class="GtkImage">
                 <property name="visible">1</property>
                 <property name="icon-name">edit-clear-symbolic</property>
-                <property name="margin">3</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+                <property name="margin-start">3</property>
+                <property name="margin-end">3</property>
               </object>
             </child>
           </object>
@@ -252,7 +258,10 @@
             <child>
               <object class="GtkImage">
                 <property name="visible">1</property>
-                <property name="margin">3</property>
+                <property name="margin-top">3</property>
+                <property name="margin-bottom">3</property>
+                <property name="margin-start">3</property>
+                <property name="margin-end">3</property>
                 <property name="icon-name">keyboard-enter-symbolic</property>
               </object>
             </child>

@@ -214,7 +214,7 @@ add_recent_item (PosEmojiPicker *self, GVariant *item, gunichar modifier)
   add_emoji (self->recent.box, TRUE, item, modifier, self);
 
   /* Enable recent */
-  gtk_widget_show (self->recent.box);
+  gtk_widget_set_visible (self->recent.box, TRUE);
   gtk_widget_set_sensitive (self->recent.button, TRUE);
 
   g_settings_set_value (self->settings, "recent-emoji", g_variant_builder_end (&builder));

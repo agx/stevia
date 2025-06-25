@@ -16,6 +16,9 @@
 
 #include <locale.h>
 
+/* Ease 3to4 migration */
+#define gtk_grid_remove(x,y) gtk_container_remove (GTK_CONTAINER (x), y)
+
 /**
  * PosKeypad:
  */
@@ -476,16 +479,16 @@ pos_keypad_set_start_action (PosKeypad *self,
   g_return_if_fail (POS_IS_KEYPAD (self));
   g_return_if_fail (start_action == NULL || GTK_IS_WIDGET (start_action));
 
-  old_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), 0, 3);
+  old_widget = gtk_grid_get_child_at (self->grid, 0, 3);
 
   if (old_widget == start_action)
     return;
 
   if (old_widget != NULL)
-    gtk_container_remove (GTK_CONTAINER (self->grid), old_widget);
+    gtk_grid_remove (self->grid, old_widget);
 
   if (start_action != NULL)
-    gtk_grid_attach (GTK_GRID (self->grid), start_action, 0, 3, 1, 1);
+    gtk_grid_attach (self->grid, start_action, 0, 3, 1, 1);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_START_ACTION]);
 }
@@ -503,7 +506,7 @@ pos_keypad_get_start_action (PosKeypad *self)
 {
   g_return_val_if_fail (POS_IS_KEYPAD (self), NULL);
 
-  return gtk_grid_get_child_at (GTK_GRID (self->grid), 0, 3);
+  return gtk_grid_get_child_at (self->grid, 0, 3);
 }
 
 /**
@@ -522,16 +525,16 @@ pos_keypad_set_end_action (PosKeypad *self,
   g_return_if_fail (POS_IS_KEYPAD (self));
   g_return_if_fail (end_action == NULL || GTK_IS_WIDGET (end_action));
 
-  old_widget = gtk_grid_get_child_at (GTK_GRID (self->grid), 2, 3);
+  old_widget = gtk_grid_get_child_at (self->grid, 2, 3);
 
   if (old_widget == end_action)
     return;
 
   if (old_widget != NULL)
-    gtk_container_remove (GTK_CONTAINER (self->grid), old_widget);
+    gtk_grid_remove (self->grid, old_widget);
 
   if (end_action != NULL)
-    gtk_grid_attach (GTK_GRID (self->grid), end_action, 2, 3, 1, 1);
+    gtk_grid_attach (self->grid, end_action, 2, 3, 1, 1);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_END_ACTION]);
 }
@@ -549,5 +552,5 @@ pos_keypad_get_end_action (PosKeypad *self)
 {
   g_return_val_if_fail (POS_IS_KEYPAD (self), NULL);
 
-  return gtk_grid_get_child_at (GTK_GRID (self->grid), 2, 3);
+  return gtk_grid_get_child_at (self->grid, 2, 3);
 }

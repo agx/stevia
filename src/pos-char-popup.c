@@ -170,7 +170,7 @@ pos_char_popup_set_symbols (PosCharPopup *self, GStrv symbols)
     GtkWidget *btn = gtk_button_new_with_label (symbols[i]);
 
     g_signal_connect_swapped (btn, "clicked", G_CALLBACK (on_button_clicked), self);
-    gtk_widget_show (btn);
+    gtk_widget_set_visible (btn, TRUE);
 
     if (left == n_per_row) {
       left = 0;
