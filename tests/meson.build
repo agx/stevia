@@ -9,7 +9,17 @@ test_env.set('NO_AT_BRIDGE', '1')
 test_env.set('GSETTINGS_BACKEND', 'memory')
 test_env.set('GSETTINGS_SCHEMA_DIR', meson.project_build_root() / 'data')
 
-tests = ['grab-word', 'load-layouts', 'osk-widget', 'completers', 'emoji-db']
+# For -Db_sanitize=address
+test_env.set(
+  'LSAN_OPTIONS',
+  'suppressions=@0@/data/leak-suppress.txt'.format(meson.project_source_root()),
+)
+# as our libraries lack frame pointers since otherwise back traces are incomplete
+test_env.set('ASAN_OPTIONS', 'fast_unwind_on_malloc=0')
+# Useful when running locally and glib hits an assertion:
+#test_env.set('ASAN_OPTIONS', 'fast_unwind_on_malloc=0:disable_coredump=0:unmap_shadow_on_exit=1:abort_on_error=1')
+
+tests = ['grab-word', 'completer-hunspell', 'load-layouts', 'osk-widget', 'completers', 'emoji-db']
 foreach name : tests
   name = 'test-@0@'.format(name)
   test = executable(name, '@0@.c'.format(name), pie: true, dependencies: libpos_dep)

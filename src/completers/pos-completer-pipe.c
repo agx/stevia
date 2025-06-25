@@ -207,7 +207,7 @@ pos_completer_pipe_initable_init (GInitable    *initable,
   g_autoptr (GError) err = NULL;
   g_autofree char *path = NULL;
   gboolean found;
-  char *command;
+  g_autofree char *command = NULL;
 
   command = g_settings_get_string (self->settings, "command");
   if (g_shell_parse_argv (command, NULL, &self->command, &err) == FALSE) {

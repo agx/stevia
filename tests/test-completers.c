@@ -63,24 +63,6 @@ test_completer_varnam (void)
 }
 
 
-static void
-test_completer_hunspell (void)
-{
-#ifdef POS_HAVE_HUNSPELL
-  if (!pos_completer_hunspell_find_dict (POS_COMPLETER_DEFAULT_LANG,
-                                         POS_COMPLETER_DEFAULT_REGION,
-                                         NULL,
-                                         NULL)) {
-    g_test_skip ("Hunspell data not found");
-    return;
-  }
-  test_simple_completer (hunspell, "hunspell", NULL);
-#else
-  g_test_skip ("Hunspell completer not available");
-#endif
-}
-
-
 int
 main (int argc, char *argv[])
 {
@@ -89,7 +71,6 @@ main (int argc, char *argv[])
   g_test_add_func ("/pos/completer/pipe", test_completer_pipe);
   g_test_add_func ("/pos/completer/fzf", test_completer_fzf);
   g_test_add_func ("/pos/completer/varnam", test_completer_varnam);
-  g_test_add_func ("/pos/completer/hunspell", test_completer_hunspell);
 
   return g_test_run ();
 }

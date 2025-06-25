@@ -427,7 +427,14 @@ pos_completer_add_preedit (PosCompleter *self, GString *preedit, const char *sym
   return FALSE;
 }
 
-
+/**
+ * pos_completer_get_display_name:
+ * @self: The completer
+ *
+ * Get the completers display name
+ *
+ * Returns:(transfer full): The display name
+ */
 char *
 pos_completer_get_display_name (PosCompleter *self)
 {

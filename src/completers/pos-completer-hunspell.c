@@ -401,7 +401,9 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
       if (utf8)
         g_ptr_array_add (completions, g_steal_pointer (&utf8));
     }
+    Hunspell_free_list (self->handle, &suggestions, ret);
   }
+
   g_ptr_array_add (completions, NULL);
 
   pos_completer_hunspell_take_completions (POS_COMPLETER (self),
