@@ -1,6 +1,7 @@
 /*
  * Copyright (C) 2022 Purism SPC
- *               2023-2025 The Phosh Developers
+ *               2023-2024 The Phosh Developers
+ *               2025 Phosh.mobi e.V.
  *
  * SPDX-License-Identifier: GPL-3.0-or-later
  *
