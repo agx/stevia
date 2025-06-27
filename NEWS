@@ -1,10 +1,17 @@
-phosh-osk-stevia 0.48~rc1
--------------------------
+phosh-osk-stevia 0.48.0
+-----------------------
 Released June 2025
 * Rename to stevia
+* Fix hunspell completer with non-UTF8 dictionaries (e.g. PL)
+* Several leak fixes
+* Change completer right away. Until know it would only get
+  updated on layout changes
 * Add pipe completer example
 * New layouts:
     * us+dvorak
+* Issues fixed:
+    * https://gitlab.gnome.org/guidog/stevia/-/issues/66
+    * https://gitlab.gnome.org/guidog/stevia/-/issues/67
 * Contributors:
     * chri2
     * Guido Günther

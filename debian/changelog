@@ -1,3 +1,42 @@
+phosh-osk-stevia (0.48.0) experimental; urgency=medium
+
+  * completion: Fix keyword completion value.
+    The resulting value is the same but that way it matches
+    the other flags.
+  * hunspell-completer: Reject non-UTF8 encodings.
+    Didn't expect that hunspell can return results in other
+    encodings than UTF-8 in 2025.
+    In case someone wants to make this more elaborate one
+    could use `g_convert` to perform conversion.
+    Helps: https://gitlab.gnome.org/guidog/stevia/-/issues/67
+  * hunspell-completer: Try conversion to UTF-8.
+    If hunspell's results aren't utf-8 we try to convert via iconv.
+    Closes: Helps: https://gitlab.gnome.org/guidog/stevia/-/issues/67
+  * hunspell-completer: Try input conversion from UTF-8.
+    Convert input so accented characters get handled.
+    Tested-by: Łukasz Osadnik
+  * completer: Document `get_display_name`
+    It's transfer full.
+  * tests: Split hunspell tests to separate file
+  * tests: Ease running under asan
+  * hunspell-completer: Don't forget to free hunspell's suggestions
+  * pipe-completer: Don't leak command
+  * tests: Leak fixes
+  * packaging: Bump provides.
+    This makes sure e.g. p-m-s is happy
+  * ui: Don't use `margin`. It doesn't exist in GTK4
+  * treewide: Avoid gtk_widget_{show,hide}
+    Deprecated in GTK4. We don't worry about gtk_wiget_show_all().
+  * keypad: Avoid container APIs.
+    Use a `define` for the function that will be introduced with GTK4.
+  * completer-manager: Notify when default completer changes
+  * input-surface: Listen and act on default completer changes.
+    Default completer changes were so far only applied when one switched
+    layouts. This can be surprising to the user so update the completer
+    right away.
+
+ -- Guido Günther <agx@sigxcpu.org>  Fri, 27 Jun 2025 10:58:41 +0200
+
 phosh-osk-stevia (0.48~rc1) experimental; urgency=medium
 
   * doc: Fix typo in hardware keyboard chapter
