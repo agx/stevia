@@ -64,6 +64,14 @@
   </screenshots>
 
   <releases>
+    <release version="0.48.0" date="2025-06-27">
+      <description translate="no">
+        <ul>
+          <li>Add us+dvorak layout</li>
+          <li>Several bug fixes</li>
+        </ul>
+      </description>
+    </release>
     <release version="0.47.0" date="2025-05-15">
       <description translate="no">
         <ul>

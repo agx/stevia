@@ -5,7 +5,8 @@ Source: https://gitlab.gnome.org/guidog/stevia
 Files: *
 Copyright:
   2022 Purism SPC
-  2022-2025 The Phosh Developers
+  2022-2024 The Phosh Developers
+  2025 Phosh.mobi e.V.
 License: GPL-3+
  This package is free software; you can redistribute it and/or modify
  it under the terms of the GNU General Public License as published by
