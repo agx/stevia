@@ -71,6 +71,7 @@ enum {
   PROP_COMPLETER_ACTIVE,
   PROP_COMPLETION_ENABLED,
   PROP_OSK_FEATURES,
+  PROP_MIN_HEIGHT,
   PROP_LAST_PROP
 };
 static GParamSpec *props[PROP_LAST_PROP];
@@ -96,6 +97,7 @@ struct _PosInputSurface {
 
   gboolean                 surface_visible;
   PosInputSurfaceAnimation animation;
+  guint                    min_height;
 
   /* GNOME settings */
   gboolean                 screen_keyboard_enabled;
@@ -1034,6 +1036,19 @@ pos_input_surface_set_osk_features (PosInputSurface *self, PhoshOskFeatures osk_
 
 
 static void
+pos_input_surface_set_min_height (PosInputSurface *self, guint min_height)
+{
+  if (self->min_height == min_height)
+    return;
+
+  self->min_height = min_height;
+  g_debug ("Minimum keyboard height: %d", self->min_height);
+
+  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_MIN_HEIGHT]);
+}
+
+
+static void
 pos_input_surface_set_property (GObject      *object,
                                 guint         property_id,
                                 const GValue *value,
@@ -1065,6 +1080,9 @@ pos_input_surface_set_property (GObject      *object,
     break;
   case PROP_OSK_FEATURES:
     pos_input_surface_set_osk_features (self, g_value_get_flags (value));
+    break;
+  case PROP_MIN_HEIGHT:
+    pos_input_surface_set_min_height (self, g_value_get_uint (value));
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1105,6 +1123,9 @@ pos_input_surface_get_property (GObject    *object,
     break;
   case PROP_OSK_FEATURES:
     g_value_set_flags (value, self->osk_features);
+    break;
+  case PROP_MIN_HEIGHT:
+    g_value_set_uint (value, self->min_height);
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1485,6 +1506,8 @@ pos_input_surface_check_resize (GtkContainer *container)
   gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, NULL);
   g_object_get (self, "height", &height, NULL);
 
+  min.height = MAX (min.height, self->min_height);
+
   if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != height) {
     phosh_layer_surface_set_size (PHOSH_LAYER_SURFACE (self), -1, min.height);
     /* Don't interfere with animation */
@@ -1649,6 +1672,16 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
                         PHOSH_TYPE_OSK_FEATURES,
                         PHOSH_OSK_FEATURE_DEFAULT,
                         G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  /**
+   * PosInputSurface:min-height:
+   *
+   * Minimal height in pixels this OSK should have
+   */
+  props[PROP_MIN_HEIGHT] =
+    g_param_spec_uint ("min-height", "", "",
+                       0, G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 
