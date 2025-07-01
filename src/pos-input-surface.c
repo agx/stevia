@@ -1477,12 +1477,12 @@ static void
 pos_input_surface_check_resize (GtkContainer *container)
 {
   PosInputSurface *self = POS_INPUT_SURFACE (container);
-  GtkRequisition min, nat;
+  GtkRequisition min;
   int height;
 
   g_return_if_fail (GTK_IS_CONTAINER (container));
 
-  gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, &nat);
+  gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, NULL);
   g_object_get (self, "height", &height, NULL);
 
   if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != height) {
