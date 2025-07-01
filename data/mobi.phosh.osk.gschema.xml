@@ -36,6 +36,15 @@
         disables this detection.
       </description>
     </key>
+
+    <key name="scaling" flags='mobi.phosh.osk.PhoshOskScalingFlags'>
+      <default>[]</default>
+      <summary>How to scale the on screen keyboard</summary>
+      <description>
+        These flags determine how the OSK adjusts to the screen size.
+      </description>
+    </key>
+
   </schema>
 
   <schema id='sm.puri.phosh.osk.EmojiPicker'

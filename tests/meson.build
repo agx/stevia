@@ -19,7 +19,15 @@ test_env.set('ASAN_OPTIONS', 'fast_unwind_on_malloc=0')
 # Useful when running locally and glib hits an assertion:
 #test_env.set('ASAN_OPTIONS', 'fast_unwind_on_malloc=0:disable_coredump=0:unmap_shadow_on_exit=1:abort_on_error=1')
 
-tests = ['grab-word', 'completer-hunspell', 'load-layouts', 'osk-widget', 'completers', 'emoji-db']
+tests = [
+  'grab-word',
+  'completer-hunspell',
+  'load-layouts',
+  'osk-widget',
+  'completers',
+  'emoji-db',
+  'size-manager',
+]
 foreach name : tests
   name = 'test-@0@'.format(name)
   test = executable(name, '@0@.c'.format(name), pie: true, dependencies: libpos_dep)
