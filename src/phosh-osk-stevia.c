@@ -259,7 +259,6 @@ dispose_input_surface (PhoshOskStevia *self)
   gtk_widget_destroy (GTK_WIDGET (self->input_surface));
 }
 
-#define INPUT_SURFACE_HEIGHT 200
 
 
 static void
@@ -293,13 +292,13 @@ create_input_surface (PhoshOskStevia *self)
   self->input_surface = g_object_new (POS_TYPE_INPUT_SURFACE,
                                       /* layer-surface */
                                       "layer-shell", pos_wayland_get_zwlr_layer_shell_v1 (wayland),
-                                      "height", INPUT_SURFACE_HEIGHT,
+                                      "height", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       "anchor", ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
                                       ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT |
                                       ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT,
                                       "layer", ZWLR_LAYER_SHELL_V1_LAYER_TOP,
                                       "kbd-interactivity", FALSE,
-                                      "exclusive-zone", INPUT_SURFACE_HEIGHT,
+                                      "exclusive-zone", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       "namespace", "osk",
                                       /* pos-input-surface */
                                       "input-method", im,
