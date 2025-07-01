@@ -290,6 +290,7 @@ create_input_surface (PhoshOskStevia *self)
 
   force_completion = !!(_debug_flags & POS_DEBUG_FLAG_FORCE_COMPLETEION);
   self->input_surface = g_object_new (POS_TYPE_INPUT_SURFACE,
+                                      "min-height", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       /* layer-surface */
                                       "layer-shell", pos_wayland_get_zwlr_layer_shell_v1 (wayland),
                                       "height", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
@@ -321,6 +322,16 @@ create_input_surface (PhoshOskStevia *self)
                                NULL,
                                self,
                                NULL);
+  g_object_bind_property (self->size_manager,
+                          "height",
+                          self->input_surface,
+                          "min-height",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->size_manager,
+                          "dead-zone",
+                          self->input_surface,
+                          "dead-zone",
+                          G_BINDING_SYNC_CREATE);
 
   g_signal_connect_object (self->hw_tracker, "notify::allow-active",
                            G_CALLBACK (on_hw_tracker_allow_active_changed),
