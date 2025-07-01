@@ -54,6 +54,7 @@ typedef struct _PhoshOskStevia {
   PosActivationFilter *activation_filter;
   PosHwTracker        *hw_tracker;
   PosEmojiDb          *emoji_db;
+  PosSizeManager      *size_manager;
 } PhoshOskStevia;
 
 #define PHOSH_TYPE_OSK_STEVIA (phosh_osk_stevia_get_type ())
@@ -444,6 +445,7 @@ pos_input_surface_finalize (GObject *object)
     dispose_input_surface (self);
 
   g_clear_object (&self->emoji_db);
+  g_clear_object (&self->size_manager);
 
   G_OBJECT_CLASS (phosh_osk_stevia_parent_class)->finalize (object);
 }
@@ -472,6 +474,7 @@ phosh_osk_stevia_init (PhoshOskStevia *self)
   g_unix_signal_add (SIGINT, quit_cb, self->loop);
 
   self->session_proxy = pos_session_register (APP_ID, self->loop);
+  self->size_manager = pos_size_manager_new ();
 
   g_signal_connect_object (wayland,
                            "ready",
