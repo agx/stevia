@@ -1038,6 +1038,17 @@ pos_input_surface_set_osk_features (PosInputSurface *self, PhoshOskFeatures osk_
 
 
 static void
+update_osk_key_height (gpointer key, gpointer value, gpointer data)
+{
+  PosOskWidget *osk_widget = POS_OSK_WIDGET (value);
+  PosInputSurface *self = POS_INPUT_SURFACE (data);
+
+  /* FIXME: need to take number of rows into account */
+  pos_osk_widget_set_key_height (osk_widget, self->min_height / 4);
+}
+
+
+static void
 pos_input_surface_set_min_height (PosInputSurface *self, guint min_height)
 {
   if (self->min_height == min_height)
@@ -1045,6 +1056,9 @@ pos_input_surface_set_min_height (PosInputSurface *self, guint min_height)
 
   self->min_height = min_height;
   g_debug ("Minimum keyboard height: %d", self->min_height);
+
+  g_hash_table_foreach (self->osks, update_osk_key_height, self);
+  update_osk_key_height (NULL, self->osk_terminal, self);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_MIN_HEIGHT]);
 }
