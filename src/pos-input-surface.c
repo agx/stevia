@@ -72,6 +72,7 @@ enum {
   PROP_COMPLETION_ENABLED,
   PROP_OSK_FEATURES,
   PROP_MIN_HEIGHT,
+  PROP_DEAD_ZONE,
   PROP_LAST_PROP
 };
 static GParamSpec *props[PROP_LAST_PROP];
@@ -98,6 +99,7 @@ struct _PosInputSurface {
   gboolean                 surface_visible;
   PosInputSurfaceAnimation animation;
   guint                    min_height;
+  guint                    dead_zone;
 
   /* GNOME settings */
   gboolean                 screen_keyboard_enabled;
@@ -1084,6 +1086,9 @@ pos_input_surface_set_property (GObject      *object,
   case PROP_MIN_HEIGHT:
     pos_input_surface_set_min_height (self, g_value_get_uint (value));
     break;
+  case PROP_DEAD_ZONE:
+    self->dead_zone = g_value_get_uint (value);
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     break;
@@ -1126,6 +1131,9 @@ pos_input_surface_get_property (GObject    *object,
     break;
   case PROP_MIN_HEIGHT:
     g_value_set_uint (value, self->min_height);
+    break;
+  case PROP_DEAD_ZONE:
+    g_value_set_uint (value, self->dead_zone);
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1682,6 +1690,16 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
                        0, G_MAXUINT,
                        0,
                        G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  /**
+   * PosInputSurface:dead-zone:
+   *
+   * Empty space at the bottom of the keyboard
+   */
+  props[PROP_DEAD_ZONE] =
+    g_param_spec_uint ("dead-zone", "", "",
+                       0, G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 

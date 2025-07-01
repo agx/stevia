@@ -8,6 +8,7 @@
         <property name="visible">1</property>
         <property name="maximum-size">1024</property>
         <property name="tightening-threshold">1024</property>
+        <property name="margin-bottom" bind-source="PosInputSurface" bind-property="dead-zone" bind-flags="sync-create"/>
         <child>
           <object class="GtkBox">
             <property name="visible">1</property>
