@@ -1641,7 +1641,7 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
                          POS_TYPE_VK_DRIVER,
                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
-   * PosInputSurface:osk-features
+   * PosInputSurface:osk-features:
    *
    * Features to enable on all OSKs.
    */
