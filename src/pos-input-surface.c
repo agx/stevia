@@ -96,7 +96,6 @@ struct _PosInputSurface {
 
   gboolean                 surface_visible;
   PosInputSurfaceAnimation animation;
-  int                      height;
 
   /* GNOME settings */
   gboolean                 screen_keyboard_enabled;
@@ -1486,7 +1485,7 @@ pos_input_surface_check_resize (GtkContainer *container)
   gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, &nat);
   g_object_get (self, "height", &height, NULL);
 
-  if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != self->height) {
+  if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != height) {
     phosh_layer_surface_set_size (PHOSH_LAYER_SURFACE (self), -1, min.height);
     /* Don't interfere with animation */
     if (self->animation.progress >= 1.0) {
