@@ -73,6 +73,8 @@ libpos_sources = files(
   'pos-osk-key.h',
   'pos-osk-widget.c',
   'pos-osk-widget.h',
+  'pos-output.c',
+  'pos-output.h',
   'pos-settings-panel.c',
   'pos-settings-panel.h',
   'pos-shortcuts-bar.c',
@@ -83,6 +85,8 @@ libpos_sources = files(
   'pos-virtual-keyboard.h',
   'pos-vk-driver.c',
   'pos-vk-driver.h',
+  'pos-wayland.c',
+  'pos-wayland.h',
   'pos.h',
 )
 
