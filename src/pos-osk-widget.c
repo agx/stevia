@@ -1823,9 +1823,6 @@ parse_lang (PosOskWidget *self, const char *layout, const char *variant)
   self->region = g_strdup (variant);
 }
 
-
-
-
 /**
  * pos_osk_widget_set_layout:
  * @self: The osk widget
@@ -1970,7 +1967,6 @@ pos_osk_widget_get_lang (PosOskWidget *self)
   return self->lang;
 }
 
-
 /**
  * pos_osk_widget_get_region:
  * @self: The osk widget
@@ -2002,7 +1998,6 @@ pos_osk_widget_get_layout_id (PosOskWidget *self)
   return self->layout_id;
 }
 
-
 /**
  * pos_osk_widget_get_symbols:
  * @self: The osk widget
@@ -2016,7 +2011,6 @@ pos_osk_widget_get_symbols (PosOskWidget *self)
 
   return (const char * const *)self->symbols->pdata;
 }
-
 
 /**
  * pos_osk_widget_set_features:
