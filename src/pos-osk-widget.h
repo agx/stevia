@@ -40,5 +40,6 @@ const char       *pos_osk_widget_get_region (PosOskWidget *self);
 void              pos_osk_widget_set_features (PosOskWidget *self, PhoshOskFeatures features);
 const char *const *pos_osk_widget_get_symbols (PosOskWidget *self);
 void              pos_osk_widget_set_key_height (PosOskWidget *self, guint key_height);
+guint             pos_osk_widget_max_rows (PosOskWidget *self);
 
 G_END_DECLS

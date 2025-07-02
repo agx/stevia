@@ -2043,3 +2043,12 @@ pos_osk_widget_set_key_height (PosOskWidget *self, guint key_height)
 
   gtk_widget_queue_resize (GTK_WIDGET (self));
 }
+
+
+guint
+pos_osk_widget_max_rows (PosOskWidget *self)
+{
+  g_assert (POS_IS_OSK_WIDGET (self));
+
+  return self->layout.n_rows;
+}
