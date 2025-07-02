@@ -1042,9 +1042,10 @@ update_osk_key_height (gpointer key, gpointer value, gpointer data)
 {
   PosOskWidget *osk_widget = POS_OSK_WIDGET (value);
   PosInputSurface *self = POS_INPUT_SURFACE (data);
+  guint n_rows;
 
-  /* FIXME: need to take number of rows into account */
-  pos_osk_widget_set_key_height (osk_widget, self->min_height / 4);
+  n_rows = pos_osk_widget_max_rows (osk_widget);
+  pos_osk_widget_set_key_height (osk_widget, self->min_height / n_rows);
 }
 
 
