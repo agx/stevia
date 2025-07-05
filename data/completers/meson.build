@@ -6,5 +6,6 @@ foreach completer : completers
     install: true,
     install_dir: pkgdatadir / 'completers',
     type: 'desktop',
+    args: '-kDescription',
   )
 endforeach
