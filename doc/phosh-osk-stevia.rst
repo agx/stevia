@@ -291,6 +291,29 @@ type. If you want to set multiple options separate them with a comma (``,``):
    gsettings set sm.puri.phosh.osk osk-features "['key-drag', 'key-indicator']"
 
 
+KEYBOARD SCALING
+^^^^^^^^^^^^^^^^
+
+While most of the mobile user interfaces features should respect the current
+output resolution on screen keyboards are the exception from the rule as the
+size of the users fingers doesn't change. We hence want to allow the keyboard's
+keys to keep the same physical height on resolution changes. Furthermore on taller
+devices it can be useful to shift the keyboard a bit upwards. The `scaling`
+setting handles this:
+
+* ``auto-portrait``: Automatically adjust the keyboard height in portrait mode based
+  on the resolution.
+
+* ``bottom-dead-zone``: Add an empty area at the bottom of the keyboard when enough
+  vertical space is available.
+
+To enable both of these features you can uses:
+
+::
+
+    gsettings set sm.puri.phosh.osk scaling "['auto-portrait', 'bottom-dead-zone']"
+
+
 ENVIRONMENT VARIABLES
 ---------------------
 

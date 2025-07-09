@@ -158,6 +158,11 @@ config_h.set('POS_HAVE_HUNSPELL', hunspell_dep.found())
 config_h.set('POS_HAVE_PRESAGE', presage_dep.found())
 config_h.set('POS_HAVE_PRESAGE2', presage2_dep.found())
 config_h.set('POS_HAVE_VARNAM', varnam_dep.found())
+config_h.set(
+  'POS_INPUT_SURFACE_DEFAULT_HEIGHT',
+  200,
+  description: 'Default height of the input surface',
+)
 config_h.set_quoted('POS_DEFAULT_COMPLETER', default_completer)
 
 configure_file(output: 'pos-config.h', configuration: config_h)

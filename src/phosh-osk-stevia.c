@@ -54,6 +54,7 @@ typedef struct _PhoshOskStevia {
   PosActivationFilter *activation_filter;
   PosHwTracker        *hw_tracker;
   PosEmojiDb          *emoji_db;
+  PosSizeManager      *size_manager;
 } PhoshOskStevia;
 
 #define PHOSH_TYPE_OSK_STEVIA (phosh_osk_stevia_get_type ())
@@ -258,7 +259,6 @@ dispose_input_surface (PhoshOskStevia *self)
   gtk_widget_destroy (GTK_WIDGET (self->input_surface));
 }
 
-#define INPUT_SURFACE_HEIGHT 200
 
 
 static void
@@ -290,15 +290,16 @@ create_input_surface (PhoshOskStevia *self)
 
   force_completion = !!(_debug_flags & POS_DEBUG_FLAG_FORCE_COMPLETEION);
   self->input_surface = g_object_new (POS_TYPE_INPUT_SURFACE,
+                                      "min-height", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       /* layer-surface */
                                       "layer-shell", pos_wayland_get_zwlr_layer_shell_v1 (wayland),
-                                      "height", INPUT_SURFACE_HEIGHT,
+                                      "height", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       "anchor", ZWLR_LAYER_SURFACE_V1_ANCHOR_BOTTOM |
                                       ZWLR_LAYER_SURFACE_V1_ANCHOR_LEFT |
                                       ZWLR_LAYER_SURFACE_V1_ANCHOR_RIGHT,
                                       "layer", ZWLR_LAYER_SHELL_V1_LAYER_TOP,
                                       "kbd-interactivity", FALSE,
-                                      "exclusive-zone", INPUT_SURFACE_HEIGHT,
+                                      "exclusive-zone", POS_INPUT_SURFACE_DEFAULT_HEIGHT,
                                       "namespace", "osk",
                                       /* pos-input-surface */
                                       "input-method", im,
@@ -321,6 +322,16 @@ create_input_surface (PhoshOskStevia *self)
                                NULL,
                                self,
                                NULL);
+  g_object_bind_property (self->size_manager,
+                          "height",
+                          self->input_surface,
+                          "min-height",
+                          G_BINDING_SYNC_CREATE);
+  g_object_bind_property (self->size_manager,
+                          "dead-zone",
+                          self->input_surface,
+                          "dead-zone",
+                          G_BINDING_SYNC_CREATE);
 
   g_signal_connect_object (self->hw_tracker, "notify::allow-active",
                            G_CALLBACK (on_hw_tracker_allow_active_changed),
@@ -444,6 +455,7 @@ pos_input_surface_finalize (GObject *object)
     dispose_input_surface (self);
 
   g_clear_object (&self->emoji_db);
+  g_clear_object (&self->size_manager);
 
   G_OBJECT_CLASS (phosh_osk_stevia_parent_class)->finalize (object);
 }
@@ -472,6 +484,7 @@ phosh_osk_stevia_init (PhoshOskStevia *self)
   g_unix_signal_add (SIGINT, quit_cb, self->loop);
 
   self->session_proxy = pos_session_register (APP_ID, self->loop);
+  self->size_manager = pos_size_manager_new ();
 
   g_signal_connect_object (wayland,
                            "ready",

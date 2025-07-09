@@ -36,6 +36,15 @@
         disables this detection.
       </description>
     </key>
+
+    <key name="scaling" flags='mobi.phosh.osk.PhoshOskScalingFlags'>
+      <default>[]</default>
+      <summary>How to scale the on screen keyboard</summary>
+      <description>
+        These flags determine how the OSK adjusts to the screen size.
+      </description>
+    </key>
+
   </schema>
 
   <schema id='sm.puri.phosh.osk.EmojiPicker'
@@ -64,7 +73,9 @@
         '&lt;ctrl&gt;v', '&lt;ctrl&gt;c',  '&lt;ctrl&gt;&lt;shift&gt;v', '&lt;ctrl&gt;&lt;shift&gt;c', 'Menu'
       ]</default>
       <summary>Shortcuts for terminal layout</summary>
-      <description/>
+      <description>
+        List of keyboard shortcuts available in the terminal layout.
+      </description>
     </key>
   </schema>
 

@@ -24,7 +24,6 @@
 
 #include <math.h>
 
-#define KEY_HEIGHT 50
 #define KEY_ICON_SIZE 16
 
 /* Default us layout */
@@ -53,6 +52,7 @@ enum {
   PROP_LAYER,
   PROP_NAME,
   PROP_MODE,
+  PROP_KEY_HEIGHT,
   PROP_LAST_PROP,
 };
 static GParamSpec *props[PROP_LAST_PROP];
@@ -126,6 +126,7 @@ struct _PosOskWidget {
   PhoshOskFeatures     features;
   int                  width, height;
   PosOskWidgetLayout   layout;
+  guint                key_height;
 
   GtkStyleContext     *key_context;
   PosOskWidgetLayer    layer;
@@ -672,6 +673,9 @@ pos_osk_widget_set_property (GObject      *object,
   case PROP_FEATURES:
     self->features = g_value_get_flags (value);
     break;
+  case PROP_KEY_HEIGHT:
+    pos_osk_widget_set_key_height (self, g_value_get_uint (value));
+    break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
     break;
@@ -699,6 +703,9 @@ pos_osk_widget_get_property (GObject    *object,
     break;
   case PROP_FEATURES:
     g_value_set_flags (value, self->features);
+    break;
+  case PROP_KEY_HEIGHT:
+    g_value_set_uint (value, self->key_height);
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1409,7 +1416,7 @@ pos_osk_widget_size_allocate (GtkWidget *widget, GdkRectangle *allocation)
     guint off_y;
 
     layer->key_width = self->width / layer->width;
-    layer->key_height = KEY_HEIGHT;
+    layer->key_height = self->key_height;
     layer->offset_x = 0.5 * (self->width - (layer->width * layer->key_width));
     off_y = self->height - (layer->n_rows * layer->key_height);
 
@@ -1492,7 +1499,7 @@ pos_osk_widget_get_preferred_height (GtkWidget       *widget,
 {
   PosOskWidget *self = POS_OSK_WIDGET (widget);
 
-  *minimum_height = *natural_height = KEY_HEIGHT * self->layout.n_rows;
+  *minimum_height = *natural_height = self->key_height * self->layout.n_rows;
 
 }
 
@@ -1565,6 +1572,17 @@ pos_osk_widget_class_init (PosOskWidgetClass *klass)
                        POS_TYPE_OSK_WIDGET_MODE,
                        POS_OSK_WIDGET_MODE_KEYBOARD,
                        G_PARAM_READABLE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+
+  /**
+   * PosOskWidget:key-height
+   *
+   * The height of a single, regular key on the keyboard
+   */
+  props[PROP_KEY_HEIGHT] =
+    g_param_spec_uint ("key-height", "", "",
+                       0, POS_OSK_WIDGET_KEY_HEIGHT_MAX,
+                       POS_OSK_WIDGET_KEY_HEIGHT_DEFAULT,
+                       G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 
@@ -1675,6 +1693,7 @@ pos_osk_widget_init (PosOskWidget *self)
   self->mode = POS_OSK_WIDGET_MODE_KEYBOARD;
   self->layer = POS_OSK_WIDGET_LAYER_NORMAL;
   self->symbols = g_ptr_array_new ();
+  self->key_height = POS_OSK_WIDGET_KEY_HEIGHT_DEFAULT;
 
   gtk_widget_add_events (GTK_WIDGET (self), GDK_BUTTON_PRESS_MASK |
                          GDK_BUTTON_RELEASE_MASK |
@@ -1803,9 +1822,6 @@ parse_lang (PosOskWidget *self, const char *layout, const char *variant)
   /* Like above but layout also from variant (`in+mal`) */
   self->region = g_strdup (variant);
 }
-
-
-
 
 /**
  * pos_osk_widget_set_layout:
@@ -1951,7 +1967,6 @@ pos_osk_widget_get_lang (PosOskWidget *self)
   return self->lang;
 }
 
-
 /**
  * pos_osk_widget_get_region:
  * @self: The osk widget
@@ -1983,7 +1998,6 @@ pos_osk_widget_get_layout_id (PosOskWidget *self)
   return self->layout_id;
 }
 
-
 /**
  * pos_osk_widget_get_symbols:
  * @self: The osk widget
@@ -1997,7 +2011,6 @@ pos_osk_widget_get_symbols (PosOskWidget *self)
 
   return (const char * const *)self->symbols->pdata;
 }
-
 
 /**
  * pos_osk_widget_set_features:
@@ -2016,4 +2029,26 @@ pos_osk_widget_set_features (PosOskWidget *self, PhoshOskFeatures features)
 
   self->features = features;
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_FEATURES]);
+}
+
+
+void
+pos_osk_widget_set_key_height (PosOskWidget *self, guint key_height)
+{
+  if (self->key_height == key_height)
+    return;
+
+  self->key_height = key_height;
+  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_KEY_HEIGHT]);
+
+  gtk_widget_queue_resize (GTK_WIDGET (self));
+}
+
+
+guint
+pos_osk_widget_max_rows (PosOskWidget *self)
+{
+  g_assert (POS_IS_OSK_WIDGET (self));
+
+  return self->layout.n_rows;
 }

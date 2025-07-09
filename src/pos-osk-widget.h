@@ -13,6 +13,9 @@
 
 G_BEGIN_DECLS
 
+#define POS_OSK_WIDGET_KEY_HEIGHT_DEFAULT 50
+#define POS_OSK_WIDGET_KEY_HEIGHT_MAX 100
+
 #define POS_TYPE_OSK_WIDGET (pos_osk_widget_get_type ())
 
 G_DECLARE_FINAL_TYPE (PosOskWidget, pos_osk_widget, POS, OSK_WIDGET, GtkDrawingArea)
@@ -36,5 +39,7 @@ const char       *pos_osk_widget_get_lang   (PosOskWidget *self);
 const char       *pos_osk_widget_get_region (PosOskWidget *self);
 void              pos_osk_widget_set_features (PosOskWidget *self, PhoshOskFeatures features);
 const char *const *pos_osk_widget_get_symbols (PosOskWidget *self);
+void              pos_osk_widget_set_key_height (PosOskWidget *self, guint key_height);
+guint             pos_osk_widget_max_rows (PosOskWidget *self);
 
 G_END_DECLS

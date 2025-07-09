@@ -79,6 +79,8 @@ libpos_sources = files(
   'pos-settings-panel.h',
   'pos-shortcuts-bar.c',
   'pos-shortcuts-bar.h',
+  'pos-size-manager.c',
+  'pos-size-manager.h',
   'pos-style-manager.c',
   'pos-style-manager.h',
   'pos-virtual-keyboard.c',

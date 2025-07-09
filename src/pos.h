@@ -17,6 +17,7 @@ G_BEGIN_DECLS
 #include "pos-hw-tracker.h"
 #include "pos-enums.h"
 #include "pos-osk-dbus.h"
+#include "pos-size-manager.h"
 #include "pos-input-method.h"
 #include "pos-input-surface.h"
 #include "pos-output.h"

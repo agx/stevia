@@ -71,6 +71,8 @@ enum {
   PROP_COMPLETER_ACTIVE,
   PROP_COMPLETION_ENABLED,
   PROP_OSK_FEATURES,
+  PROP_MIN_HEIGHT,
+  PROP_DEAD_ZONE,
   PROP_LAST_PROP
 };
 static GParamSpec *props[PROP_LAST_PROP];
@@ -96,7 +98,8 @@ struct _PosInputSurface {
 
   gboolean                 surface_visible;
   PosInputSurfaceAnimation animation;
-  int                      height;
+  guint                    min_height;
+  guint                    dead_zone;
 
   /* GNOME settings */
   gboolean                 screen_keyboard_enabled;
@@ -1035,6 +1038,34 @@ pos_input_surface_set_osk_features (PosInputSurface *self, PhoshOskFeatures osk_
 
 
 static void
+update_osk_key_height (gpointer key, gpointer value, gpointer data)
+{
+  PosOskWidget *osk_widget = POS_OSK_WIDGET (value);
+  PosInputSurface *self = POS_INPUT_SURFACE (data);
+  guint n_rows;
+
+  n_rows = pos_osk_widget_max_rows (osk_widget);
+  pos_osk_widget_set_key_height (osk_widget, self->min_height / n_rows);
+}
+
+
+static void
+pos_input_surface_set_min_height (PosInputSurface *self, guint min_height)
+{
+  if (self->min_height == min_height)
+    return;
+
+  self->min_height = min_height;
+  g_debug ("Minimum keyboard height: %d", self->min_height);
+
+  g_hash_table_foreach (self->osks, update_osk_key_height, self);
+  update_osk_key_height (NULL, self->osk_terminal, self);
+
+  g_object_notify_by_pspec (G_OBJECT (self), props[PROP_MIN_HEIGHT]);
+}
+
+
+static void
 pos_input_surface_set_property (GObject      *object,
                                 guint         property_id,
                                 const GValue *value,
@@ -1066,6 +1097,12 @@ pos_input_surface_set_property (GObject      *object,
     break;
   case PROP_OSK_FEATURES:
     pos_input_surface_set_osk_features (self, g_value_get_flags (value));
+    break;
+  case PROP_MIN_HEIGHT:
+    pos_input_surface_set_min_height (self, g_value_get_uint (value));
+    break;
+  case PROP_DEAD_ZONE:
+    self->dead_zone = g_value_get_uint (value);
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1106,6 +1143,12 @@ pos_input_surface_get_property (GObject    *object,
     break;
   case PROP_OSK_FEATURES:
     g_value_set_flags (value, self->osk_features);
+    break;
+  case PROP_MIN_HEIGHT:
+    g_value_set_uint (value, self->min_height);
+    break;
+  case PROP_DEAD_ZONE:
+    g_value_set_uint (value, self->dead_zone);
     break;
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
@@ -1478,15 +1521,17 @@ static void
 pos_input_surface_check_resize (GtkContainer *container)
 {
   PosInputSurface *self = POS_INPUT_SURFACE (container);
-  GtkRequisition min, nat;
+  GtkRequisition min;
   int height;
 
   g_return_if_fail (GTK_IS_CONTAINER (container));
 
-  gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, &nat);
+  gtk_widget_get_preferred_size (GTK_WIDGET (self), &min, NULL);
   g_object_get (self, "height", &height, NULL);
 
-  if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != self->height) {
+  min.height = MAX (min.height, self->min_height);
+
+  if (gtk_widget_get_mapped (GTK_WIDGET (self)) && min.height != height) {
     phosh_layer_surface_set_size (PHOSH_LAYER_SURFACE (self), -1, min.height);
     /* Don't interfere with animation */
     if (self->animation.progress >= 1.0) {
@@ -1641,7 +1686,7 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
                          POS_TYPE_VK_DRIVER,
                          G_PARAM_WRITABLE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
   /**
-   * PosInputSurface:osk-features
+   * PosInputSurface:osk-features:
    *
    * Features to enable on all OSKs.
    */
@@ -1650,6 +1695,26 @@ pos_input_surface_class_init (PosInputSurfaceClass *klass)
                         PHOSH_TYPE_OSK_FEATURES,
                         PHOSH_OSK_FEATURE_DEFAULT,
                         G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  /**
+   * PosInputSurface:min-height:
+   *
+   * Minimal height in pixels this OSK should have
+   */
+  props[PROP_MIN_HEIGHT] =
+    g_param_spec_uint ("min-height", "", "",
+                       0, G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE | G_PARAM_EXPLICIT_NOTIFY | G_PARAM_STATIC_STRINGS);
+  /**
+   * PosInputSurface:dead-zone:
+   *
+   * Empty space at the bottom of the keyboard
+   */
+  props[PROP_DEAD_ZONE] =
+    g_param_spec_uint ("dead-zone", "", "",
+                       0, G_MAXUINT,
+                       0,
+                       G_PARAM_READWRITE | G_PARAM_STATIC_STRINGS);
 
   g_object_class_install_properties (object_class, PROP_LAST_PROP, props);
 
