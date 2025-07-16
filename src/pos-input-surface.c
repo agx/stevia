@@ -243,7 +243,8 @@ pos_input_surface_notify_key_press (PosInputSurface *self)
 
   g_assert (POS_IS_INPUT_SURFACE (self));
 
-  event = lfb_event_new ("button-pressed");
+  event = lfb_event_new ("key-pressed");
+  lfb_event_set_important (event, TRUE);
   lfb_event_trigger_feedback_async (event, NULL, NULL, NULL);
 }
 
