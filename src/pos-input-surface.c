@@ -236,9 +236,21 @@ on_num_shortcuts_changed (PosInputSurface *self)
 }
 
 
-
 static void
 pos_input_surface_notify_key_press (PosInputSurface *self)
+{
+  g_autoptr (LfbEvent) event = NULL;
+
+  g_assert (POS_IS_INPUT_SURFACE (self));
+
+  event = lfb_event_new ("key-pressed");
+  lfb_event_set_important (event, TRUE);
+  lfb_event_trigger_feedback_async (event, NULL, NULL, NULL);
+}
+
+
+static void
+pos_input_surface_notify_button_press (PosInputSurface *self)
 {
   g_autoptr (LfbEvent) event = NULL;
 
@@ -257,7 +269,7 @@ on_click_hook (GSignalInvocationHint *ihint,
 {
   PosInputSurface *self = POS_INPUT_SURFACE (user_data);
 
-  pos_input_surface_notify_key_press (self);
+  pos_input_surface_notify_button_press (self);
   return TRUE;
 }
 
