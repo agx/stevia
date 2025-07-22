@@ -65,22 +65,25 @@ G_DEFINE_TYPE_WITH_CODE (PosCompleterHunspell, pos_completer_hunspell, POS_TYPE_
                                                 pos_completer_hunspell_initable_interface_init))
 
 static void
-pos_completer_hunspell_take_completions (PosCompleter *iface, GStrv completions)
+pos_completer_hunspell_set_completions (PosCompleter *iface,
+                                        GStrv         completions,
+                                        gboolean      additional_sources)
 {
   PosCompleterHunspell *self = POS_COMPLETER_HUNSPELL (iface);
   g_auto (GStrv) additional_results = NULL;
   g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
 
-  additional_results = pos_completer_base_get_additional_results (POS_COMPLETER_BASE (self),
-                                                                  self->preedit->str,
-                                                                  MAX_ADDITIONAL_RESULTS);
+  if (additional_sources)
+    additional_results = pos_completer_base_get_additional_results (POS_COMPLETER_BASE (self),
+                                                                    self->preedit->str,
+                                                                    MAX_ADDITIONAL_RESULTS);
 
   if (completions)
     g_strv_builder_addv (builder, (const char **)completions);
   if (additional_results)
     g_strv_builder_addv (builder, (const char **)additional_results);
   g_strfreev (self->completions);
-  self->completions = completions;
+  self->completions = g_strv_builder_end (builder);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_COMPLETIONS]);
 }
@@ -104,11 +107,10 @@ pos_completer_hunspell_set_preedit (PosCompleter *iface, const char *preedit)
     return;
 
   g_string_truncate (self->preedit, 0);
-  if (preedit) {
+  if (preedit)
     g_string_append (self->preedit, preedit);
-  } else {
-    pos_completer_hunspell_take_completions (POS_COMPLETER (self), NULL);
-  }
+  else
+    pos_completer_hunspell_set_completions (POS_COMPLETER (self), NULL, FALSE);
 
   g_object_notify_by_pspec (G_OBJECT (self), props[PROP_PREEDIT]);
 }
@@ -366,7 +368,8 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
   PosCompleterHunspell *self = POS_COMPLETER_HUNSPELL (iface);
   g_autofree char *preedit = g_strdup (self->preedit->str);
   g_autofree char *input = NULL;
-  g_autoptr (GPtrArray) completions = g_ptr_array_new ();
+  g_autoptr (GStrvBuilder) builder = g_strv_builder_new ();
+  g_auto (GStrv) completions = NULL;
   char **suggestions;
   int ret;
 
@@ -391,7 +394,7 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
 
   input = convert_from_utf8 (self, self->preedit->str);
   if (Hunspell_spell (self->handle, input))
-    g_ptr_array_add (completions, g_strdup (self->preedit->str));
+    g_strv_builder_add (builder, g_strdup (self->preedit->str));
 
   ret = Hunspell_suggest (self->handle, &suggestions, input);
   if (ret > 0) {
@@ -399,15 +402,14 @@ pos_completer_hunspell_feed_symbol (PosCompleter *iface, const char *symbol)
       char *utf8 = convert_to_utf8 (self, suggestions[i]);
 
       if (utf8)
-        g_ptr_array_add (completions, g_steal_pointer (&utf8));
+        g_strv_builder_take (builder, utf8);
     }
     Hunspell_free_list (self->handle, &suggestions, ret);
   }
 
-  g_ptr_array_add (completions, NULL);
+  completions = g_strv_builder_end (builder);
+  pos_completer_hunspell_set_completions (POS_COMPLETER (self), completions, TRUE);
 
-  pos_completer_hunspell_take_completions (POS_COMPLETER (self),
-                                           (char **)g_ptr_array_steal (completions, NULL));
   return TRUE;
 }
 
