@@ -39,3 +39,8 @@ show_class_hierarchy = true
 base_url = "https://gitlab.gnome.org/guidog/stevia//-/blob/main/"
 # The format for links, using "filename" and "line" for the format
 file_format = "{filename}#L{line}"
+
+[extra]
+content_files = [
+  "testing-layouts.md",
+]
