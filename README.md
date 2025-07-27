@@ -5,11 +5,10 @@ Stevia is an alternative keyboard for Phosh. It can replace the default OSK
 
 The purpose of Stevia is:
 
-- to allow experimentation without the risk of breaking end user systems
+- to make typing pleasant and fast on touch screens
 - be helpful when debugging input-method related issues
 - be quick and easy to (cross)compile
-- allow to move GObject bits and Widgets over to squeekboard easily if
-  desired (hence provide API documentation)
+- to be easy to extend (hence the API documentation)
 
 Features:
 
@@ -94,14 +93,16 @@ The result should look something like this:
 
 ``phosh-osk-stevia`` has support for word completion. There are different
 completers built in and it's easy to add more. See the [manpage][] on
-available completers and how to configure them.
+available completers and how to configure them, see also [this blog
+post](https://phosh.mobi/posts/osk-completion/) for more details.
 
 ## Documentation
 
 ### Development Documentation
 
-The API documentation is available at
-<https://guidog.pages.gitlab.gnome.org/stevia>.
+The API and development documentation is available at
+<https://guidog.pages.gitlab.gnome.org/stevia>. See also the OSK
+related posts on [phosh.mobi](https://phosh.mobi/tags/osk/).
 
 ### End User Documentation
 
