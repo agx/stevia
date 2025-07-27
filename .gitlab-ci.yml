@@ -87,6 +87,7 @@ check-markdown:
       changes:
         paths:
           - "*.md"
+          - "doc/*.md"
 
 # Sanity checks of MR settings and commit logs
 sanity:

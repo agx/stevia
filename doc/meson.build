@@ -9,6 +9,8 @@ if get_option('gtk_doc')
     configuration: toml_data,
   )
 
+  markdown_files = ['testing-layouts.md']
+
   dependency(
     'gi-docgen',
     version: '>= 2021.1',
@@ -37,6 +39,7 @@ if get_option('gtk_doc')
       '--fatal-warnings',
       '@INPUT1@',
     ],
+    depend_files: markdown_files,
     build_by_default: true,
     install: true,
     install_dir: docs_dir,
@@ -65,4 +68,3 @@ if get_option('man')
     )
   endforeach
 endif
-
